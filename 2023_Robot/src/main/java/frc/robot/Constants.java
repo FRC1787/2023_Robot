@@ -16,4 +16,41 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class IntakeIndexerConstants {
+    public static int intakeOutPneumaticsChannel = 0;
+    public static int intakeInPneumaticsChannel = 1;
+
+    public static int intakeMotorID = 99;
+    public static double intakeMotorSpeed = .5;
+  }
+
+  public static class LEDConstants {
+    public static int BlinkinRedColor = 0;
+    public static int BlinkinBlueColor = 0;
+    public static int BlinkinYellowColor = 0;
+    public static int BlinkinPurpleColor = 0;
+  }
+
+  public static class LimelightConstants {
+    public static enum LimelightTarget {
+      aprilTag(0, 0.46),
+      midTape(1, 0.61),
+      highTape(2, 1.11);
+      
+      public int limelightPipeline;
+      public double heightMeters;
+      LimelightTarget(int limelightPipeline, double heightMeters) {
+        this.limelightPipeline=limelightPipeline;
+        this.heightMeters=heightMeters;
+      }
+    }
+
+    /** Height of the Limelight from the ground. */
+    public static final double limelightHeightMeters = 0.432;
+    /** Angle above the horizontal of the Limelight. */
+    public static final double limelightAngleDegrees = 14.61;
+
+    public static final double limelightLateralOffsetMeters = 0.152;
+  }
 }

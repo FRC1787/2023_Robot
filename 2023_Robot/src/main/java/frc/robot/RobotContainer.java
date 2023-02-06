@@ -5,7 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.intake.IntakeGamePieces;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.IntakeIndex;
+import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -16,6 +22,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  // CONTROLLERS
+  public static final CommandXboxController controller = new CommandXboxController(0);
+  public static final CommandXboxController backupController = new CommandXboxController(1);
+  public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
+
+  // SUBSYSTEMS 
+  public final Drivetrain drivetrain = new Drivetrain();
+  private final IntakeIndex intakeIndex = new IntakeIndex();
+  private final LED led = new LED();
+  private final Vision vision = new Vision();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -33,6 +50,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    controller.rightTrigger().whileTrue(new IntakeGamePieces(intakeIndex));
     
   }
 
