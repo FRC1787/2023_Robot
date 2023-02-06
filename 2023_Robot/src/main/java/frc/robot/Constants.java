@@ -26,8 +26,12 @@ public final class Constants {
     public static int intakeOutPneumaticsChannel = 0;
     public static int intakeInPneumaticsChannel = 1;
 
-    public static int intakeMotorID = 99;
+    public static int intakeMotorID = 98;
+    public static int conveyorMotorID = 99;
+
+
     public static double intakeMotorSpeed = .5;
+    public static double conveyorMotorSpeed = .5;
   }
 
   public static class LEDConstants {

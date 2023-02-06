@@ -22,6 +22,7 @@ public class IntakeGamePieces extends CommandBase {
   public void initialize() {
     intakeIndex.setIntake(Value.kForward);
     intakeIndex.setIntakeMotor(Constants.IntakeIndexerConstants.intakeMotorSpeed);
+    intakeIndex.setConveyorMotor(Constants.IntakeIndexerConstants.conveyorMotorSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

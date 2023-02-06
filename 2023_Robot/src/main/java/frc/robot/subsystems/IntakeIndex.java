@@ -28,9 +28,15 @@ public class IntakeIndex extends SubsystemBase {
     MotorType.kBrushless
   );
 
+  private CANSparkMax conveyorMotor = new CANSparkMax(
+    Constants.IntakeIndexerConstants.conveyorMotorID,
+    MotorType.kBrushless
+  );
+
   /** Creates a new IntakeIndex. */
   public IntakeIndex() {
     intakeMotor.setSmartCurrentLimit(60);
+    conveyorMotor.setSmartCurrentLimit(60);
   }
 
   /**
@@ -39,7 +45,6 @@ public class IntakeIndex extends SubsystemBase {
   * <p>
   * To extend the pneumatic cylinder, use {@code kForward} for the {@code value} parameter, for example: 
   * {@code setPiston(Value.kForward);}
-  * </p>
   * <p>
   * To retract the pneumatic cylinder, use {@code kReverse} for the {@code value} parameter, for example:
   * {@code setPiston(Value.kReverse);}
@@ -59,31 +64,42 @@ public class IntakeIndex extends SubsystemBase {
   }
 
   /**
-   * Sets the speed of the intake motor
-   * 
+   * Sets the speed of the intake motor.
    * <p>
-   * To set the speed of the motor, input a double between 0 and 1.0. For example,
+   * To set the speed of the motor, input a double between -1.0 and 1.0. For example,
    * {@code setIntakeMotor(0.5);}
-   * </p>
-   * @param speed - Speed to set for the motor. Value should be between 0 and 1.0
+   * @param speed Speed to set for the motor. Value [-1.0, 1.0].
    */
   public void setIntakeMotor(double speed) {
     intakeMotor.set(speed);
   }
 
+  /**
+   * Sets the speed of the conveyor motor.
+   * <p>
+   * To set the speed of the motor, input a double between -1.0 and 1.0. For example,
+   * {@code setConveyorMotor(0.5);}
+   * @param speed Speed to set for the motor. Value [-1.0, 1.0].
+   */
+  public void setConveyorMotor(double speed) {
+    conveyorMotor.set(speed);
+  }
+
   /** Stops all motors in this subsystem */
   public void stopAllMotors() {
     this.setIntakeMotor(0);
+    this.setConveyorMotor(0);
   }
 
   /**
    * Sets the open loop ramp rate for this subsystem's motors.
-   * 
+   * <p>
    * This is the maximum rate at which the motor controllers' outputs are allowed to change.
    * @param rate Time in seconds to go from 0 to full throttle.
    */
   public void setRampRate(double rate) {
     intakeMotor.setOpenLoopRampRate(rate);
+    conveyorMotor.setOpenLoopRampRate(rate);
   }
 
   @Override
