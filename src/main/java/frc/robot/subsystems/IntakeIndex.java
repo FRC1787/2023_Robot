@@ -18,18 +18,18 @@ public class IntakeIndex extends SubsystemBase {
     // REVPH declares we are using REV's Pneumatic Hub.
     PneumaticsModuleType.REVPH,
     // The two channels are the Pneumatic Hub ports the solenoid is wired to.
-    Constants.IntakeIndexerConstants.intakeOutPneumaticsChannel,
-    Constants.IntakeIndexerConstants.intakeInPneumaticsChannel
+    Constants.IntakeIndexer.intakeOutPneumaticsChannel,
+    Constants.IntakeIndexer.intakeInPneumaticsChannel
   );
 
   private CANSparkMax intakeMotor = new CANSparkMax(
     // CAN ID of the Spark MAX
-    Constants.IntakeIndexerConstants.intakeMotorID, 
+    Constants.IntakeIndexer.intakeMotorID, 
     MotorType.kBrushless
   );
 
   private CANSparkMax conveyorMotor = new CANSparkMax(
-    Constants.IntakeIndexerConstants.conveyorMotorID,
+    Constants.IntakeIndexer.conveyorMotorID,
     MotorType.kBrushless
   );
 

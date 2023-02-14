@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -19,7 +20,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class ElevatorGrabber extends SubsystemBase {
   /** Creates a new Drivetrain. */
   private CANSparkMax elevatorMotor;
-  private PWMSparkMax grabberMotor;
+  private CANSparkMax grabberMotor;
 
   private RelativeEncoder encoder;
   private DoubleSolenoid solenoid;
@@ -32,28 +33,29 @@ public class ElevatorGrabber extends SubsystemBase {
 
   public ElevatorGrabber() {
     elevatorMotor = new CANSparkMax(
-        Constants.ElevatorGrabberConstants.elevatorMotorID,
+        Constants.ElevatorGrabber.elevatorMotorID,
         MotorType.kBrushless);
 
-    grabberMotor = new PWMSparkMax(
-        Constants.ElevatorGrabberConstants.grabberMotorID);
+    grabberMotor = new CANSparkMax(
+        Constants.ElevatorGrabber.grabberMotorID,
+        MotorType.kBrushless);
 
     encoder = elevatorMotor.getEncoder();
 
     solenoid = new DoubleSolenoid(
         PneumaticsModuleType.CTREPCM,
-        Constants.ElevatorGrabberConstants.inPneumaticChannel,
-        Constants.ElevatorGrabberConstants.outPneumaticChannel);
+        Constants.ElevatorGrabber.inPneumaticChannel,
+        Constants.ElevatorGrabber.outPneumaticChannel);
 
-    upperLimitSwitch = new DigitalInput(Constants.ElevatorGrabberConstants.upperLimitSwitchID);
-    lowerLimitSwitch = new DigitalInput(Constants.ElevatorGrabberConstants.lowerLimitSwitchID);
+    upperLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.upperLimitSwitchID);
+    lowerLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.lowerLimitSwitchID);
 
     velocityController = new PIDController(
-        Constants.ElevatorGrabberConstants.kP,
-        Constants.ElevatorGrabberConstants.kI,
-        Constants.ElevatorGrabberConstants.kD);
+        Constants.ElevatorGrabber.kP,
+        Constants.ElevatorGrabber.kI,
+        Constants.ElevatorGrabber.kD);
 
-    feedforward = new SimpleMotorFeedforward(Constants.ElevatorGrabberConstants.kS, Constants.ElevatorGrabberConstants.kV);
+    feedforward = new SimpleMotorFeedforward(Constants.ElevatorGrabber.kS, Constants.ElevatorGrabber.kV);
   }
 
   private boolean atUpperLimit() {

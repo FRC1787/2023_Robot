@@ -186,23 +186,15 @@ public final class Constants {
     }
   }
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-
-  public static class IntakeIndexerConstants {
+  public static class IntakeIndexer {
     public static int intakeOutPneumaticsChannel = 0;
     public static int intakeInPneumaticsChannel = 1;
 
     public static int intakeMotorID = 98;
     public static int conveyorMotorID = 99;
-
-
-    public static double intakeMotorSpeed = .5;
-    public static double conveyorMotorSpeed = .5;
   }
 
-  public static class ElevatorGrabberConstants {
+  public static class ElevatorGrabber {
     public static int elevatorMotorID = 99;
     public static int grabberMotorID = 99;
 
@@ -223,14 +215,14 @@ public final class Constants {
     public static double kV = 0;
   }
 
-  public static class LEDConstants {
+  public static class LED {
     public static int BlinkinRedColor = 0;
     public static int BlinkinBlueColor = 0;
     public static int BlinkinYellowColor = 0;
     public static int BlinkinPurpleColor = 0;
   }
 
-  public static class ControllerConstants {
+  public static class Controller {
     public static final double controllerDeadzone = 0.175;
   }
 
@@ -254,5 +246,12 @@ public final class Constants {
     public static final double limelightAngleDegrees = 14.61;
 
     public static final double limelightLateralOffsetMeters = 0.152;
+  }
+
+  public final static class MotorSpeeds {
+    public static double intakeMotorSpeedRPM;
+    public static double conveyorMotorSpeedRPM;
+    public static double indexerLeftMotorSpeedRPM;
+    public static double indexerRightMotorSpeedRPM;
   }
 }

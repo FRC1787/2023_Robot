@@ -188,7 +188,7 @@ public class Drivetrain extends SubsystemBase {
    * @return Squared and deadzoned input
    */
   public static double modifyAxis(double value) {
-    value = deadzone(value, Constants.ControllerConstants.controllerDeadzone);
+    value = deadzone(value, Constants.Controller.controllerDeadzone);
 
     // Square the axis
     // value = Math.copySign(Math.pow(value, 4), value);
