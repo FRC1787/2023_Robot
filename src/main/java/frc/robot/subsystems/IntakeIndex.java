@@ -9,8 +9,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.IndexerState;
 
 public class IntakeIndex extends SubsystemBase {
 
@@ -33,6 +35,8 @@ public class IntakeIndex extends SubsystemBase {
     MotorType.kBrushless
   );
 
+  private IndexerState indexerState;
+
   /** Creates a new IntakeIndex. */
   public IntakeIndex() {
     intakeMotor.setSmartCurrentLimit(60);
@@ -40,26 +44,25 @@ public class IntakeIndex extends SubsystemBase {
   }
 
   /**
-  * Sets the value of the intake solenoid
-  * 
-  * <p>
-  * To extend the pneumatic cylinder, use {@code kForward} for the {@code value} parameter, for example: 
-  * {@code setPiston(Value.kForward);}
-  * <p>
-  * To retract the pneumatic cylinder, use {@code kReverse} for the {@code value} parameter, for example:
-  * {@code setPiston(Value.kReverse);}
-  * 
-  * @param value - {@code Value.kForward} or {@code Value.kReverse}
+  * Extends the intake solenoid.
   */
-  public void setIntake(DoubleSolenoid.Value directionValue) {
-    intakeSolenoid.set(directionValue);
+  public void extendIntake() {
+    intakeSolenoid.set(Value.kForward);
   }
+
+  /*
+   * Retracts the intake solenoid.
+   */
+  public void retractIntake() {
+    intakeSolenoid.set(Value.kReverse);
+  }
+  
 
   /**
    * Read the current value of the intake solenoid.
    * @return The current value of the intake solenoid.
    */
-  public DoubleSolenoid.Value getIntakeDirection() {
+  public DoubleSolenoid.Value getIntakePosition() {
     return intakeSolenoid.get();
   }
 
@@ -70,8 +73,8 @@ public class IntakeIndex extends SubsystemBase {
    * {@code setIntakeMotor(0.5);}
    * @param speed Speed to set for the motor. Value [-1.0, 1.0].
    */
-  public void setIntakeMotor(double speed) {
-    intakeMotor.set(speed);
+  public void setIntakeMotorPercentage(double percent) {
+    intakeMotor.set(percent);
   }
 
   /**
@@ -81,14 +84,14 @@ public class IntakeIndex extends SubsystemBase {
    * {@code setConveyorMotor(0.5);}
    * @param speed Speed to set for the motor. Value [-1.0, 1.0].
    */
-  public void setConveyorMotor(double speed) {
-    conveyorMotor.set(speed);
+  public void setConveyorMotorPercentage(double percent) {
+    conveyorMotor.set(percent);
   }
 
   /** Stops all motors in this subsystem */
   public void stopAllMotors() {
-    this.setIntakeMotor(0);
-    this.setConveyorMotor(0);
+    this.setIntakeMotorPercentage(0);
+    this.setConveyorMotorPercentage(0);
   }
 
   /**
@@ -100,6 +103,18 @@ public class IntakeIndex extends SubsystemBase {
   public void setRampRate(double rate) {
     intakeMotor.setOpenLoopRampRate(rate);
     conveyorMotor.setOpenLoopRampRate(rate);
+  }
+
+  public void setCubeMode() {
+    indexerState = IndexerState.cube;
+  }
+
+  public void setConeMode() {
+    indexerState = IndexerState.cone;
+  }
+
+  public IndexerState getIndexerState() {
+    return indexerState;
   }
 
   @Override

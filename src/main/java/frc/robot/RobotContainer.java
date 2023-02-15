@@ -8,7 +8,6 @@ import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeIndex;
 import frc.robot.subsystems.LED;
-import frc.robot.subsystems.Telemetry;
 import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -33,7 +32,6 @@ public class RobotContainer {
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final LED led = new LED();
   private final Vision vision = new Vision();
-  private final Telemetry telemetry = new Telemetry();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -54,8 +52,8 @@ public class RobotContainer {
     controller.rightTrigger().whileTrue(
       new IntakeGamePieces(
         intakeIndex,
-        telemetry.getIntakeMotorSpeedRPM,
-        telemetry.getConveyorMotorSpeedRPM()
+        Constants.IntakeIndexer.intakeMotorPercentage,
+        Constants.IntakeIndexer.conveyorMotorPercentage
       )
     );
     

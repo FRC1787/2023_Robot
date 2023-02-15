@@ -7,22 +7,21 @@ package frc.robot.subsystems;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 public class ElevatorGrabber extends SubsystemBase {
   /** Creates a new Drivetrain. */
   private CANSparkMax elevatorMotor;
   private CANSparkMax grabberMotor;
 
-  private RelativeEncoder encoder;
+  private SparkMaxAbsoluteEncoder encoder;
   private DoubleSolenoid solenoid;
 
   private DigitalInput upperLimitSwitch;
@@ -40,7 +39,9 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.grabberMotorID,
         MotorType.kBrushless);
 
-    encoder = elevatorMotor.getEncoder();
+    encoder = elevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
+    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
 
     solenoid = new DoubleSolenoid(
         PneumaticsModuleType.CTREPCM,
@@ -57,6 +58,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
     feedforward = new SimpleMotorFeedforward(Constants.ElevatorGrabber.kS, Constants.ElevatorGrabber.kV);
   }
+
 
   private boolean atUpperLimit() {
     return upperLimitSwitch.get();
@@ -103,8 +105,18 @@ public class ElevatorGrabber extends SubsystemBase {
     grabberMotor.set(percentage);
   }
 
+  public double getElevatorPositionMeters() {
+    return encoder.getPosition();
+  }
+
+  public void zeroEncoder() {
+    encoder.setZeroOffset(getElevatorPositionMeters());
+  }
+
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (atLowerLimit()) {
+      zeroEncoder();
+    }
   }
 }

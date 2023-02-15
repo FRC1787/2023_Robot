@@ -4,29 +4,27 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.IntakeIndex;
 
 public class IntakeGamePieces extends CommandBase {
   private IntakeIndex intakeIndex;
-  private double intakeMotorSpeedRPM;
-  private double conveyorMotorSpeedRPM;
+  private double intakeMotorPercentage;
+  private double conveyorMotorPercentage;
 
-  public IntakeGamePieces(IntakeIndex intakeIndex, double intakeMotorSpeedRPM, double conveyorMotorSpeedRPM) {
+  public IntakeGamePieces(IntakeIndex intakeIndex, double intakeMotorPercentage, double conveyorMotorPercentage) {
     addRequirements(intakeIndex);
     this.intakeIndex = intakeIndex;
-    this.intakeMotorSpeedRPM = intakeMotorSpeedRPM;
-    this.conveyorMotorSpeedRPM = conveyorMotorSpeedRPM;
+    this.intakeMotorPercentage = intakeMotorPercentage;
+    this.conveyorMotorPercentage = conveyorMotorPercentage;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intakeIndex.setIntake(Value.kForward);
-    intakeIndex.setIntakeMotor(intakeMotorSpeedRPM);
-    intakeIndex.setConveyorMotor(conveyorMotorSpeedRPM);
+    intakeIndex.extendIntake();;
+    intakeIndex.setIntakeMotorPercentage(intakeMotorPercentage);
+    intakeIndex.setConveyorMotorPercentage(conveyorMotorPercentage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +35,7 @@ public class IntakeGamePieces extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intakeIndex.stopAllMotors();
-    intakeIndex.setIntake(Value.kReverse);
+    intakeIndex.retractIntake();
   }
 
   // Returns true when the command should end.

@@ -41,7 +41,7 @@ public final class Constants {
     public static final double wheelDiamater = 0.10033;
 
     public static final ModuleConfiguration MK4I_L2 = new ModuleConfiguration(
-        Units.inchesToMeters(4), // 0.10033,
+        Units.inchesToMeters(4), 
         (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0),
         true,
         (14.0 / 50.0) * (10.0 / 60.0),
@@ -53,16 +53,15 @@ public final class Constants {
         new Translation2d(-wheelbaseMeters / 2.0, -trackwidthMeters / 2.0));
 
     // pid for drive motor
-    public static final double drivekP = 0.8; // 0.049867
+    public static final double drivekP = 0.8;
     public static final double drivekI = 0.;
     public static final double drivekD = 0.01;
 
     // pid for angle motor
     public static final double anglekP = 0.065;
     public static final double anglekI = 0.;
-    public static final double anglekD = 0.; // 0.00006
+    public static final double anglekD = 0.;
 
-    // feedforward for drive motor (CHARACTERIZE TO FIND)
     public static final double drivekS = 0.12584;
     public static final double drivekV = 2.6; // .8679
     public static final double drivekA = 0.14785;
@@ -73,11 +72,6 @@ public final class Constants {
      * This is a measure of how fast the robot should be able to drive in a straight
      * line.
      */
-    // The formula for calculating the theoretical maximum velocity is:
-    // <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> *
-    // pi
-    // 4.578870701248506
-    // TODO: fix this later
     public static final double maxVelocityMetersPerSecond = 5880.0 / 60.0 *
         driveReduction *
         wheelDiamater * Math.PI;
@@ -87,9 +81,6 @@ public final class Constants {
      * <p>
      * This is a measure of how fast the robot can rotate in place.
      */
-    // Here we calculate the theoretical maximum angular velocity. You can also
-    // replace this with a measured amount.
-    // theoretical - 12.286312581459901
     public static final double maxAngularVelocityRadiansPerSecond = maxVelocityMetersPerSecond /
         Math.hypot(Constants.Swerve.trackwidthMeters / 2.0, Constants.Swerve.wheelbaseMeters / 2.0);
 
@@ -192,6 +183,12 @@ public final class Constants {
 
     public static int intakeMotorID = 98;
     public static int conveyorMotorID = 99;
+
+    public static double intakeMotorPercentage;
+    public static double conveyorMotorPercentage;
+    public static double indexerLeftMotorPercentage;
+    public static double indexerRightMotorPercentage;
+
   }
 
   public static class ElevatorGrabber {
@@ -213,6 +210,13 @@ public final class Constants {
 
     public static double kS = 0;
     public static double kV = 0;
+
+    public static double elevatorMaxVelMetersPerSecond = 5;
+    public static double elevatorMaxAccelMetersPerSecondSquared = 2;
+
+    public static double chainMetersPerRotation = 1.78*Math.PI;
+    public static double grabberMetersPerChain = 2;
+    public static double grabberMetersPerRotation = chainMetersPerRotation*grabberMetersPerChain;
   }
 
   public static class LED {
@@ -224,6 +228,17 @@ public final class Constants {
 
   public static class Controller {
     public static final double controllerDeadzone = 0.175;
+
+    public static int buttonA = 1;
+    public static int buttonB = 2;
+    public static int buttonX = 3;
+    public static int buttonY = 4;
+    public static int leftBumper = 5;
+    public static int rightBumper = 6;
+    public static int viewButton = 7;
+    public static int menuButton = 8;
+    public static int leftJoyStickPress = 9;
+    public static int rightJoyStickPress = 10;  
   }
 
   public static class Vision {
@@ -234,6 +249,7 @@ public final class Constants {
       
       public int limelightPipeline;
       public double heightMeters;
+
       LimelightTarget(int limelightPipeline, double heightMeters) {
         this.limelightPipeline=limelightPipeline;
         this.heightMeters=heightMeters;
@@ -248,10 +264,9 @@ public final class Constants {
     public static final double limelightLateralOffsetMeters = 0.152;
   }
 
-  public final static class MotorSpeeds {
-    public static double intakeMotorSpeedRPM;
-    public static double conveyorMotorSpeedRPM;
-    public static double indexerLeftMotorSpeedRPM;
-    public static double indexerRightMotorSpeedRPM;
+
+
+  public static enum IndexerState {
+    cone, cube
   }
 }

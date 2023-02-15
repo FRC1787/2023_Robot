@@ -26,35 +26,30 @@ public class Drivetrain extends SubsystemBase {
 
   public Field2d field;
 
-  // These are your swerve modules. They will probably cause hair loss?
-  private final SwerveModule m_frontLeftModule;
-  private final SwerveModule m_frontRightModule;
-  private final SwerveModule m_backLeftModule;
-  private final SwerveModule m_backRightModule;
 
   public Drivetrain() {
     field = new Field2d();
 
     mSwerveMods = new SwerveModule[] {
-        m_frontLeftModule = new SwerveModule(
+        new SwerveModule(
             0,
             Constants.Swerve.FrontLeftSwerveModule.driveMotorID,
             Constants.Swerve.FrontLeftSwerveModule.steerMotorID,
             Constants.Swerve.FrontLeftSwerveModule.steerEncoderID,
             Constants.Swerve.FrontLeftSwerveModule.steerOffset),
-        m_frontRightModule = new SwerveModule(
+        new SwerveModule(
             1,
             Constants.Swerve.FrontRightSwerveModule.driveMotorID,
             Constants.Swerve.FrontRightSwerveModule.steerMotorID,
             Constants.Swerve.FrontRightSwerveModule.steerEncoderID,
             Constants.Swerve.FrontRightSwerveModule.steerOffset),
-        m_backLeftModule = new SwerveModule(
+        new SwerveModule(
             2,
             Constants.Swerve.BackLeftSwerveModule.driveMotorID,
             Constants.Swerve.BackLeftSwerveModule.steerMotorID,
             Constants.Swerve.BackLeftSwerveModule.steerEncoderID,
             Constants.Swerve.BackLeftSwerveModule.steerOffset),
-        m_backRightModule = new SwerveModule(
+        new SwerveModule(
             3,
             Constants.Swerve.BackRightSwerveModule.driveMotorID,
             Constants.Swerve.BackRightSwerveModule.steerMotorID,
@@ -208,19 +203,6 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("pose x", swerveOdometry.getPoseMeters().getX());
     SmartDashboard.putNumber("pose y", swerveOdometry.getPoseMeters().getY());
     SmartDashboard.putNumber("pose rotation", swerveOdometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("pitch", gyro.getPitch());
-
-    if (this.getCurrentCommand() != null) {
-      SmartDashboard.putString("current drivetrain command", this.getCurrentCommand().getName());
-    }
-
-    SmartDashboard.putNumber("wheel velocity", getStates()[0].speedMetersPerSecond);
-
     updateOdometry();
-
-    SmartDashboard.putNumber("encoder left", m_frontLeftModule.getState().angle.getDegrees());
-
-    SmartDashboard.putNumber("front left swerve module speed", m_frontLeftModule.getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("gyro", getGyroscopeRotation().getDegrees());
   }
 }
