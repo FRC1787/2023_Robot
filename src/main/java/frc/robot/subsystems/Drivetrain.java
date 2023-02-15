@@ -26,7 +26,6 @@ public class Drivetrain extends SubsystemBase {
 
   public Field2d field;
 
-
   public Drivetrain() {
     field = new Field2d();
 
@@ -81,29 +80,53 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getRotation2d();
   }
 
+  /**
+   * Returns the current yaw value (in degrees, from -180 to 180) reported by the NavX IMU.
+   * Yaw is a measure of rotation about the Z Axis (which is perpendicular to the earth).
+   * @return The current yaw value in degrees (-180 to 180).
+   */
+  public double getYaw() {
+    return gyro.getYaw();
+  }
+
+  /**
+   * Returns the current pitch value (in degrees, from -180 to 180) reported by the NavX IMU.
+   * Pitch is a measure of rotation about the X Axis.
+   * @return The current pitch value in degrees (-180 to 180).
+   */
   public double getPitch() {
     return gyro.getPitch();
   }
 
+  /**
+   * Returns the current roll value (in degrees, from -180 to 180) reported by the NavX IMU.
+   * Roll is a measure of rotation about the Y Axis.
+   * @return The current roll value in degrees (-180 to 180).
+   */
   public double getRoll() {
     return gyro.getRoll();
   }
 
-  public double getAngularSpeed() {
-    return gyro.getRawGyroZ();
-  }
-
   // POSE, FIELD, ODOMETRY
 
+  /**
+   * Gets the current position of the robot on the field in meters.
+   * @return The current position of the robot on the field in meters.
+   */
   public Pose2d getPose() {
     return swerveOdometry.getPoseMeters();
   }
 
+  /**
+   * Sets the current position of the robot on the field in meters.
+   * @param pose
+   */
   public void setOdometry(Pose2d pose) {
     swerveOdometry.resetPosition(
-        getGyroscopeRotation(),
-        getPositions(),
-        pose);
+      getGyroscopeRotation(),
+      getPositions(),
+      pose
+    );
   }
 
   public void updateOdometry() {
@@ -200,9 +223,13 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateOdometry();
     SmartDashboard.putNumber("pose x", swerveOdometry.getPoseMeters().getX());
     SmartDashboard.putNumber("pose y", swerveOdometry.getPoseMeters().getY());
     SmartDashboard.putNumber("pose rotation", swerveOdometry.getPoseMeters().getRotation().getDegrees());
     updateOdometry();
+    SmartDashboard.putNumber("yaw", getYaw());
+    SmartDashboard.putNumber("pitch", getPitch());
+    SmartDashboard.putNumber("roll", getRoll());
   }
 }

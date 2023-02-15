@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import frc.team1787_lib.ModuleConfiguration;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,26 +25,23 @@ public final class Constants {
   }
 
   public static final class Swerve {
+    //28-(2.625*2)
     /**
      * distance between the center point of the left wheels and the center point of
      * the right wheels
      */
-    public static final double trackwidthMeters = Units.inchesToMeters(20.75);
+    public static final double trackwidthMeters = Units.inchesToMeters(22.75);
     /**
      * distance between the center point of the front wheels and the center point of
      * the back wheels
      */
-    public static final double wheelbaseMeters = Units.inchesToMeters(20.75);
-
+    public static final double wheelbaseMeters = Units.inchesToMeters(22.75);
     public static final double driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
-    public static final double wheelDiamater = 0.10033;
+    public static final double steerReduction = (14.0 / 50.0) * (10.0 / 60.0);
+    /** Diameter of the wheels in meters. */ // 0.10033
+    public static final double wheelDiamater = Units.inchesToMeters(4.0);
+    public static final double wheelCircumference = wheelDiamater * Math.PI;
 
-    public static final ModuleConfiguration MK4I_L2 = new ModuleConfiguration(
-        Units.inchesToMeters(4), 
-        (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0),
-        true,
-        (14.0 / 50.0) * (10.0 / 60.0),
-        false);
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
         new Translation2d(wheelbaseMeters / 2.0, trackwidthMeters / 2.0),
         new Translation2d(wheelbaseMeters / 2.0, -trackwidthMeters / 2.0),
@@ -91,6 +87,11 @@ public final class Constants {
     public static final boolean driveInvert = true;
     public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
+    /**
+     * Offset for the angle CANCoder encoder.
+     * This offsets the angle encoder so that it reads as 0 when pointing forwards.
+     * All values are relative to the front left corner configuration.
+     */
     public static final class CANCoderOffsets {
       public static final double one = 99.74;
       public static final double two = 287.23;
@@ -103,6 +104,7 @@ public final class Constants {
       public static final double nine = 0.00;
     }
 
+    // This enum is used to determine the offset for the swerve modules.
     public enum SwerveModuleCorners {
       FRONT_LEFT,
       FRONT_RIGHT,
@@ -110,6 +112,14 @@ public final class Constants {
       BACK_RIGHT
     }
 
+    /**
+     * This method is used to get the offset for the swerve modules.
+     * 
+     * @param leftRightOffset the offset for the left and right swerve modules.
+     * This should be a {@link CANCoderOffsets} constant.
+     * @param corner the corner of the swerve module to get the offset for.
+     * @return the angular offset for the swerve module in degrees.
+     */
     public static double getOffset(double leftRightOffset, SwerveModuleCorners corner) {
       switch (corner) {
         case FRONT_LEFT:
