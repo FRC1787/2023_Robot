@@ -166,14 +166,14 @@ public class SwerveModule {
 
     //converts rotations of motor to meters traveled of wheel
     mDriveEncoder.setPositionConversionFactor(
-      Constants.Swerve.MK4I_L2.getDriveReduction()
-      * Constants.Swerve.MK4I_L2.getWheelCircumference()
+      Constants.Swerve.driveReduction
+      * Constants.Swerve.wheelCircumference
     );
 
     //converts rpm of motor to m/s of wheel
     mDriveEncoder.setVelocityConversionFactor(
-      1./60. * Constants.Swerve.MK4I_L2.getDriveReduction()
-      * Constants.Swerve.MK4I_L2.getWheelCircumference()
+      1./60. * Constants.Swerve.driveReduction
+      * Constants.Swerve.wheelCircumference
     );
 
     mDriveMotor.burnFlash();

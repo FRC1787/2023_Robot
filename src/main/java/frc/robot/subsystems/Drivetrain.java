@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -26,35 +27,29 @@ public class Drivetrain extends SubsystemBase {
 
   public Field2d field;
 
-  // These are your swerve modules. They will probably cause hair loss?
-  private final SwerveModule m_frontLeftModule;
-  private final SwerveModule m_frontRightModule;
-  private final SwerveModule m_backLeftModule;
-  private final SwerveModule m_backRightModule;
-
   public Drivetrain() {
     field = new Field2d();
 
     mSwerveMods = new SwerveModule[] {
-        m_frontLeftModule = new SwerveModule(
+        new SwerveModule(
             0,
             Constants.Swerve.FrontLeftSwerveModule.driveMotorID,
             Constants.Swerve.FrontLeftSwerveModule.steerMotorID,
             Constants.Swerve.FrontLeftSwerveModule.steerEncoderID,
             Constants.Swerve.FrontLeftSwerveModule.steerOffset),
-        m_frontRightModule = new SwerveModule(
+        new SwerveModule(
             1,
             Constants.Swerve.FrontRightSwerveModule.driveMotorID,
             Constants.Swerve.FrontRightSwerveModule.steerMotorID,
             Constants.Swerve.FrontRightSwerveModule.steerEncoderID,
             Constants.Swerve.FrontRightSwerveModule.steerOffset),
-        m_backLeftModule = new SwerveModule(
+        new SwerveModule(
             2,
             Constants.Swerve.BackLeftSwerveModule.driveMotorID,
             Constants.Swerve.BackLeftSwerveModule.steerMotorID,
             Constants.Swerve.BackLeftSwerveModule.steerEncoderID,
             Constants.Swerve.BackLeftSwerveModule.steerOffset),
-        m_backRightModule = new SwerveModule(
+        new SwerveModule(
             3,
             Constants.Swerve.BackRightSwerveModule.driveMotorID,
             Constants.Swerve.BackRightSwerveModule.steerMotorID,
@@ -86,29 +81,53 @@ public class Drivetrain extends SubsystemBase {
     return gyro.getRotation2d();
   }
 
+  /**
+   * Returns the current yaw value (in degrees, from -180 to 180) reported by the NavX IMU.
+   * Yaw is a measure of rotation about the Z Axis (which is perpendicular to the earth).
+   * @return The current yaw value in degrees (-180 to 180).
+   */
+  public double getYaw() {
+    return gyro.getYaw();
+  }
+
+  /**
+   * Returns the current pitch value (in degrees, from -180 to 180) reported by the NavX IMU.
+   * Pitch is a measure of rotation about the X Axis.
+   * @return The current pitch value in degrees (-180 to 180).
+   */
   public double getPitch() {
     return gyro.getPitch();
   }
 
+  /**
+   * Returns the current roll value (in degrees, from -180 to 180) reported by the NavX IMU.
+   * Roll is a measure of rotation about the Y Axis.
+   * @return The current roll value in degrees (-180 to 180).
+   */
   public double getRoll() {
     return gyro.getRoll();
   }
 
-  public double getAngularSpeed() {
-    return gyro.getRawGyroZ();
-  }
-
   // POSE, FIELD, ODOMETRY
 
+  /**
+   * Gets the current position of the robot on the field in meters.
+   * @return The current position of the robot on the field in meters.
+   */
   public Pose2d getPose() {
     return swerveOdometry.getPoseMeters();
   }
 
+  /**
+   * Sets the current position of the robot on the field in meters.
+   * @param pose
+   */
   public void setOdometry(Pose2d pose) {
     swerveOdometry.resetPosition(
-        getGyroscopeRotation(),
-        getPositions(),
-        pose);
+      getGyroscopeRotation(),
+      getPositions(),
+      pose
+    );
   }
 
   public void updateOdometry() {
@@ -205,22 +224,16 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateOdometry();
     SmartDashboard.putNumber("pose x", swerveOdometry.getPoseMeters().getX());
     SmartDashboard.putNumber("pose y", swerveOdometry.getPoseMeters().getY());
     SmartDashboard.putNumber("pose rotation", swerveOdometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("pitch", gyro.getPitch());
-
-    if (this.getCurrentCommand() != null) {
-      SmartDashboard.putString("current drivetrain command", this.getCurrentCommand().getName());
-    }
-
+    SmartDashboard.putNumber("encoder left", getStates()[0].angle.getDegrees());
+    SmartDashboard.putNumber("front left swerve module speed", getStates()[0].speedMetersPerSecond);
     SmartDashboard.putNumber("wheel velocity", getStates()[0].speedMetersPerSecond);
-
-    updateOdometry();
-
-    SmartDashboard.putNumber("encoder left", m_frontLeftModule.getState().angle.getDegrees());
-
-    SmartDashboard.putNumber("front left swerve module speed", m_frontLeftModule.getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("gyro", getGyroscopeRotation().getDegrees());
+    SmartDashboard.putNumber("gyroscoping rotation", getGyroscopeRotation().getDegrees());
+    SmartDashboard.putNumber("yaw", getYaw());
+    SmartDashboard.putNumber("pitch", getPitch());
+    SmartDashboard.putNumber("roll", getRoll());
   }
 }
