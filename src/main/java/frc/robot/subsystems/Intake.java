@@ -79,11 +79,31 @@ public class IntakeIndex extends SubsystemBase {
 
     indexerState = IndexerState.cone;
 
+
+
+    setMotorRampRates(1.0); //maybe delete??
+  }
+
+  private void setMotorInversions() {
+
+  }
+
+  private void setMotorCurrentLimits() {
     intakeMotor.setSmartCurrentLimit(60);
     conveyorMotor.setSmartCurrentLimit(60);
-
-    setRampRate(1.0);
   }
+
+  /**
+   * Sets the open loop ramp rate for this subsystem's motors.
+   * <p>
+   * This is the maximum rate at which the motor controllers' outputs are allowed to change.
+   * @param rate Time in seconds to go from 0 to full throttle.
+   */
+  public void setMotorRampRates(double rate) {
+    intakeMotor.setOpenLoopRampRate(rate);
+    conveyorMotor.setOpenLoopRampRate(rate);
+  }
+
 
   /* INTAKE/CONVEYOR STUFF */////////////////////////////
 
@@ -110,56 +130,46 @@ public class IntakeIndex extends SubsystemBase {
     return intakeSolenoid.get();
   }
 
+
   /**
-   * Sets the speed of the intake motor.
-   * <p>
-   * To set the speed of the motor, input a double between -1.0 and 1.0. For example,
-   * {@code setIntakeMotor(0.5);}
-   * @param speed Speed to set for the motor. Value [-1.0, 1.0].
+   * Sets the voltage of the intake motor.
+   * @param voltage - Make this positive if you are trying to intake something.
    */
-  public void setIntakeMotorPercentage(double percent) {
-    intakeMotor.set(percent);
+  public void setIntakeMotorVolts(double voltage) {
+    intakeMotor.setVoltage(voltage);
   }
 
   /**
-   * Sets the speed of the conveyor motor.
-   * <p>
-   * To set the speed of the motor, input a double between -1.0 and 1.0. For example,
-   * {@code setConveyorMotor(0.5);}
-   * @param speed Speed to set for the motor. Value [-1.0, 1.0].
+   * Sets the voltage of the conveyor motor.
+   * @param voltage - Make this positive if you are trying to intake something.
    */
-  public void setConveyorMotorPercentage(double percent) {
-    conveyorMotor.set(percent);
+  public void setConveyorMotorVolts(double voltage) {
+    conveyorMotor.set(voltage);
   }
 
   /** Stops all motors in this subsystem */
   public void stopIntakeMotors() {
-    setIntakeMotorPercentage(0);
-    setConveyorMotorPercentage(0);
+    setIntakeMotorVolts(0);
+    setConveyorMotorVolts(0);
   }
 
-  /**
-   * Sets the open loop ramp rate for this subsystem's motors.
-   * <p>
-   * This is the maximum rate at which the motor controllers' outputs are allowed to change.
-   * @param rate Time in seconds to go from 0 to full throttle.
-   */
-  public void setRampRate(double rate) {
-    intakeMotor.setOpenLoopRampRate(rate);
-    conveyorMotor.setOpenLoopRampRate(rate);
-  }
+
 
   /* INDEXER STUFF *//////////////////////////
 
   /**
-   * Sets the percentage of max voltage for the claw motor.
-   * @param percentage Between -1.0 and 1.0, with positive being the claw moving towards the front of the robot.
+   * Sets the voltage of the claw motor.
+   * @param voltage - A positive value should move the claw towards the front of the robot.
    */
-  public void setClawMotorPercentage(double percentage) {
-    clawMotor.set(percentage);
+  public void setClawMotorVolts(double voltage) {
+    clawMotor.set(voltage);
   }
 
-  private boolean getClawLimitSwitch() {
+  /**
+   * Returns true if the claw is as far back as possible in the robot as possible,
+   * analagous to it touching the limit switch.
+   */
+  public boolean isClawBack() {
     return clawLimitSwitch.get();
   }
 
@@ -168,10 +178,10 @@ public class IntakeIndex extends SubsystemBase {
   }
 
   /**
-   * Gets the position of the motor in rotations of the motor.
+   * Returns true if the claw is as far forward in the robot as possible.
    */
-  public double getClawMotorRotations() {
-    return clawMotorEncoder.getPosition();
+  public boolean isClawForward() {
+    return clawMotorEncoder.getPosition() > 15;
   }
 
   public void setCubeMode() {
@@ -186,10 +196,27 @@ public class IntakeIndex extends SubsystemBase {
     return indexerState;
   }
 
+  public void extendIndexerSolenoid() {
+    indexerSolenoid.set(Value.kForward);
+  }
+
+  public void retractIndexerSolenoid() {
+    indexerSolenoid.set(Value.kReverse);
+  }
+
+  /**
+   * Sets voltage of indexer motors.
+   * @param voltage - A positive value here should move the belts towards the front of the robot.
+   */
+  public void setIndexerMotors(double voltage) {
+    leftIndexerMotor.set(voltage);
+    rightIndexerMotor.set(voltage);
+  }
+
 
   @Override
   public void periodic() {
-    if (getClawLimitSwitch())
+    if (isClawBack())
       zeroClawEncoder();
   }
 }

@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -76,7 +77,9 @@ public class SwerveModule {
       double desiredStateSpeedMetersPerSecond = driveMotorSlew.calculate(desiredState.speedMetersPerSecond);
 
       double feedforward = mDriveFeedforward.calculate(desiredStateSpeedMetersPerSecond);
-      double pidCorrection = mDrivePID.calculate(wheelMetersPerSecond, desiredStateSpeedMetersPerSecond);
+      double pidCorrection = MathUtil.clamp(
+        mDrivePID.calculate(wheelMetersPerSecond, desiredStateSpeedMetersPerSecond),
+        -6, 6);
 
       mDriveMotor.setVoltage(feedforward + pidCorrection);
     }

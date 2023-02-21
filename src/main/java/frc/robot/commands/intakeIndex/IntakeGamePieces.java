@@ -9,22 +9,22 @@ import frc.robot.subsystems.IntakeIndex;
 
 public class IntakeGamePieces extends CommandBase {
   private IntakeIndex intakeIndex;
-  private double intakeMotorPercentage;
-  private double conveyorMotorPercentage;
+  private double intakeMotorVoltage;
+  private double conveyorMotorVoltage;
 
-  public IntakeGamePieces(IntakeIndex intakeIndex, double intakeMotorPercentage, double conveyorMotorPercentage) {
+  public IntakeGamePieces(IntakeIndex intakeIndex, double intakeMotorVoltage, double conveyorMotorVoltage) {
     addRequirements(intakeIndex);
     this.intakeIndex = intakeIndex;
-    this.intakeMotorPercentage = intakeMotorPercentage;
-    this.conveyorMotorPercentage = conveyorMotorPercentage;
+    this.intakeMotorVoltage = Math.abs(intakeMotorVoltage);
+    this.conveyorMotorVoltage = Math.abs(conveyorMotorVoltage);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     intakeIndex.extendIntake();
-    intakeIndex.setIntakeMotorPercentage(intakeMotorPercentage);
-    intakeIndex.setConveyorMotorPercentage(conveyorMotorPercentage);
+    intakeIndex.setIntakeMotorVolts(intakeMotorVoltage);
+    intakeIndex.setConveyorMotorVolts(conveyorMotorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

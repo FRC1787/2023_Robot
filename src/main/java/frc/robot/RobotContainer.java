@@ -9,7 +9,6 @@ import frc.robot.commands.intakeIndex.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeIndex;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -33,7 +32,7 @@ public class RobotContainer {
 
   //BUTTONS
   private static final Trigger robotOrientedButton = controller.rightBumper();
-  private static final Trigger indexerStateButton = buttonBoard.button(0);
+  private static final Trigger isInConeMode = buttonBoard.button(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -62,10 +61,7 @@ public class RobotContainer {
     robotOrientedButton.whileTrue(new JoystickDrive(drivetrain, false));
     robotOrientedButton.whileFalse(new JoystickDrive(drivetrain, true));
 
-    indexerStateButton.onTrue(new InstantCommand(intakeIndex::setConeMode));
-    indexerStateButton.onFalse(new InstantCommand(intakeIndex::setCubeMode));
-    
-    
+  
   }
 
   /**

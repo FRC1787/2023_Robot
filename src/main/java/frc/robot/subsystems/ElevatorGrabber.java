@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -21,7 +22,7 @@ public class ElevatorGrabber extends SubsystemBase {
   private CANSparkMax elevatorMotor;
   private CANSparkMax grabberMotor;
 
-  private SparkMaxAbsoluteEncoder encoder;
+  private RelativeEncoder encoder;
   private DoubleSolenoid solenoid;
   
   private DigitalInput lowerLimitSwitch;
@@ -38,7 +39,7 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.grabberMotorID,
         MotorType.kBrushless);
 
-    encoder = elevatorMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    encoder = elevatorMotor.getAlternateEncoder(4096);
     encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
     encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
 
@@ -103,8 +104,8 @@ public class ElevatorGrabber extends SubsystemBase {
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  public void setGrabMotor(double percentage) {
-    grabberMotor.set(percentage);
+  public void setGrabMotorVolts(double voltage) {
+    grabberMotor.setVoltage(voltage);
   }
 
   public double getElevatorPositionMeters() {
@@ -112,7 +113,7 @@ public class ElevatorGrabber extends SubsystemBase {
   }
 
   public void zeroEncoder() {
-    encoder.setZeroOffset(getElevatorPositionMeters());
+    encoder.setPosition(0);
   }
 
   @Override
