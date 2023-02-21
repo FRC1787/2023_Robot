@@ -22,10 +22,22 @@ public class LED extends SubsystemBase {
    * 
    * @see <a href="https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf#page=14">REV Robotics Blinkin User's Manual Table 5</a>
    */
-  public void setBlinkin(double value) {
+  private void setBlinkin(double value) {
     if ((value >= -1.0) && (value <= 1.0)) {
       blinkin.set(value);
     }
+  }
+
+  public void setYellow() {
+    setBlinkin(0.69);
+  }
+
+  public void setPurple() {
+    setBlinkin(0.91);
+  }
+
+  public void flashRed() {
+    setBlinkin(-0.11);
   }
 
   @Override

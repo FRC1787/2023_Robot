@@ -70,7 +70,6 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
     desiredState = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition()));
 
-    // auto
     if (closedLoop) {
       //conversion factor is already set below to convert rpm of motor to m/s of wheel
       double wheelMetersPerSecond = mDriveEncoder.getVelocity();
@@ -81,7 +80,7 @@ public class SwerveModule {
 
       mDriveMotor.setVoltage(feedforward + pidCorrection);
     }
-    // teleop
+
     else {
       double percentOutput =
         driveMotorSlew.calculate(desiredState.speedMetersPerSecond) / Constants.Swerve.maxVelocityMetersPerSecond;

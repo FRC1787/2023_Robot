@@ -65,7 +65,7 @@ public final class Constants {
     /**
      * The maximum velocity of the robot in meters per second.
      * <p>
-     * This is a measure of how fast the robot should be able to drive in a straight
+     * This is a measure of how fast the robot will be able to drive in a straight
      * line.
      */
     public static final double maxVelocityMetersPerSecond = 5880.0 / 60.0 *
@@ -191,13 +191,26 @@ public final class Constants {
     public static int intakeOutPneumaticsChannel = 0;
     public static int intakeInPneumaticsChannel = 1;
 
-    public static int intakeMotorID = 98;
-    public static int conveyorMotorID = 99;
+    public static int indexerOutPneumaticsChannel = 0;
+    public static int indexerInPneumaticsChannel = 1;
+
+    public static int clawLimitSwitchID;
+
+    public static int intakeMotorID ;
+    public static int conveyorMotorID;
+    public static int clawMotorID;
+    public static int leftIndexerMotorID;
+    public static int rightIndexerMotorID;
 
     public static double intakeMotorPercentage;
     public static double conveyorMotorPercentage;
     public static double indexerLeftMotorPercentage;
     public static double indexerRightMotorPercentage;
+
+
+    public static enum IndexerState {
+      cone, cube
+    }
 
   }
 
@@ -211,15 +224,14 @@ public final class Constants {
     public static int boreEncoderID = 99;
     public static int distancePerRotation = 99;
 
-    public static int upperLimitSwitchID = 99;
     public static int lowerLimitSwitchID = 99;
 
     public static double kP = 0;
     public static double kI = 0;
     public static double kD = 0;
 
-    public static double kS = 0;
-    public static double kV = 0;
+    public static double kSVolts = 0.00;
+    public static double kVVoltSecondsPerMeter = 0; //represents voltage given to motor per m/s of velocity of elevator carriage movement
 
     public static double elevatorMaxVelMetersPerSecond = 5;
     public static double elevatorMaxAccelMetersPerSecondSquared = 2;
@@ -253,16 +265,18 @@ public final class Constants {
 
   public static class Vision {
     public static enum LimelightTarget {
-      aprilTag(0, 0.46),
-      midTape(1, 0.61),
-      highTape(2, 1.11);
+      aprilTag(0, 0.46, 0.36),
+      midTape(1, 0.61, 0.59),
+      highTape(2, 1.11, 1.01);
       
       public int limelightPipeline;
       public double heightMeters;
+      public double distanceMeters;
 
-      LimelightTarget(int limelightPipeline, double heightMeters) {
+      LimelightTarget(int limelightPipeline, double heightMeters, double distanceMeters) {
         this.limelightPipeline=limelightPipeline;
         this.heightMeters=heightMeters;
+        this.distanceMeters = distanceMeters;
       }
     }
 
@@ -270,13 +284,11 @@ public final class Constants {
     public static final double limelightHeightMeters = 0.432;
     /** Angle above the horizontal of the Limelight. */
     public static final double limelightAngleDegrees = 14.61;
-
+    /** Lateral offset of the Limelight from the center of the robot. */
     public static final double limelightLateralOffsetMeters = 0.152;
+    /** Horizontal distance from limelight to front bumper. */
+    public static final double limelightBumperDistanceMeters = 0.0;
   }
 
 
-
-  public static enum IndexerState {
-    cone, cube
-  }
 }

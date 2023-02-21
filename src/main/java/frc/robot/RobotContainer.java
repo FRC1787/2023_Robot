@@ -4,12 +4,12 @@
 
 package frc.robot;
 
-import frc.robot.commands.intake.IntakeGamePieces;
+import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.intakeIndex.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakeIndex;
-import frc.robot.subsystems.LED;
-import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,8 +30,10 @@ public class RobotContainer {
   // SUBSYSTEMS 
   public final Drivetrain drivetrain = new Drivetrain();
   private final IntakeIndex intakeIndex = new IntakeIndex();
-  private final LED led = new LED();
-  private final Vision vision = new Vision();
+
+  //BUTTONS
+  private static final Trigger robotOrientedButton = controller.rightBumper();
+  private static final Trigger indexerStateButton = buttonBoard.button(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -56,6 +58,13 @@ public class RobotContainer {
         Constants.IntakeIndexer.conveyorMotorPercentage
       )
     );
+    
+    robotOrientedButton.whileTrue(new JoystickDrive(drivetrain, false));
+    robotOrientedButton.whileFalse(new JoystickDrive(drivetrain, true));
+
+    indexerStateButton.onTrue(new InstantCommand(intakeIndex::setConeMode));
+    indexerStateButton.onFalse(new InstantCommand(intakeIndex::setCubeMode));
+    
     
   }
 

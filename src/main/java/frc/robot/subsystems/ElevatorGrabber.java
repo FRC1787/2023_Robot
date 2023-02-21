@@ -23,8 +23,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
   private SparkMaxAbsoluteEncoder encoder;
   private DoubleSolenoid solenoid;
-
-  private DigitalInput upperLimitSwitch;
+  
   private DigitalInput lowerLimitSwitch;
 
   private PIDController velocityController;
@@ -48,7 +47,6 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.inPneumaticChannel,
         Constants.ElevatorGrabber.outPneumaticChannel);
 
-    upperLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.upperLimitSwitchID);
     lowerLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.lowerLimitSwitchID);
 
     velocityController = new PIDController(
@@ -56,16 +54,20 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.kI,
         Constants.ElevatorGrabber.kD);
 
-    feedforward = new SimpleMotorFeedforward(Constants.ElevatorGrabber.kS, Constants.ElevatorGrabber.kV);
-  }
+    feedforward = new SimpleMotorFeedforward(
+      Constants.ElevatorGrabber.kSVolts,
+      Constants.ElevatorGrabber.kVVoltSecondsPerMeter);
 
-
-  private boolean atUpperLimit() {
-    return upperLimitSwitch.get();
+    elevatorMotor.setSmartCurrentLimit(60);
   }
 
   private boolean atLowerLimit() {
     return lowerLimitSwitch.get();
+  }
+
+  private boolean atUpperLimit() {
+    //returns true if elevator position is greater than max elevator height (1.72 meters)
+    return getElevatorPositionMeters() >= 1.7272;
   }
 
   public void setElevatorMotorVolts(double volts) {
@@ -84,10 +86,10 @@ public class ElevatorGrabber extends SubsystemBase {
 
     double totalOutput = pidOutput + feedforwardOutput;
 
-    if(atLowerLimit() && totalOutput < 0)
+    if (atLowerLimit() && totalOutput < 0)
       totalOutput = 0;
-      
-    if(atUpperLimit() && totalOutput > 0)
+
+    if (atUpperLimit() && totalOutput > 0)
       totalOutput = 0;
 
     setElevatorMotorVolts(totalOutput);

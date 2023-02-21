@@ -20,7 +20,7 @@ import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
 
-  private final static AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+  private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
   public SwerveDriveOdometry swerveOdometry;
   public SwerveModule[] mSwerveMods;
 
@@ -66,14 +66,14 @@ public class Drivetrain extends SubsystemBase {
    * robot is currently facing to the
    * 'forwards' direction.
    */
-  public static void zeroGyroscope() {
+  public void zeroGyroscope() {
     gyro.zeroYaw();
   }
 
   /**
    * Gets the angle measured by the gyroscope (continuous).
    */
-  public static Rotation2d getGyroscopeRotation() {
+  public Rotation2d getGyroscopeRotation() {
     // We have to invert the angle of the NavX so that rotating the robot
     // counter-clockwise makes the angle increase.
     // return Rotation2d.fromDegrees(-gyro.getAngle());
@@ -195,23 +195,23 @@ public class Drivetrain extends SubsystemBase {
    * @param deadzone Lowest value before input is set to 0
    * @return Axis input checked against deadzone value
    */
-  public static double deadzone(double num, double deadzone) {
+  public double deadzone(double num, double deadzone) {
     return Math.abs(num) > deadzone ? num : 0;
   }
 
   /**
-   * Adds a deadzone to axis input and squares the input
+   * Adds a deadzone to axis input and squares the input.
+   * 
+   * This function should always return a value between -1 and 1.
    * 
    * @param value Axis input
    * @return Squared and deadzoned input
    */
-  public static double modifyAxis(double value) {
+  public double modifyAxis(double value) {
     value = deadzone(value, Constants.Controller.controllerDeadzone);
 
-    // Square the axis
-    // value = Math.copySign(Math.pow(value, 4), value);
-    // value = (value * .50) + Math.pow(value * .50 , 3);
-    return Math.signum(value) * Math.pow(value, 2);
+    //adjust this power value for diffferences in how the robot handles (recommended between 1.5 and 3)
+    return Math.signum(value) * Math.pow(Math.abs(value), 2.3);
   }
 
   // DRIVE COMMANDS

@@ -5,43 +5,87 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.IndexerState;
+import frc.robot.Constants.IntakeIndexer.IndexerState;
 
 public class IntakeIndex extends SubsystemBase {
 
-  private final DoubleSolenoid intakeSolenoid = new DoubleSolenoid(
-    // REVPH declares we are using REV's Pneumatic Hub.
-    PneumaticsModuleType.REVPH,
-    // The two channels are the Pneumatic Hub ports the solenoid is wired to.
-    Constants.IntakeIndexer.intakeOutPneumaticsChannel,
-    Constants.IntakeIndexer.intakeInPneumaticsChannel
-  );
+  private final DoubleSolenoid intakeSolenoid;
+  private final DoubleSolenoid indexerSolenoid;
 
-  private CANSparkMax intakeMotor = new CANSparkMax(
-    // CAN ID of the Spark MAX
-    Constants.IntakeIndexer.intakeMotorID, 
-    MotorType.kBrushless
-  );
+  private CANSparkMax intakeMotor;
+  private CANSparkMax conveyorMotor;
+  private CANSparkMax clawMotor;
+  private CANSparkMax leftIndexerMotor;
+  private CANSparkMax rightIndexerMotor;
 
-  private CANSparkMax conveyorMotor = new CANSparkMax(
-    Constants.IntakeIndexer.conveyorMotorID,
-    MotorType.kBrushless
-  );
+  private DigitalInput clawLimitSwitch;
+  private RelativeEncoder clawMotorEncoder;
 
   private IndexerState indexerState;
 
   /** Creates a new IntakeIndex. */
   public IntakeIndex() {
+
+    intakeSolenoid = new DoubleSolenoid(
+      PneumaticsModuleType.REVPH,
+      Constants.IntakeIndexer.intakeOutPneumaticsChannel,
+      Constants.IntakeIndexer.intakeInPneumaticsChannel
+    );
+
+    indexerSolenoid = new DoubleSolenoid(
+      PneumaticsModuleType.REVPH,
+      Constants.IntakeIndexer.indexerOutPneumaticsChannel,
+      Constants.IntakeIndexer.indexerInPneumaticsChannel
+    );
+
+    intakeMotor = new CANSparkMax(
+      // CAN ID of the Spark MAX
+      Constants.IntakeIndexer.intakeMotorID, 
+      MotorType.kBrushless
+    );
+    conveyorMotor = new CANSparkMax(
+      Constants.IntakeIndexer.conveyorMotorID,
+      MotorType.kBrushless
+    );
+
+    clawMotor = new CANSparkMax(
+      Constants.IntakeIndexer.clawMotorID,
+      MotorType.kBrushless
+    );
+
+    leftIndexerMotor = new CANSparkMax(
+      Constants.IntakeIndexer.leftIndexerMotorID,
+      MotorType.kBrushless
+    );
+    rightIndexerMotor = new CANSparkMax(
+      Constants.IntakeIndexer.rightIndexerMotorID,
+      MotorType.kBrushless
+    );
+
+    clawLimitSwitch = new DigitalInput(Constants.IntakeIndexer.clawLimitSwitchID);
+
+    clawMotorEncoder = clawMotor.getEncoder();
+    clawMotorEncoder.setPositionConversionFactor(0);
+  
+
+    indexerState = IndexerState.cone;
+
     intakeMotor.setSmartCurrentLimit(60);
     conveyorMotor.setSmartCurrentLimit(60);
+
+    setRampRate(1.0);
   }
+
+  /* INTAKE/CONVEYOR STUFF */////////////////////////////
 
   /**
   * Extends the intake solenoid.
@@ -50,7 +94,7 @@ public class IntakeIndex extends SubsystemBase {
     intakeSolenoid.set(Value.kForward);
   }
 
-  /*
+  /**
    * Retracts the intake solenoid.
    */
   public void retractIntake() {
@@ -89,9 +133,9 @@ public class IntakeIndex extends SubsystemBase {
   }
 
   /** Stops all motors in this subsystem */
-  public void stopAllMotors() {
-    this.setIntakeMotorPercentage(0);
-    this.setConveyorMotorPercentage(0);
+  public void stopIntakeMotors() {
+    setIntakeMotorPercentage(0);
+    setConveyorMotorPercentage(0);
   }
 
   /**
@@ -103,6 +147,31 @@ public class IntakeIndex extends SubsystemBase {
   public void setRampRate(double rate) {
     intakeMotor.setOpenLoopRampRate(rate);
     conveyorMotor.setOpenLoopRampRate(rate);
+  }
+
+  /* INDEXER STUFF *//////////////////////////
+
+  /**
+   * Sets the percentage of max voltage for the claw motor.
+   * @param percentage Between -1.0 and 1.0, with positive being the claw moving towards the front of the robot.
+   */
+  public void setClawMotorPercentage(double percentage) {
+    clawMotor.set(percentage);
+  }
+
+  private boolean getClawLimitSwitch() {
+    return clawLimitSwitch.get();
+  }
+
+  private void zeroClawEncoder() {
+    clawMotorEncoder.setPosition(0);
+  }
+
+  /**
+   * Gets the position of the motor in rotations of the motor.
+   */
+  public double getClawMotorRotations() {
+    return clawMotorEncoder.getPosition();
   }
 
   public void setCubeMode() {
@@ -117,6 +186,10 @@ public class IntakeIndex extends SubsystemBase {
     return indexerState;
   }
 
+
   @Override
-  public void periodic() {}
+  public void periodic() {
+    if (getClawLimitSwitch())
+      zeroClawEncoder();
+  }
 }
