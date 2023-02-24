@@ -202,12 +202,6 @@ public final class Constants {
     public static int leftIndexerMotorID;
     public static int rightIndexerMotorID;
 
-    public static double intakeMotorPercentage;
-    public static double conveyorMotorPercentage;
-    public static double indexerLeftMotorPercentage;
-    public static double indexerRightMotorPercentage;
-
-
     public static enum IndexerState {
       cone, cube
     }
@@ -231,14 +225,16 @@ public final class Constants {
     public static double kD = 0;
 
     public static double kSVolts = 0.00;
-    public static double kVVoltSecondsPerMeter = 0; //represents voltage given to motor per m/s of velocity of elevator carriage movement
+    public static double kVVoltSecondsPerMeter = 0; //represents voltage given to motor per m/s of desired elevator carriage velocity
 
-    public static double elevatorMaxVelMetersPerSecond = 5;
+    public static double elevatorMaxVelMetersPerSecond = 4;
     public static double elevatorMaxAccelMetersPerSecondSquared = 2;
 
     public static double chainMetersPerRotation = 1.78*Math.PI;
     public static double grabberMetersPerChain = 2;
     public static double grabberMetersPerRotation = chainMetersPerRotation*grabberMetersPerChain;
+
+
   }
 
   public static class LED {

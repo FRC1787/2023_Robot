@@ -5,23 +5,28 @@
 package frc.robot.commands.intakeIndex;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeIndex;
+import frc.robot.subsystems.Intake;
 
 public class IntakeGamePieces extends CommandBase {
-  private IntakeIndex intakeIndex;
+  private Intake intakeIndex;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
 
-  public IntakeGamePieces(IntakeIndex intakeIndex, double intakeMotorVoltage, double conveyorMotorVoltage) {
+  public IntakeGamePieces(Intake intakeIndex, double intakeMotorVoltage, double conveyorMotorVoltage) {
     addRequirements(intakeIndex);
     this.intakeIndex = intakeIndex;
     this.intakeMotorVoltage = Math.abs(intakeMotorVoltage);
     this.conveyorMotorVoltage = Math.abs(conveyorMotorVoltage);
+
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+
+
     intakeIndex.extendIntake();
     intakeIndex.setIntakeMotorVolts(intakeMotorVoltage);
     intakeIndex.setConveyorMotorVolts(conveyorMotorVoltage);

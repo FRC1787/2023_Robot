@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.intakeIndex.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.IntakeIndex;
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -28,7 +28,7 @@ public class RobotContainer {
 
   // SUBSYSTEMS 
   public final Drivetrain drivetrain = new Drivetrain();
-  private final IntakeIndex intakeIndex = new IntakeIndex();
+  private final Intake intakeIndex = new Intake();
 
   //BUTTONS
   private static final Trigger robotOrientedButton = controller.rightBumper();
@@ -50,13 +50,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    controller.rightTrigger().whileTrue(
-      new IntakeGamePieces(
-        intakeIndex,
-        Constants.IntakeIndexer.intakeMotorPercentage,
-        Constants.IntakeIndexer.conveyorMotorPercentage
-      )
-    );
     
     robotOrientedButton.whileTrue(new JoystickDrive(drivetrain, false));
     robotOrientedButton.whileFalse(new JoystickDrive(drivetrain, true));

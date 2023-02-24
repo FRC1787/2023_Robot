@@ -6,7 +6,6 @@ package frc.robot.commands.intakeIndex;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
 
 public class MoveClawForward extends CommandBase {
   /**
