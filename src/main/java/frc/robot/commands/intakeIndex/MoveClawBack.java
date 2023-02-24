@@ -4,6 +4,7 @@
 
 package frc.robot.commands.intakeIndex;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
 
@@ -18,11 +19,17 @@ public class MoveClawBack extends CommandBase {
   public MoveClawBack(Indexer indexer, double clawMotorVoltage) {
     this.indexer = indexer;
     this.clawMotorVoltage = Math.abs(clawMotorVoltage);
+
+    
+    SmartDashboard.putNumber("indexer claw back voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    clawMotorVoltage = SmartDashboard.getNumber("indexer claw back voltage", 0.0);
+
     indexer.setClawMotorVolts(clawMotorVoltage);
   }
 

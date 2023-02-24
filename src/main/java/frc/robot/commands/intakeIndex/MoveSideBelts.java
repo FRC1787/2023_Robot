@@ -8,30 +8,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
 
-public class MoveClawForward extends CommandBase {
-  /**
-   * Moves claw towards back of robot.
-   * @param percentage - percentage/speed of claw motor, the sign does not matter.
-   */
-  private Indexer indexer;
-  private double clawMotorVoltage;
+public class MoveSideBelts extends CommandBase {
+  
 
-  public MoveClawForward(Indexer indexer, double clawMotorVoltage) {
+  Indexer indexer;
+  double indexerSideBeltsMotorVoltage;
+
+  /**
+   * Moves side belts at a given voltage.
+   * @param indexer - indexer subsystem object
+   * @param indexerSideBeltsMotorVoltage - a positive value will move the belts towards the front of the robot.
+   */
+  public MoveSideBelts(Indexer indexer, double indexerSideBeltsMotorVoltage) {
+    addRequirements(indexer);
+
     this.indexer = indexer;
-    this.clawMotorVoltage = Math.abs(clawMotorVoltage);
+    this.indexerSideBeltsMotorVoltage = indexerSideBeltsMotorVoltage;
+
     
-    SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
+    SmartDashboard.putNumber("indexer side belt volts", 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
 
-    clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
+    indexerSideBeltsMotorVoltage = SmartDashboard.getNumber("indexer side belt volts", 0.0);
 
-    indexer.setClawMotorVolts(-clawMotorVoltage);
-
+    indexer.setIndexerMotors(indexerSideBeltsMotorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,12 +45,12 @@ public class MoveClawForward extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.setClawMotorVolts(0.0);
+    indexer.setIndexerMotors(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return indexer.isClawForward();
+    return false;
   }
 }

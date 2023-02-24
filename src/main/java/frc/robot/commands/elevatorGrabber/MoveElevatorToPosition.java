@@ -17,6 +17,11 @@ public class MoveElevatorToPosition extends CommandBase {
     TrapezoidProfile profile;
     Timer timer;
 
+    /**
+     * 
+     * @param elevatorGrabber
+     * @param targetPositionMeters
+     */
     public MoveElevatorToPosition(ElevatorGrabber elevatorGrabber, double targetPositionMeters) {
         addRequirements(elevatorGrabber);
         this.elevatorGrabber = elevatorGrabber;
@@ -49,7 +54,9 @@ public class MoveElevatorToPosition extends CommandBase {
     @Override
     public void execute() {
         elevatorGrabber.setElevatorMotorMetersPerSecond(
-            profile.calculate(timer.get()).velocity);
+            profile.calculate(timer.get()).velocity
+            + 
+            );
     }
 
     // Called once the command ends or is interrupted.

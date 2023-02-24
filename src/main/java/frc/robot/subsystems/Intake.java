@@ -104,7 +104,7 @@ public class Intake extends SubsystemBase {
 
   /**
    * Sets the voltage of the conveyor motor.
-   * @param voltage - Make this positive if you are trying to intake something.
+   * @param voltage - A positive value moves an object on the conveyor towards the back of the robot.
    */
   public void setConveyorMotorVolts(double voltage) {
     conveyorMotor.set(voltage);

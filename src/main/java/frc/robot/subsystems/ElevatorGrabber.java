@@ -102,6 +102,11 @@ public class ElevatorGrabber extends SubsystemBase {
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
+  /**
+   * Sets voltage of the grab motor.
+   * @param voltage - make this positive to intake a cone/outtake a cube,
+   * while negative to outtake a cone/intake a cube 
+   */
   public void setGrabMotorVolts(double voltage) {
     grabberMotor.setVoltage(voltage);
   }

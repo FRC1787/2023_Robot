@@ -4,6 +4,7 @@
 
 package frc.robot.commands.intakeIndex;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
@@ -18,12 +19,20 @@ public class IntakeGamePieces extends CommandBase {
     this.intakeMotorVoltage = Math.abs(intakeMotorVoltage);
     this.conveyorMotorVoltage = Math.abs(conveyorMotorVoltage);
 
+    SmartDashboard.putNumber("intake motor voltage", 0.0);
+    SmartDashboard.putNumber("conveyor motor voltage", 0.0);
+
+
     
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    
+    intakeMotorVoltage = SmartDashboard.getNumber("intake motor voltage", 0.0);
+    conveyorMotorVoltage = SmartDashboard.getNumber("conveyor motor voltage", 0.0);
 
 
 

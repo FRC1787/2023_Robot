@@ -220,9 +220,9 @@ public final class Constants {
 
     public static int lowerLimitSwitchID = 99;
 
-    public static double kP = 0;
-    public static double kI = 0;
-    public static double kD = 0;
+    public static double kPVoltsPerMeterPerSecond = 0;
+    public static double kIVoltsPerMeter = 0;
+    public static double kDVoltsPerMeterPerSecondSquared = 0;
 
     public static double kSVolts = 0.00;
     public static double kVVoltSecondsPerMeter = 0; //represents voltage given to motor per m/s of desired elevator carriage velocity

@@ -6,32 +6,34 @@ package frc.robot.commands.intakeIndex;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 
-public class MoveClawForward extends CommandBase {
+public class MoveConveyor extends CommandBase {
+
+  Intake intake;
+  double conveyorVoltage;
+
   /**
-   * Moves claw towards back of robot.
-   * @param percentage - percentage/speed of claw motor, the sign does not matter.
+   * Moves the conveyor at a given voltage
+   * @param intake - intake subsystem object
+   * @param conveyorVoltage - make this positive to move an object on the conveyor towards the back of the robot
    */
-  private Indexer indexer;
-  private double clawMotorVoltage;
+  public MoveConveyor(Intake intake, double conveyorVoltage) {
+    addRequirements(intake);
 
-  public MoveClawForward(Indexer indexer, double clawMotorVoltage) {
-    this.indexer = indexer;
-    this.clawMotorVoltage = Math.abs(clawMotorVoltage);
-    
-    SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
+    this.intake = intake;
+    this.conveyorVoltage = conveyorVoltage;
+
+    SmartDashboard.putNumber("move conveyor motor voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
 
-    clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
+    conveyorVoltage = SmartDashboard.getNumber("move conveyor motor voltage", 0.0);
 
-    indexer.setClawMotorVolts(-clawMotorVoltage);
-
+    intake.setConveyorMotorVolts(conveyorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,12 +43,12 @@ public class MoveClawForward extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.setClawMotorVolts(0.0);
+    intake.setConveyorMotorVolts(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return indexer.isClawForward();
+    return false;
   }
 }

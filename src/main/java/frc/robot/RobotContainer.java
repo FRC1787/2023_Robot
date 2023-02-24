@@ -53,8 +53,6 @@ public class RobotContainer {
     
     robotOrientedButton.whileTrue(new JoystickDrive(drivetrain, false));
     robotOrientedButton.whileFalse(new JoystickDrive(drivetrain, true));
-
-  
   }
 
   /**
