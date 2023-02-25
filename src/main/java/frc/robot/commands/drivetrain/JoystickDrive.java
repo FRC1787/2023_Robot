@@ -24,38 +24,63 @@ public class JoystickDrive extends CommandBase {
     this.drivetrain=drivetrain;
     this.fieldOriented=fieldOriented;
   }
+  
+  /**
+   * Returns 0 if the parameter {@code num} is lower than {@code deadzone} to
+   * prevent joystick drift.
+   * 
+   * @param num      Axis input value
+   * @param deadzone Lowest value before input is set to 0
+   * @return Axis input checked against deadzone value
+   */
+  private double deadzone(double num, double deadzone) {
+    return Math.abs(num) > deadzone ? num : 0;
+  }
+
+  /**
+   * Adds a deadzone to axis input and squares the input.
+   * 
+   * This function should always return a value between -1 and 1.
+   * 
+   * @param value Axis input
+   * @return Squared and deadzoned input
+   */
+  private double modifyAxis(double value) {
+    value = deadzone(value, Constants.Controller.controllerDeadzone);
+
+    //adjust this power value for diffferences in how the robot handles (recommended between 1.5 and 3)
+    return Math.signum(value) * Math.pow(Math.abs(value), 2.3);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    double controllerX = drivetrain.modifyAxis(-RobotContainer.controller.getLeftX());
-    double controllerY = drivetrain.modifyAxis(-RobotContainer.controller.getLeftY());
-    double controllerR = drivetrain.modifyAxis(-RobotContainer.controller.getRightX());
+    double controllerX = modifyAxis(-RobotContainer.controller.getLeftX());
+    double controllerY = modifyAxis(-RobotContainer.controller.getLeftY());
+    double controllerR = modifyAxis(-RobotContainer.controller.getRightX());
 
     //raw controller values after modifyAxis will be between -1 and 1
     //coefficient = maximum speed in meters or radians per second
 
     ChassisSpeeds outputChassisSpeeds = new ChassisSpeeds(
-      controllerY*Constants.Swerve.maxVelocityMetersPerSecond,
-      controllerX*Constants.Swerve.maxVelocityMetersPerSecond,
-      controllerR*Constants.Swerve.maxAngularVelocityRadiansPerSecond
+      controllerY*Constants.Swerve.maxDesiredTeleopVelocityMetersPerSecond,
+      controllerX*Constants.Swerve.maxDesiredTeleopVelocityMetersPerSecond,
+      controllerR*Constants.Swerve.maxDesiredAngularVelocityRadiansPerSecond
     );
 
     if (fieldOriented) {
       outputChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         outputChassisSpeeds,
-        drivetrain.getGyroscopeRotation());
+        drivetrain.getRobotRotation2d());
     }
 
-    drivetrain.drive(
-      outputChassisSpeeds
-    );
+    drivetrain.drive(outputChassisSpeeds, true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.drive(new ChassisSpeeds(0, 0, 0));
+    drivetrain.drive(new ChassisSpeeds(0, 0, 0), true);
   }
 }

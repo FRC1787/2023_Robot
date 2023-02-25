@@ -14,7 +14,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 
@@ -28,23 +27,25 @@ public class SwerveModule {
   private RelativeEncoder mDriveEncoder;
 
   //limits acceleration of drive motor in meters/seconds^2
-  private SlewRateLimiter driveMotorSlew = new SlewRateLimiter(16.);
+  private SlewRateLimiter driveMotorSlew;
 
-  public static PIDController mDrivePID =
-    new PIDController(
-      Constants.Swerve.drivekP, Constants.Swerve.drivekI, Constants.Swerve.drivekD);
-  public static PIDController mAnglePID =
-    new PIDController(
-      Constants.Swerve.anglekP, Constants.Swerve.anglekI, Constants.Swerve.anglekD);
-
-  SimpleMotorFeedforward mDriveFeedforward =
-    new SimpleMotorFeedforward(
-      Constants.Swerve.drivekS, Constants.Swerve.drivekV, Constants.Swerve.drivekA);
-  
+  public static PIDController mDrivePID;
+  public static PIDController mAnglePID;
+  SimpleMotorFeedforward mDriveFeedforward;
 
   public SwerveModule(int moduleNumber, int driveMotorID, int angleMotorID, int cancoderID, double angleOffset) {
     
+    driveMotorSlew = new SlewRateLimiter(16.);
+
+    mDrivePID = new PIDController(
+      Constants.Swerve.drivekP, Constants.Swerve.drivekI, Constants.Swerve.drivekD);
+
+    mAnglePID = new PIDController(
+      Constants.Swerve.anglekP, Constants.Swerve.anglekI, Constants.Swerve.anglekD);
     
+    mDriveFeedforward = new SimpleMotorFeedforward(
+      Constants.Swerve.drivekS, Constants.Swerve.drivekV, Constants.Swerve.drivekA);
+
     this.moduleNumber = moduleNumber;
     this.angleOffset = angleOffset;
 
@@ -62,10 +63,6 @@ public class SwerveModule {
     configDriveMotor();
 
     lastAngle = absoluteEncoder.getAbsolutePosition();
-    SmartDashboard.putNumber("angleP", mAnglePID.getP());
-    SmartDashboard.putNumber("lookAheadSeconds", 0.02);
-
-    //mAnglePID.enableContinuousInput(-180, 180);
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
@@ -85,9 +82,8 @@ public class SwerveModule {
     }
 
     else {
-      double percentOutput =
-        driveMotorSlew.calculate(desiredState.speedMetersPerSecond) / Constants.Swerve.maxVelocityMetersPerSecond;
-      mDriveMotor.set(percentOutput);
+
+      mDriveMotor.setVoltage(mDriveFeedforward.calculate(desiredState.speedMetersPerSecond));
     }
     
 
@@ -95,7 +91,7 @@ public class SwerveModule {
     
     //this is here so the wheel does not reset angle every time velocity is 0
     double targetWheelAngle =
-      (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxVelocityMetersPerSecond * 0.01))
+      (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxAchievableVelocityMetersPerSecond * 0.01))
         ? lastAngle
         : desiredState.angle.getDegrees();
 
@@ -112,12 +108,6 @@ public class SwerveModule {
     mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngle, targetWheelAngle));
 
     lastAngle = targetWheelAngle;
-  }
-
-  public void resetAngleMotors() {
-    double currentEncoderAngle = absoluteEncoder.getAbsolutePosition();
-
-    mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngle, 0));
   }
 
   public SwerveModuleState getState() {

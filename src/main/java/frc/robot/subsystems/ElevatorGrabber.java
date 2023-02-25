@@ -49,9 +49,9 @@ public class ElevatorGrabber extends SubsystemBase {
     lowerLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.lowerLimitSwitchID);
 
     velocityController = new PIDController(
-        Constants.ElevatorGrabber.kP,
-        Constants.ElevatorGrabber.kI,
-        Constants.ElevatorGrabber.kD);
+        Constants.ElevatorGrabber.kPVoltsPerMeterPerSecond,
+        Constants.ElevatorGrabber.kIVoltsPerMeter,
+        Constants.ElevatorGrabber.kDVoltsPerMeterPerSecondSquared);
 
     feedforward = new SimpleMotorFeedforward(
       Constants.ElevatorGrabber.kSVolts,
@@ -81,7 +81,7 @@ public class ElevatorGrabber extends SubsystemBase {
     double currentMetersPerSecond = getElevatorVelocityMetersPerSecond();
 
     double pidOutput = velocityController.calculate(currentMetersPerSecond, targetMetersPerSecond);
-    double feedforwardOutput = feedforward.calculate(currentMetersPerSecond);
+    double feedforwardOutput = feedforward.calculate(targetMetersPerSecond);
 
     double totalOutput = pidOutput + feedforwardOutput;
 

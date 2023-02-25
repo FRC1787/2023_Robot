@@ -34,12 +34,15 @@ public class RotateToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.rotateAtSpeed(
-      MathUtil.clamp(
-        angleController.calculate(drivetrain.getGyroscopeRotation().getDegrees() % 360),
-        -270,
-        270
-      )
+    drivetrain.drive(
+      new ChassisSpeeds(
+        0, 0, MathUtil.clamp(
+          angleController.calculate(drivetrain.getRobotRotation2d().getDegrees() % 360),
+          -270,
+          270
+        )
+      ),
+      true
     );
   }
 
@@ -47,7 +50,8 @@ public class RotateToAngle extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drivetrain.drive(
-      new ChassisSpeeds(0, 0, 0)
+      new ChassisSpeeds(0, 0, 0),
+      true
     );
   }
 

@@ -20,14 +20,18 @@ import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
 
-  private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-  public SwerveDriveOdometry swerveOdometry;
-  public SwerveModule[] mSwerveMods;
+  private final AHRS gyro; // NavX connected over MXP
+  private SwerveDriveOdometry swerveOdometry;
+  private SwerveModule[] mSwerveMods;
 
-  public Field2d field;
+  private Field2d field;
+
+  private ChassisSpeeds desiredChassisSpeeds;
 
   public Drivetrain() {
-    field = new Field2d();
+    
+
+    gyro = new AHRS(SPI.Port.kMXP);
 
     mSwerveMods = new SwerveModule[] {
         new SwerveModule(
@@ -56,7 +60,8 @@ public class Drivetrain extends SubsystemBase {
             Constants.Swerve.BackRightSwerveModule.steerOffset)
     };
 
-    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroscopeRotation(), getPositions());
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
+    field = new Field2d();
   }
 
   // GYROSCOPE
@@ -66,88 +71,101 @@ public class Drivetrain extends SubsystemBase {
    * robot is currently facing to the
    * 'forwards' direction.
    */
-  public void zeroGyroscope() {
-    gyro.zeroYaw();
+  public void zeroYaw() {
+    gyro.zeroYaw(); //this is the exact same thing as saying gyro.reset();
   }
 
   /**
-   * Gets the angle measured by the gyroscope (continuous).
+   * Gets the angle of the robot measured by the gyroscope as a Rotation2d (continuous).
+   * @return rotation2d - this angle will be counterclockwise positive.
    */
-  public Rotation2d getGyroscopeRotation() {
-    // We have to invert the angle of the NavX so that rotating the robot
-    // counter-clockwise makes the angle increase.
-    // return Rotation2d.fromDegrees(-gyro.getAngle());
+  public Rotation2d getRobotRotation2d() {
     return gyro.getRotation2d();
   }
 
   /**
-   * Returns the current yaw value (in degrees, from -180 to 180) reported by the NavX IMU.
-   * Yaw is a measure of rotation about the Z Axis (which is perpendicular to the earth).
-   * @return The current yaw value in degrees (-180 to 180).
+   * Returns the current pitch value (in degrees, from -180 to 180) of the robot, based off of the NavX.
+   * Pitch is a measure of angle between the robot-oriented X-axis and the horizontal.
+   * @return The current pitch value in degrees (-180 to 180). This value will be positive if the front of the robot is raised.
    */
-  public double getYaw() {
-    return gyro.getYaw();
+  public double getRobotPitchDegrees() {
+    return 0.0; //TODO: unclear which axes of the gyro corresponds to the axes of the robot, do a test to verify after gyro omnimount
   }
 
   /**
-   * Returns the current pitch value (in degrees, from -180 to 180) reported by the NavX IMU.
-   * Pitch is a measure of rotation about the X Axis.
-   * @return The current pitch value in degrees (-180 to 180).
+   * Returns the current roll value (in degrees, from -180 to 180) of the robot, based off of the NavX.
+   * Roll is a measure of angle between the robot-oriented Y-axis and the horizontal.
+   * @return The current roll value in degrees (-180 to 180). This value will be positive if the left of the robot (positive Y) is raised.
    */
-  public double getPitch() {
-    return gyro.getPitch();
+  public double getRobotRollDegrees() {
+    return 0.0; //TODO: see above
   }
 
-  /**
-   * Returns the current roll value (in degrees, from -180 to 180) reported by the NavX IMU.
-   * Roll is a measure of rotation about the Y Axis.
-   * @return The current roll value in degrees (-180 to 180).
-   */
-  public double getRoll() {
-    return gyro.getRoll();
+  public double getRobotPitchDegreesPerSecond() {
+    return 0.0;
+  }
+  
+  public double getRobotRollDegreesPerSecond() {
+    return 0.0;
   }
 
   // POSE, FIELD, ODOMETRY
 
   /**
    * Gets the current position of the robot on the field in meters.
+   * This value considers the origin to be the right side of the robot's current alliance.
+   * <p>
+   * A positive X value brings the robot towards the opposing alliance,
+   * and a positive Y value brings the robot left as viewed by your alliance.
    * @return The current position of the robot on the field in meters.
    */
-  public Pose2d getPose() {
+  public Pose2d getPoseMeters() {
     return swerveOdometry.getPoseMeters();
   }
 
   /**
    * Sets the current position of the robot on the field in meters.
+   * <p>
+   * A positive X value brings the robot towards the opposing alliance,
+   * and a positive Y value brings the robot left as viewed by your alliance.
    * @param pose
    */
-  public void setOdometry(Pose2d pose) {
+  public void setPoseMeters(Pose2d pose) {
     swerveOdometry.resetPosition(
-      getGyroscopeRotation(),
-      getPositions(),
+      getRobotRotation2d(),
+      getModulePositions(),
       pose
     );
   }
 
   public void updateOdometry() {
-    swerveOdometry.update(getGyroscopeRotation(), getPositions());
+    swerveOdometry.update(getRobotRotation2d(), getModulePositions());
     field.setRobotPose(swerveOdometry.getPoseMeters());
   }
 
   // SWERVE MODULES
 
-  public void drive(ChassisSpeeds chassisSpeeds) {
+  /**
+   * Drives the robot based on a desired ChassisSpeeds.
+   * <p>
+   * Takes in a robot relative ChassisSpeeds. Field relative control can be accomplished by using the ChassisSpeeds.fromFieldRelative() method.
+   * @param desiredChassisSpeeds - Robot relative ChassisSpeeds object in meters per second and radians per second.
+   */
+  public void drive(ChassisSpeeds desiredChassisSpeeds, boolean closedLoop) {
 
-    SmartDashboard.putNumber("ChassisSpeedsX", chassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("ChassisSpeedsY", chassisSpeeds.vyMetersPerSecond);
-    SmartDashboard.putNumber("ChassisSpeedsRotation", chassisSpeeds.omegaRadiansPerSecond);
+    this.desiredChassisSpeeds = desiredChassisSpeeds;
 
-    SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds);
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxVelocityMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxAchievableVelocityMetersPerSecond);
 
-    setModuleStatesClosedLoop(swerveModuleStates);
+    if (closedLoop)
+      setModuleStatesClosedLoop(swerveModuleStates);
+
+    else
+      setModuleStatesOpenLoop(swerveModuleStates);
   }
+
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
@@ -156,19 +174,14 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  //useful for debugging
   public void setModuleStatesOpenLoop(SwerveModuleState[] desiredStates) {
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], false);
     }
   }
 
-  public void setAngleToZero() {
-    for (SwerveModule mod : mSwerveMods) {
-      mod.resetAngleMotors();
-    }
-  }
-
-  public SwerveModuleState[] getStates() {
+  public SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
 
     for (SwerveModule mod : mSwerveMods) {
@@ -177,59 +190,32 @@ public class Drivetrain extends SubsystemBase {
     return states;
   }
 
-  public SwerveModulePosition[] getPositions() {
+  //required by odometry
+  public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
+
     for (SwerveModule mod : mSwerveMods) {
       positions[mod.moduleNumber] = mod.getPosition();
     }
     return positions;
   }
 
-  // CONTROL
-
-  /**
-   * Returns 0 if the parameter {@code num} is lower than {@code deadzone} to
-   * prevent joystick drift
-   * 
-   * @param num      Axis input value
-   * @param deadzone Lowest value before input is set to 0
-   * @return Axis input checked against deadzone value
-   */
-  public double deadzone(double num, double deadzone) {
-    return Math.abs(num) > deadzone ? num : 0;
-  }
-
-  /**
-   * Adds a deadzone to axis input and squares the input.
-   * 
-   * This function should always return a value between -1 and 1.
-   * 
-   * @param value Axis input
-   * @return Squared and deadzoned input
-   */
-  public double modifyAxis(double value) {
-    value = deadzone(value, Constants.Controller.controllerDeadzone);
-
-    //adjust this power value for diffferences in how the robot handles (recommended between 1.5 and 3)
-    return Math.signum(value) * Math.pow(Math.abs(value), 2.3);
-  }
-
-  // DRIVE COMMANDS
-  public void rotateAtSpeed(double speedDegreesPerSecond) {
-    drive(
-        new ChassisSpeeds(
-            0, 0, Math.toRadians(speedDegreesPerSecond)));
-  }
-
   @Override
   public void periodic() {
     updateOdometry();
-    SmartDashboard.putNumber("pose x", swerveOdometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("pose y", swerveOdometry.getPoseMeters().getY());
-    SmartDashboard.putNumber("pose rotation", swerveOdometry.getPoseMeters().getRotation().getDegrees());
-    updateOdometry();
-    SmartDashboard.putNumber("yaw", getYaw());
-    SmartDashboard.putNumber("pitch", getPitch());
-    SmartDashboard.putNumber("roll", getRoll());
+
+    SmartDashboard.putNumber("pose x meters", swerveOdometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("pose y meters", swerveOdometry.getPoseMeters().getY());
+    SmartDashboard.putNumber("pose rotation degrees", swerveOdometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putNumber("gyro yaw degrees", getRobotRotation2d().getDegrees());
+    SmartDashboard.putNumber("pitch degrees", getRobotPitchDegrees());
+    SmartDashboard.putNumber("roll degrees", getRobotRollDegrees());
+    SmartDashboard.putNumber("pitch degrees per second", getRobotPitchDegreesPerSecond());
+    SmartDashboard.putNumber("roll degrees per second", getRobotRollDegreesPerSecond());
+    SmartDashboard.putData("field", field);
+
+    SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
+    SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
   }
 }

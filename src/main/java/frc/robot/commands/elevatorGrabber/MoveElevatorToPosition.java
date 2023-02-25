@@ -55,7 +55,6 @@ public class MoveElevatorToPosition extends CommandBase {
     public void execute() {
         elevatorGrabber.setElevatorMotorMetersPerSecond(
             profile.calculate(timer.get()).velocity
-            + 
             );
     }
 

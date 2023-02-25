@@ -63,22 +63,40 @@ public final class Constants {
     public static final double drivekA = 0.14785;
 
     /**
-     * The maximum velocity of the robot in meters per second.
+     * The maximum possible velocity of the robot in meters per second.
      * <p>
      * This is a measure of how fast the robot will be able to drive in a straight
-     * line.
+     * line, based off of the empirical free speed of the drive NEOs.
      */
-    public static final double maxVelocityMetersPerSecond = 5880.0 / 60.0 *
+    public static final double maxAchievableVelocityMetersPerSecond = 5880.0 / 60.0 *
         driveReduction *
         wheelDiamater * Math.PI;
 
     /**
-     * The maximum angular velocity of the robot in radians per second.
+     * This is the max desired speed that will be achievable in teleop.
      * <p>
-     * This is a measure of how fast the robot can rotate in place.
+     * If the controller joystick is maxed in one direction, it will drive at this speed.
+     * <p>
+     * This value will be less than or equal to the maxAchievableVelocityMetersPerSecond, depending on driver preference.
      */
-    public static final double maxAngularVelocityRadiansPerSecond = maxVelocityMetersPerSecond /
+    public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.0;
+
+    /**
+     * The maximum achievable angular velocity of the robot in radians per second.
+     * <p>
+     * This is a measure of how fast the robot can rotate in place, based off of maxAchievableVelocityMetersPerSecond.
+     */
+    public static final double maxAchievableAngularVelocityRadiansPerSecond = maxAchievableVelocityMetersPerSecond /
         Math.hypot(Constants.Swerve.trackwidthMeters / 2.0, Constants.Swerve.wheelbaseMeters / 2.0);
+
+    /**
+     * This is the max desired angular velocity that will be achievable in teleop.
+     * <p>
+     * If the controller rotation joystick is maxed in one direction, it will rotate at this speed.
+     * <p>
+     * This value will be tuned based off of driver preference.
+     */
+    public static final double maxDesiredAngularVelocityRadiansPerSecond = 6.0;
 
     public static final int angleContinuousCurrentLimit = 0;
     public static final boolean angleInvert = true;
