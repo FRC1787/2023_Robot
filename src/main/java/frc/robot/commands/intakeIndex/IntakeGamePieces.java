@@ -21,20 +21,13 @@ public class IntakeGamePieces extends CommandBase {
 
     SmartDashboard.putNumber("intake motor voltage", 0.0);
     SmartDashboard.putNumber("conveyor motor voltage", 0.0);
-
-
-    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    
     intakeMotorVoltage = SmartDashboard.getNumber("intake motor voltage", 0.0);
     conveyorMotorVoltage = SmartDashboard.getNumber("conveyor motor voltage", 0.0);
-
-
 
     intakeIndex.extendIntake();
     intakeIndex.setIntakeMotorVolts(intakeMotorVoltage);

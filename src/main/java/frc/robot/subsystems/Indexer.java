@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeIndexer.IndexerState;
 
-
-
 public class Indexer extends SubsystemBase {
 
   private final DoubleSolenoid indexerSolenoid;
@@ -99,6 +97,7 @@ public class Indexer extends SubsystemBase {
    * Returns true if the claw is as far forward in the robot as possible.
    */
   public boolean isClawForward() {
+    // TODO: probably fix this value 
     return clawMotorEncoder.getPosition() > 15;
   }
 
@@ -114,10 +113,16 @@ public class Indexer extends SubsystemBase {
     return indexerState;
   }
 
+  /**
+   * Makes the indexer walls parallel
+   */
   public void extendIndexerSolenoid() {
     indexerSolenoid.set(Value.kForward);
   }
 
+  /**
+   * Makes the indexer walls angle inwards
+   */
   public void retractIndexerSolenoid() {
     indexerSolenoid.set(Value.kReverse);
   }
@@ -130,7 +135,6 @@ public class Indexer extends SubsystemBase {
     leftIndexerMotor.set(voltage);
     rightIndexerMotor.set(voltage);
   }
-
 
   @Override
   public void periodic() {

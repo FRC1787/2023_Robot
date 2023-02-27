@@ -25,7 +25,7 @@ public final class Constants {
   }
 
   public static final class Swerve {
-    //28-(2.625*2)
+    // KINEMATICS CONSTANTS
     /**
      * distance between the center point of the left wheels and the center point of
      * the right wheels
@@ -38,9 +38,9 @@ public final class Constants {
     public static final double wheelbaseMeters = Units.inchesToMeters(22.75);
     public static final double driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
     public static final double steerReduction = (14.0 / 50.0) * (10.0 / 60.0);
-    /** Diameter of the wheels in meters. */ // 0.10033
-    public static final double wheelDiamater = Units.inchesToMeters(4.0);
-    public static final double wheelCircumference = wheelDiamater * Math.PI;
+
+    public static final double wheelDiamaterMeters = Units.inchesToMeters(4.0);
+    public static final double wheelCircumferenceMeters = wheelDiamaterMeters * Math.PI;
 
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
         new Translation2d(wheelbaseMeters / 2.0, trackwidthMeters / 2.0),
@@ -48,19 +48,21 @@ public final class Constants {
         new Translation2d(-wheelbaseMeters / 2.0, trackwidthMeters / 2.0),
         new Translation2d(-wheelbaseMeters / 2.0, -trackwidthMeters / 2.0));
 
+
+    // PID + FEEDFORWARD CONSTANTS FOR MOTORS
     // pid for drive motor
-    public static final double drivekP = 0.8;
-    public static final double drivekI = 0.;
-    public static final double drivekD = 0.01;
+    public static final double drivekPVoltsPerMeterPerSecond = 0.8;
+    public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
+    public static final double drivekDVoltsPerMeter = 0.01;
 
     // pid for angle motor
-    public static final double anglekP = 0.065;
-    public static final double anglekI = 0.;
-    public static final double anglekD = 0.;
+    public static final double anglekPVoltsPerDegree = 0.065;
+    public static final double anglekIVolts = 0.; // this might be the wrong unit idk 
+    public static final double anglekDVoltsPerDegreePerSecond = 0.;
 
-    public static final double drivekS = 0.12584;
-    public static final double drivekV = 2.6; // .8679
-    public static final double drivekA = 0.14785;
+    public static final double drivekSVolts = 0.12584;
+    public static final double drivekVVoltsSecondsPerMeter = 2.6; // .8679
+    public static final double drivekAVoltsSecondsSquaredPerMeter = 0.14785;
 
     /**
      * The maximum possible velocity of the robot in meters per second.
@@ -70,7 +72,7 @@ public final class Constants {
      */
     public static final double maxAchievableVelocityMetersPerSecond = 5880.0 / 60.0 *
         driveReduction *
-        wheelDiamater * Math.PI;
+        wheelDiamaterMeters * Math.PI;
 
     /**
      * This is the max desired speed that will be achievable in teleop.
@@ -223,7 +225,6 @@ public final class Constants {
     public static enum IndexerState {
       cone, cube
     }
-
   }
 
   public static class ElevatorGrabber {
@@ -251,8 +252,6 @@ public final class Constants {
     public static double chainMetersPerRotation = 1.78*Math.PI;
     public static double grabberMetersPerChain = 2;
     public static double grabberMetersPerRotation = chainMetersPerRotation*grabberMetersPerChain;
-
-
   }
 
   public static class LED {
@@ -303,6 +302,4 @@ public final class Constants {
     /** Horizontal distance from limelight to front bumper. */
     public static final double limelightBumperDistanceMeters = 0.0;
   }
-
-
 }

@@ -48,6 +48,7 @@ public class SetGrabberMotor extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // return elevatorGrabber.getGrabOutputAmps() > some value
     return false;
   }
 }

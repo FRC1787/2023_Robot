@@ -4,14 +4,20 @@
 
 package frc.robot;
 
+import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
-import frc.robot.commands.intakeIndex.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Vision;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,17 +33,24 @@ public class RobotContainer {
   public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
 
   // SUBSYSTEMS 
-  public final Drivetrain drivetrain = new Drivetrain();
-  private final Intake intakeIndex = new Intake();
+  private final Drivetrain drivetrain = new Drivetrain();
+  private final Intake intake = new Intake();
+  private final Indexer indexer = new Indexer();
+  private final Vision vision = new Vision();
+  private final LED led = new LED();
 
-  //BUTTONS
-  private static final Trigger robotOrientedButton = controller.rightBumper();
-  private static final Trigger isInConeMode = buttonBoard.button(0);
+  // AUTO
+  private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    autoChooser.setDefaultOption("Full Path", "FullPath");
+    autoChooser.addOption("Curve 180", "curve180");
+
+    SmartDashboard.putData(autoChooser);
   }
 
   /**
@@ -51,8 +64,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     
-    robotOrientedButton.whileTrue(new JoystickDrive(drivetrain, false));
-    robotOrientedButton.whileFalse(new JoystickDrive(drivetrain, true));
+    // toggles robot oriented with right bumper
+    controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
+    controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
+
+
+    buttonBoard.button(0).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
+    buttonBoard.button(0).onFalse(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setCubeMode)));
   }
 
   /**
@@ -61,7 +79,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision);
   }
 }

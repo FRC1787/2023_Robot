@@ -20,7 +20,7 @@ import frc.robot.Constants;
 public class SwerveModule {
   public int moduleNumber;
   private double angleOffset;
-  private double lastAngle;
+  private double lastAngleDegrees;
   private CANCoder absoluteEncoder;
   private CANSparkMax mAngleMotor;
   private CANSparkMax mDriveMotor;
@@ -34,17 +34,20 @@ public class SwerveModule {
   SimpleMotorFeedforward mDriveFeedforward;
 
   public SwerveModule(int moduleNumber, int driveMotorID, int angleMotorID, int cancoderID, double angleOffset) {
-    
     driveMotorSlew = new SlewRateLimiter(16.);
 
     mDrivePID = new PIDController(
-      Constants.Swerve.drivekP, Constants.Swerve.drivekI, Constants.Swerve.drivekD);
+      Constants.Swerve.drivekPVoltsPerMeterPerSecond, 
+      Constants.Swerve.drivekIVoltsPerMeterPerSecondSquared, 
+      Constants.Swerve.drivekDVoltsPerMeter);
 
     mAnglePID = new PIDController(
-      Constants.Swerve.anglekP, Constants.Swerve.anglekI, Constants.Swerve.anglekD);
+      Constants.Swerve.anglekPVoltsPerDegree, Constants.Swerve.anglekIVolts, Constants.Swerve.anglekDVoltsPerDegreePerSecond);
     
     mDriveFeedforward = new SimpleMotorFeedforward(
-      Constants.Swerve.drivekS, Constants.Swerve.drivekV, Constants.Swerve.drivekA);
+      Constants.Swerve.drivekSVolts, 
+      Constants.Swerve.drivekVVoltsSecondsPerMeter, 
+      Constants.Swerve.drivekAVoltsSecondsSquaredPerMeter);
 
     this.moduleNumber = moduleNumber;
     this.angleOffset = angleOffset;
@@ -62,7 +65,7 @@ public class SwerveModule {
     mDriveEncoder = mDriveMotor.getEncoder();
     configDriveMotor();
 
-    lastAngle = absoluteEncoder.getAbsolutePosition();
+    lastAngleDegrees = absoluteEncoder.getAbsolutePosition();
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
@@ -80,45 +83,40 @@ public class SwerveModule {
 
       mDriveMotor.setVoltage(feedforward + pidCorrection);
     }
-
     else {
-
       mDriveMotor.setVoltage(mDriveFeedforward.calculate(desiredState.speedMetersPerSecond));
     }
     
-
-
-    
     //this is here so the wheel does not reset angle every time velocity is 0
-    double targetWheelAngle =
+    double targetWheelAngleDegrees =
       (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxAchievableVelocityMetersPerSecond * 0.01))
-        ? lastAngle
+        ? lastAngleDegrees
         : desiredState.angle.getDegrees();
 
-    double currentEncoderAngle = absoluteEncoder.getAbsolutePosition();
+    double currentEncoderAngleDegrees = absoluteEncoder.getAbsolutePosition();
 
     //ensures no 360 degree rotations (i.e. getting from -179 to 179)
-    if (targetWheelAngle - currentEncoderAngle > 180) {
-      targetWheelAngle -= 360;
+    if (targetWheelAngleDegrees - currentEncoderAngleDegrees > 180) {
+      targetWheelAngleDegrees -= 360;
     }
-    else if (targetWheelAngle - currentEncoderAngle < -180) {
-      targetWheelAngle += 360;
+    else if (targetWheelAngleDegrees - currentEncoderAngleDegrees < -180) {
+      targetWheelAngleDegrees += 360;
     }
 
-    mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngle, targetWheelAngle));
+    mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngleDegrees, targetWheelAngleDegrees));
 
-    lastAngle = targetWheelAngle;
+    lastAngleDegrees = targetWheelAngleDegrees;
   }
 
   public SwerveModuleState getState() {
     //conversion factor is already set below to convert rpm of motor to m/s of wheel
-    double velocity = mDriveEncoder.getVelocity();
+    double velocityMetersPerSecond = mDriveEncoder.getVelocity();
     
     Rotation2d angle =
         Rotation2d.fromDegrees(
           absoluteEncoder.getAbsolutePosition());
             
-    return new SwerveModuleState(velocity, angle);
+    return new SwerveModuleState(velocityMetersPerSecond, angle);
   }
 
   public SwerveModulePosition getPosition() {
@@ -143,7 +141,6 @@ public class SwerveModule {
     mAngleMotor.setInverted(Constants.Swerve.angleInvert);
     mAngleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
     mAngleMotor.burnFlash();
-    
   }
 
   private void configDriveMotor() {
@@ -157,13 +154,13 @@ public class SwerveModule {
     //converts rotations of motor to meters traveled of wheel
     mDriveEncoder.setPositionConversionFactor(
       Constants.Swerve.driveReduction
-      * Constants.Swerve.wheelCircumference
+      * Constants.Swerve.wheelCircumferenceMeters
     );
 
     //converts rpm of motor to m/s of wheel
     mDriveEncoder.setVelocityConversionFactor(
       1./60. * Constants.Swerve.driveReduction
-      * Constants.Swerve.wheelCircumference
+      * Constants.Swerve.wheelCircumferenceMeters
     );
 
     mDriveMotor.burnFlash();

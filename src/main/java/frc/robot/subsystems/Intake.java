@@ -19,24 +19,21 @@ public class Intake extends SubsystemBase {
 
   private CANSparkMax intakeMotor;
   private CANSparkMax conveyorMotor;
-
   
   /** Creates a new IntakeIndex. */
   public Intake() {
-
     intakeSolenoid = new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
       Constants.IntakeIndexer.intakeOutPneumaticsChannel,
       Constants.IntakeIndexer.intakeInPneumaticsChannel
     );
 
-
-
     intakeMotor = new CANSparkMax(
       // CAN ID of the Spark MAX
       Constants.IntakeIndexer.intakeMotorID, 
       MotorType.kBrushless
     );
+
     conveyorMotor = new CANSparkMax(
       Constants.IntakeIndexer.conveyorMotorID,
       MotorType.kBrushless
@@ -48,7 +45,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setMotorInversions() {
-    
+    // TODO: Set motor inversions?
   }
 
   private void setMotorCurrentLimits() {
@@ -115,12 +112,6 @@ public class Intake extends SubsystemBase {
     setIntakeMotorVolts(0);
     setConveyorMotorVolts(0);
   }
-
-
-
-  /* INDEXER STUFF *//////////////////////////
-
-  
 
   @Override
   public void periodic() {

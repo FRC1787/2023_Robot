@@ -77,6 +77,10 @@ public class ElevatorGrabber extends SubsystemBase {
     return encoder.getVelocity();
   }
 
+  /**
+   * Sets velocity of the elevator
+   * @param targetMetersPerSecond - Make this positive if you want to extend the elevator up.
+   */
   public void setElevatorMotorMetersPerSecond(double targetMetersPerSecond) {
     double currentMetersPerSecond = getElevatorVelocityMetersPerSecond();
 
@@ -117,6 +121,10 @@ public class ElevatorGrabber extends SubsystemBase {
 
   public void zeroEncoder() {
     encoder.setPosition(0);
+  }
+
+  public double getGrabOutputAmps() {
+    return grabberMotor.getOutputCurrent();
   }
 
   @Override

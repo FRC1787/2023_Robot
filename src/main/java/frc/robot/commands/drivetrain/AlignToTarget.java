@@ -17,8 +17,10 @@ public class AlignToTarget extends CommandBase {
   Drivetrain drivetrain;
   Vision vision;
   Constants.Vision.LimelightTarget target;
+
+  // TODO: tune these pid controllers and maybe change the clamp values
   PIDController lateralPID = new PIDController(3, 0, 0);
-  PIDController distancePID = new PIDController(-3, 0, 0);
+  PIDController distancePID = new PIDController(3, 0, 0);
 
   public AlignToTarget(Drivetrain drivetrain, Vision vision, Constants.Vision.LimelightTarget target) {
     addRequirements(drivetrain);
@@ -54,7 +56,7 @@ public class AlignToTarget extends CommandBase {
     if (distanceOffsetMeters == 0.0)
       distanceVel = 0;
     else {
-      distanceVel = MathUtil.clamp(
+      distanceVel = -1. * MathUtil.clamp(
         distancePID.calculate(distanceOffsetMeters),
         -1,
         1
@@ -62,7 +64,8 @@ public class AlignToTarget extends CommandBase {
     }
     
     drivetrain.drive(
-      new ChassisSpeeds(distanceVel, lateralVel, 0)
+      new ChassisSpeeds(distanceVel, lateralVel, 0),
+      true
     );
   }
 
@@ -70,7 +73,8 @@ public class AlignToTarget extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drivetrain.drive(
-      new ChassisSpeeds(0, 0, 0)
+      new ChassisSpeeds(0, 0, 0),
+      true
     );
   }
 
