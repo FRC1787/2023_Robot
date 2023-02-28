@@ -113,12 +113,12 @@ public final class Constants {
      * All values are relative to the front left corner configuration.
      */
     public static final class CANCoderOffsets {
-      public static final double one = 99.74;
-      public static final double two = 287.23;
-      public static final double three = 211.99;
+      public static final double one = 0;
+      public static final double two = 0;
+      public static final double three = 0;
       public static final double four = 0.00;// 254.17969796160835;
-      public static final double five = 107.00;// 297.68554453125;
-      public static final double six = 354.73;// 84.73;
+      public static final double five = 0;// 297.68554453125;
+      public static final double six = 0;// 84.73;
       public static final double seven = 0.00;
       public static final double eight = 0.00;
       public static final double nine = 0.00;
@@ -164,7 +164,7 @@ public final class Constants {
       public static final int steerEncoderID = 5;
       /** Offset from true zero for the front left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
-          CANCoderOffsets.five, SwerveModuleCorners.FRONT_LEFT);// 107;
+          CANCoderOffsets.one, SwerveModuleCorners.FRONT_LEFT);// 107;
     }
 
     public static final class FrontRightSwerveModule {
@@ -176,7 +176,7 @@ public final class Constants {
       public static final int steerEncoderID = 3;
       /** Offset from true zero for the front right swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
-          CANCoderOffsets.three,
+          CANCoderOffsets.two,
           SwerveModuleCorners.FRONT_RIGHT);// 121.99;
     }
 
@@ -189,7 +189,7 @@ public final class Constants {
       public static final int steerEncoderID = 6;
       /** Offset from true zero for the back left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
-          CANCoderOffsets.six,
+          CANCoderOffsets.three,
           SwerveModuleCorners.BACK_RIGHT);// -185.27;
     }
 
@@ -202,7 +202,7 @@ public final class Constants {
       public static final int steerEncoderID = 1;
       /** Offset from true zero for the back right swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
-          CANCoderOffsets.one,
+          CANCoderOffsets.four,
           SwerveModuleCorners.BACK_RIGHT);// 279.73;
     }
   }

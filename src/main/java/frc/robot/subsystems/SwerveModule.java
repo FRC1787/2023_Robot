@@ -10,7 +10,6 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -20,22 +19,16 @@ import frc.robot.Constants;
 public class SwerveModule {
   public int moduleNumber;
   private double angleOffset;
-  private double lastAngleDegrees;
   private CANCoder absoluteEncoder;
   private CANSparkMax mAngleMotor;
   private CANSparkMax mDriveMotor;
   private RelativeEncoder mDriveEncoder;
-
-  //limits acceleration of drive motor in meters/seconds^2
-  private SlewRateLimiter driveMotorSlew;
 
   public static PIDController mDrivePID;
   public static PIDController mAnglePID;
   SimpleMotorFeedforward mDriveFeedforward;
 
   public SwerveModule(int moduleNumber, int driveMotorID, int angleMotorID, int cancoderID, double angleOffset) {
-    driveMotorSlew = new SlewRateLimiter(16.);
-
     mDrivePID = new PIDController(
       Constants.Swerve.drivekPVoltsPerMeterPerSecond, 
       Constants.Swerve.drivekIVoltsPerMeterPerSecondSquared, 
@@ -65,7 +58,7 @@ public class SwerveModule {
     mDriveEncoder = mDriveMotor.getEncoder();
     configDriveMotor();
 
-    lastAngleDegrees = absoluteEncoder.getAbsolutePosition();
+    mAnglePID.enableContinuousInput(-180, 180);
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
@@ -74,38 +67,22 @@ public class SwerveModule {
     if (closedLoop) {
       //conversion factor is already set below to convert rpm of motor to m/s of wheel
       double wheelMetersPerSecond = mDriveEncoder.getVelocity();
-      double desiredStateSpeedMetersPerSecond = driveMotorSlew.calculate(desiredState.speedMetersPerSecond);
 
-      double feedforward = mDriveFeedforward.calculate(desiredStateSpeedMetersPerSecond);
-      double pidCorrection = MathUtil.clamp(
-        mDrivePID.calculate(wheelMetersPerSecond, desiredStateSpeedMetersPerSecond),
-        -6, 6);
+      double feedforward = mDriveFeedforward.calculate(desiredState.speedMetersPerSecond);
+      double pidCorrection = mDrivePID.calculate(wheelMetersPerSecond, desiredState.speedMetersPerSecond);
+      double outputVolts = MathUtil.clamp(feedforward + pidCorrection, -6, 6);
 
-      mDriveMotor.setVoltage(feedforward + pidCorrection);
+      mDriveMotor.setVoltage(outputVolts);
     }
     else {
       mDriveMotor.setVoltage(mDriveFeedforward.calculate(desiredState.speedMetersPerSecond));
     }
     
-    //this is here so the wheel does not reset angle every time velocity is 0
-    double targetWheelAngleDegrees =
-      (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxAchievableVelocityMetersPerSecond * 0.01))
-        ? lastAngleDegrees
-        : desiredState.angle.getDegrees();
-
+    //if angle motors are messed up then check commit from 2/28 for changes
+    double targetWheelAngleDegrees = desiredState.angle.getDegrees();
     double currentEncoderAngleDegrees = absoluteEncoder.getAbsolutePosition();
 
-    //ensures no 360 degree rotations (i.e. getting from -179 to 179)
-    if (targetWheelAngleDegrees - currentEncoderAngleDegrees > 180) {
-      targetWheelAngleDegrees -= 360;
-    }
-    else if (targetWheelAngleDegrees - currentEncoderAngleDegrees < -180) {
-      targetWheelAngleDegrees += 360;
-    }
-
     mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngleDegrees, targetWheelAngleDegrees));
-
-    lastAngleDegrees = targetWheelAngleDegrees;
   }
 
   public SwerveModuleState getState() {
