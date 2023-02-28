@@ -157,9 +157,9 @@ public final class Constants {
 
     public static final class FrontLeftSwerveModule {
       /** CAN ID for the SPARK MAX used to control the front left driving NEO */
-      public static final int driveMotorID = 2;
+      public static final int driveMotorID = 1;
       /** CAN ID for the SPARK MAX used to control the front left steering NEO */
-      public static final int steerMotorID = 1;
+      public static final int steerMotorID = 2;
       /** CAN ID for the front left CANcoder */
       public static final int steerEncoderID = 5;
       /** Offset from true zero for the front left swerve module in degrees */
@@ -169,9 +169,9 @@ public final class Constants {
 
     public static final class FrontRightSwerveModule {
       /** CAN ID for the SPARK MAX used to control the front right driving NEO */
-      public static final int driveMotorID = 4;
+      public static final int driveMotorID = 3;
       /** CAN ID for the SPARK MAX used to control the front right steering NEO */
-      public static final int steerMotorID = 3;
+      public static final int steerMotorID = 4;
       /** CAN ID for the front right CANcoder */
       public static final int steerEncoderID = 3;
       /** Offset from true zero for the front right swerve module in degrees */
@@ -182,9 +182,9 @@ public final class Constants {
 
     public static final class BackLeftSwerveModule {
       /** CAN ID for the SPARK MAX used to control the back left driving NEO */
-      public static final int driveMotorID = 8;
+      public static final int driveMotorID = 5;
       /** CAN ID for the SPARK MAX used to control the back left steering NEO */
-      public static final int steerMotorID = 7;
+      public static final int steerMotorID = 6;
       /** CAN ID for the back left CANcoder */
       public static final int steerEncoderID = 6;
       /** Offset from true zero for the back left swerve module in degrees */
@@ -195,9 +195,9 @@ public final class Constants {
 
     public static final class BackRightSwerveModule {
       /** CAN ID for the SPARK MAX used to control the back right driving NEO */
-      public static final int driveMotorID = 6;
+      public static final int driveMotorID = 7;
       /** CAN ID for the SPARK MAX used to control the back right steering NEO */
-      public static final int steerMotorID = 5;
+      public static final int steerMotorID = 8;
       /** CAN ID for the back right CANcoder */
       public static final int steerEncoderID = 1;
       /** Offset from true zero for the back right swerve module in degrees */
@@ -216,11 +216,11 @@ public final class Constants {
 
     public static int clawLimitSwitchID;
 
-    public static int intakeMotorID ;
-    public static int conveyorMotorID;
+    public static int intakeMotorID = 14;
+    public static int conveyorMotorID = 9;
     public static int clawMotorID;
-    public static int leftIndexerMotorID;
-    public static int rightIndexerMotorID;
+    public static int leftIndexerMotorID = 11;
+    public static int rightIndexerMotorID = 12;
 
     public static enum IndexerState {
       cone, cube
