@@ -161,7 +161,7 @@ public final class Constants {
       /** CAN ID for the SPARK MAX used to control the front left steering NEO */
       public static final int steerMotorID = 2;
       /** CAN ID for the front left CANcoder */
-      public static final int steerEncoderID = 5;
+      public static final int steerEncoderID = 1;
       /** Offset from true zero for the front left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.one, SwerveModuleCorners.FRONT_LEFT);// 107;
@@ -173,7 +173,7 @@ public final class Constants {
       /** CAN ID for the SPARK MAX used to control the front right steering NEO */
       public static final int steerMotorID = 4;
       /** CAN ID for the front right CANcoder */
-      public static final int steerEncoderID = 3;
+      public static final int steerEncoderID = 2;
       /** Offset from true zero for the front right swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.two,
@@ -186,7 +186,7 @@ public final class Constants {
       /** CAN ID for the SPARK MAX used to control the back left steering NEO */
       public static final int steerMotorID = 6;
       /** CAN ID for the back left CANcoder */
-      public static final int steerEncoderID = 6;
+      public static final int steerEncoderID = 3;
       /** Offset from true zero for the back left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.three,
@@ -199,7 +199,7 @@ public final class Constants {
       /** CAN ID for the SPARK MAX used to control the back right steering NEO */
       public static final int steerMotorID = 8;
       /** CAN ID for the back right CANcoder */
-      public static final int steerEncoderID = 1;
+      public static final int steerEncoderID = 4;
       /** Offset from true zero for the back right swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.four,
