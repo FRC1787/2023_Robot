@@ -113,10 +113,10 @@ public final class Constants {
      * All values are relative to the front left corner configuration.
      */
     public static final class CANCoderOffsets {
-      public static final double one = 0;
-      public static final double two = 0;
-      public static final double three = 0;
-      public static final double four = 0.00;// 254.17969796160835;
+      public static final double one = 61.523;
+      public static final double two = 314.209;
+      public static final double three = 176.045;
+      public static final double four = 63.193;// 254.17969796160835;
       public static final double five = 0;// 297.68554453125;
       public static final double six = 0;// 84.73;
       public static final double seven = 0.00;
