@@ -216,9 +216,9 @@ public final class Constants {
 
     public static int clawLimitSwitchID;
 
-    public static int intakeMotorID = 14;
+    public static int intakeMotorID = 10;
     public static int conveyorMotorID = 9;
-    public static int clawMotorID;
+    public static int clawMotorID = 15;
     public static int leftIndexerMotorID = 11;
     public static int rightIndexerMotorID = 12;
 
@@ -228,13 +228,12 @@ public final class Constants {
   }
 
   public static class ElevatorGrabber {
-    public static int elevatorMotorID = 99;
-    public static int grabberMotorID = 99;
+    public static int elevatorMotorID = 13;
+    public static int grabberMotorID = 14;
 
     public static int outPneumaticChannel = 99;
     public static int inPneumaticChannel = 99;
 
-    public static int boreEncoderID = 99;
     public static int distancePerRotation = 99;
 
     public static int lowerLimitSwitchID = 99;

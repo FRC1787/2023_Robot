@@ -58,6 +58,17 @@ public class ElevatorGrabber extends SubsystemBase {
       Constants.ElevatorGrabber.kVVoltSecondsPerMeter);
 
     elevatorMotor.setSmartCurrentLimit(60);
+    setMotorCurrentLimits();
+    setMotorInversions();
+  }
+
+  private void setMotorInversions() {
+    //TODO: set motor inversions
+  }
+
+  private void setMotorCurrentLimits() {
+    //TODO: fix amp limit
+    elevatorMotor.setSmartCurrentLimit(0);
   }
 
   private boolean atLowerLimit() {
