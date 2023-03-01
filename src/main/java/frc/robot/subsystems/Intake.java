@@ -24,8 +24,8 @@ public class Intake extends SubsystemBase {
   public Intake() {
     intakeSolenoid = new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
-      Constants.IntakeIndexer.intakeOutPneumaticsChannel,
-      Constants.IntakeIndexer.intakeInPneumaticsChannel
+      Constants.IntakeIndexer.intakeExtendPneumaticsChannel,
+      Constants.IntakeIndexer.intakeRetractPneumaticsChannel
     );
 
     intakeMotor = new CANSparkMax(

@@ -43,8 +43,8 @@ public class ElevatorGrabber extends SubsystemBase {
 
     solenoid = new DoubleSolenoid(
         PneumaticsModuleType.CTREPCM,
-        Constants.ElevatorGrabber.inPneumaticChannel,
-        Constants.ElevatorGrabber.outPneumaticChannel);
+        Constants.ElevatorGrabber.elevatorRetractPneumaticChannel,
+        Constants.ElevatorGrabber.elevatorExtendPneumaticChannel);
 
     lowerLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.lowerLimitSwitchID);
 

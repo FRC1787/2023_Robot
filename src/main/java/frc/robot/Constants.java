@@ -208,11 +208,12 @@ public final class Constants {
   }
 
   public static class IntakeIndexer {
-    public static int intakeOutPneumaticsChannel = 0;
-    public static int intakeInPneumaticsChannel = 1;
+    // for the intake, not for the actual pneumatics
+    public static int intakeExtendPneumaticsChannel = 5;
+    public static int intakeRetractPneumaticsChannel = 4;
 
-    public static int indexerOutPneumaticsChannel = 0;
-    public static int indexerInPneumaticsChannel = 1;
+    public static int indexerRetractPneumaticsChannel = 1;
+    public static int indexerExtendPneumaticsChannel = 0;
 
     public static int clawLimitSwitchID;
 
@@ -231,8 +232,8 @@ public final class Constants {
     public static int elevatorMotorID = 13;
     public static int grabberMotorID = 14;
 
-    public static int outPneumaticChannel = 99;
-    public static int inPneumaticChannel = 99;
+    public static int elevatorExtendPneumaticChannel = 3;
+    public static int elevatorRetractPneumaticChannel = 2;
 
     public static int distancePerRotation = 99;
 

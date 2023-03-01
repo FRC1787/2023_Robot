@@ -32,8 +32,8 @@ public class Indexer extends SubsystemBase {
   public Indexer() {
     indexerSolenoid = new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
-      Constants.IntakeIndexer.indexerOutPneumaticsChannel,
-      Constants.IntakeIndexer.indexerInPneumaticsChannel
+      Constants.IntakeIndexer.indexerRetractPneumaticsChannel,
+      Constants.IntakeIndexer.indexerExtendPneumaticsChannel
     );
     
     clawMotor = new CANSparkMax(
