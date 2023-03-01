@@ -30,6 +30,7 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     gyro = new AHRS(SPI.Port.kMXP);
+    desiredChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
     mSwerveMods = new SwerveModule[] {
         new SwerveModule(

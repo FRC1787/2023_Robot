@@ -69,8 +69,8 @@ public class RobotContainer {
     controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
 
-    buttonBoard.button(0).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
-    buttonBoard.button(0).onFalse(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setCubeMode)));
+    //buttonBoard.button(0).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
+    //buttonBoard.button(0).onFalse(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setCubeMode)));
   }
 
   /**
