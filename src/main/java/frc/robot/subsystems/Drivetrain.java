@@ -216,5 +216,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
+
+    SmartDashboard.putNumber("back left module speed", mSwerveMods[2].getState().speedMetersPerSecond);
+    
   }
 }

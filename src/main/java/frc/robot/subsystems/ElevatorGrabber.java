@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -37,9 +38,11 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.grabberMotorID,
         MotorType.kBrushless);
 
-    encoder = elevatorMotor.getAlternateEncoder(4096);
+    configureMotors();
+
+    encoder = elevatorMotor.getAlternateEncoder(8192);
     encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
-    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
+    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM);
 
     solenoid = new DoubleSolenoid(
         PneumaticsModuleType.CTREPCM,
@@ -57,19 +60,19 @@ public class ElevatorGrabber extends SubsystemBase {
       Constants.ElevatorGrabber.kSVolts,
       Constants.ElevatorGrabber.kVVoltSecondsPerMeter);
 
-    elevatorMotor.setSmartCurrentLimit(60);
-    setMotorCurrentLimits();
-    setMotorInversions();
+    
   }
 
-  private void setMotorInversions() {
-    //TODO: set motor inversions
+  private void configureMotors() {
+    //TODO: inversions and amp limits
+    elevatorMotor.restoreFactoryDefaults();
+    elevatorMotor.setSmartCurrentLimit(50);
+    elevatorMotor.setInverted(true);
+
+    grabberMotor.restoreFactoryDefaults();
+
   }
 
-  private void setMotorCurrentLimits() {
-    //TODO: fix amp limit
-    elevatorMotor.setSmartCurrentLimit(0);
-  }
 
   private boolean atLowerLimit() {
     return lowerLimitSwitch.get();
@@ -77,7 +80,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
   private boolean atUpperLimit() {
     //returns true if elevator position is greater than max elevator height (1.72 meters)
-    return getElevatorPositionMeters() >= 1.7272;
+    return getElevatorPositionMeters() >= 1.7;
   }
 
   public void setElevatorMotorVolts(double volts) {
@@ -143,5 +146,10 @@ public class ElevatorGrabber extends SubsystemBase {
     if (atLowerLimit()) {
       zeroEncoder();
     }
+
+    SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
+    SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
+    SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());
+    SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
   }
 }

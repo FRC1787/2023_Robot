@@ -30,7 +30,7 @@ public class MoveClawBack extends CommandBase {
 
     clawMotorVoltage = SmartDashboard.getNumber("indexer claw back voltage", 0.0);
 
-    indexer.setClawMotorVolts(clawMotorVoltage);
+    indexer.setClawMotorVolts(-clawMotorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

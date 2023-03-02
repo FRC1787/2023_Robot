@@ -6,7 +6,15 @@ package frc.robot;
 
 import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
+import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
+import frc.robot.commands.intakeIndex.IntakeGamePieces;
+import frc.robot.commands.intakeIndex.MoveClawBack;
+import frc.robot.commands.intakeIndex.MoveClawForward;
+import frc.robot.commands.intakeIndex.MoveConveyor;
+import frc.robot.commands.intakeIndex.MoveSideBelts;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,9 +42,10 @@ public class RobotContainer {
 
   // SUBSYSTEMS 
   private final Drivetrain drivetrain = new Drivetrain();
-  // private final Intake intake = new Intake();
+  private final Intake intake = new Intake();
   private final Indexer indexer = new Indexer();
   private final Vision vision = new Vision();
+  private final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
   private final LED led = new LED();
 
   // AUTO
@@ -65,8 +74,20 @@ public class RobotContainer {
   private void configureBindings() {
     
     // toggles robot oriented with right bumper
-    controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
-    controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
+    // controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
+    // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
+
+    drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, false));
+
+    controller.a().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 1.));
+    controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
+
+
+    controller.x().whileTrue(new MoveSideBelts(indexer, 0));
+    controller.y().whileTrue(new IntakeGamePieces(intake, 0, 0));
+
+    controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0));
+    controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0));
 
 
     //buttonBoard.button(0).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));

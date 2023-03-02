@@ -18,9 +18,9 @@ public class MoveElevatorToPosition extends CommandBase {
     Timer timer;
 
     /**
-     * 
-     * @param elevatorGrabber
-     * @param targetPositionMeters
+     * Moves the elevator to a position in meters. The lowest position is marked as zero, and a higher position position is positive.
+     * @param elevatorGrabber - elevatorGrabber subsystem object.
+     * @param targetPositionMeters - target position in meters, positive is elevator extended.
      */
     public MoveElevatorToPosition(ElevatorGrabber elevatorGrabber, double targetPositionMeters) {
         addRequirements(elevatorGrabber);

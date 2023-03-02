@@ -9,15 +9,21 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
 public class IntakeGamePieces extends CommandBase {
-  private Intake intakeIndex;
+  private Intake intake;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
 
-  public IntakeGamePieces(Intake intakeIndex, double intakeMotorVoltage, double conveyorMotorVoltage) {
-    addRequirements(intakeIndex);
-    this.intakeIndex = intakeIndex;
-    this.intakeMotorVoltage = Math.abs(intakeMotorVoltage);
-    this.conveyorMotorVoltage = Math.abs(conveyorMotorVoltage);
+  /**
+   * Extends the intake and intakes a game piece.
+   * @param intake - intake subsystem object
+   * @param intakeMotorVoltage - Voltage to send to the intake (upper) motor. Make this negative to intake a piece.
+   * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this negative to intake a piece.
+   */
+  public IntakeGamePieces(Intake intake, double intakeMotorVoltage, double conveyorMotorVoltage) {
+    addRequirements(intake);
+    this.intake = intake;
+    this.intakeMotorVoltage = intakeMotorVoltage;
+    this.conveyorMotorVoltage = conveyorMotorVoltage;
 
     SmartDashboard.putNumber("intake motor voltage", 0.0);
     SmartDashboard.putNumber("conveyor motor voltage", 0.0);
@@ -29,9 +35,9 @@ public class IntakeGamePieces extends CommandBase {
     intakeMotorVoltage = SmartDashboard.getNumber("intake motor voltage", 0.0);
     conveyorMotorVoltage = SmartDashboard.getNumber("conveyor motor voltage", 0.0);
 
-    intakeIndex.extendIntake();
-    intakeIndex.setIntakeMotorVolts(intakeMotorVoltage);
-    intakeIndex.setConveyorMotorVolts(conveyorMotorVoltage);
+    intake.extendIntake();
+    intake.setIntakeMotorVolts(intakeMotorVoltage);
+    intake.setConveyorMotorVolts(conveyorMotorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,8 +47,8 @@ public class IntakeGamePieces extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeIndex.stopIntakeMotors();
-    intakeIndex.retractIntake();
+    intake.stopIntakeMotors();
+    intake.retractIntake();
   }
 
   // Returns true when the command should end.

@@ -16,7 +16,7 @@ public class MoveConveyor extends CommandBase {
   /**
    * Moves the conveyor at a given voltage
    * @param intake - intake subsystem object
-   * @param conveyorVoltage - make this positive to move an object on the conveyor towards the back of the robot
+   * @param conveyorVoltage - make this positive to move an object on the conveyor towards the front of the robot
    */
   public MoveConveyor(Intake intake, double conveyorVoltage) {
     addRequirements(intake);

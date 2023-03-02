@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeIndexer.IndexerState;
@@ -50,6 +51,8 @@ public class Indexer extends SubsystemBase {
       MotorType.kBrushless
     );
 
+    configureMotors();
+
     clawLimitSwitch = new DigitalInput(Constants.IntakeIndexer.clawLimitSwitchID);
 
     clawMotorEncoder = clawMotor.getEncoder();
@@ -58,18 +61,18 @@ public class Indexer extends SubsystemBase {
 
     indexerState = IndexerState.cone;
 
-    setMotorInversions();
-    setMotorCurrentLimits();
 
   }
 
-  private void setMotorInversions() {
-    //TODO: set motor inversions
-  }
+  private void configureMotors() {
+    leftIndexerMotor.restoreFactoryDefaults();
+    leftIndexerMotor.setInverted(true);
+    
+    rightIndexerMotor.restoreFactoryDefaults();
+    rightIndexerMotor.setInverted(false);
 
-  private void setMotorCurrentLimits() {
-    clawMotor.setSmartCurrentLimit(30);
-    //TODO: fix amp limit
+    clawMotor.restoreFactoryDefaults();
+    clawMotor.setSmartCurrentLimit(20);
   }
 
 
@@ -98,7 +101,7 @@ public class Indexer extends SubsystemBase {
    */
   public boolean isClawForward() {
     // TODO: probably fix this value 
-    return clawMotorEncoder.getPosition() > 15;
+    return clawMotorEncoder.getPosition() > 24;
   }
 
   public void setCubeMode() {
@@ -140,5 +143,7 @@ public class Indexer extends SubsystemBase {
   public void periodic() {
     if (isClawBack())
       zeroClawEncoder();
+
+    SmartDashboard.putNumber("claw motor rotations", clawMotorEncoder.getPosition());
   }
 }

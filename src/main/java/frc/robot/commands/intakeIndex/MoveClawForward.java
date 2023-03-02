@@ -30,7 +30,7 @@ public class MoveClawForward extends CommandBase {
 
     clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
 
-    indexer.setClawMotorVolts(-clawMotorVoltage);
+    indexer.setClawMotorVolts(clawMotorVoltage);
 
   }
 

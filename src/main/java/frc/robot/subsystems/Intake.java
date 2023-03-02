@@ -39,30 +39,19 @@ public class Intake extends SubsystemBase {
       MotorType.kBrushless
     );
 
-    setMotorRampRates(1.0); //maybe delete??
-    setMotorInversions();
-    setMotorCurrentLimits();
+    configureMotors();
   }
 
-  private void setMotorInversions() {
-    // TODO: Set motor inversions?
+  private void configureMotors() {
+    //TODO: set inversions and limits and ramp rates??
+    conveyorMotor.restoreFactoryDefaults();
+    conveyorMotor.setInverted(true);
+
+    intakeMotor.restoreFactoryDefaults();
+    
+
   }
 
-  private void setMotorCurrentLimits() {
-    intakeMotor.setSmartCurrentLimit(60);
-    conveyorMotor.setSmartCurrentLimit(60);
-  }
-
-  /**
-   * Sets the open loop ramp rate for this subsystem's motors.
-   * <p>
-   * This is the maximum rate at which the motor controllers' outputs are allowed to change.
-   * @param rate Time in seconds to go from 0 to full throttle.
-   */
-  public void setMotorRampRates(double rate) {
-    intakeMotor.setOpenLoopRampRate(rate);
-    conveyorMotor.setOpenLoopRampRate(rate);
-  }
 
 
   /* INTAKE/CONVEYOR STUFF */////////////////////////////
@@ -101,7 +90,7 @@ public class Intake extends SubsystemBase {
 
   /**
    * Sets the voltage of the conveyor motor.
-   * @param voltage - A positive value moves an object on the conveyor towards the back of the robot.
+   * @param voltage - A positive value moves an object on the conveyor towards the front of the robot.
    */
   public void setConveyorMotorVolts(double voltage) {
     conveyorMotor.set(voltage);

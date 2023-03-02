@@ -35,7 +35,7 @@ public class SwerveModule {
       Constants.Swerve.drivekDVoltsPerMeter);
 
     mAnglePID = new PIDController(
-      Constants.Swerve.anglekPVoltsPerDegree, Constants.Swerve.anglekIVolts, Constants.Swerve.anglekDVoltsPerDegreePerSecond);
+      Constants.Swerve.anglekPVoltsPerDegree, Constants.Swerve.anglekIVoltsPerDegreeSeconds, Constants.Swerve.anglekDVoltsPerDegreePerSecond);
     
     mDriveFeedforward = new SimpleMotorFeedforward(
       Constants.Swerve.drivekSVolts, 

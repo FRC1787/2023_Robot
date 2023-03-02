@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -57,12 +58,13 @@ public final class Constants {
 
     // pid for angle motor
     public static final double anglekPVoltsPerDegree = 0.065;
-    public static final double anglekIVolts = 0.; // this might be the wrong unit idk 
+    public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk 
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
 
+    // TODO: fix characterization + pid values for driving
     public static final double drivekSVolts = 0.12584;
     public static final double drivekVVoltsSecondsPerMeter = 2.6; // .8679
-    public static final double drivekAVoltsSecondsSquaredPerMeter = 0.14785;
+    public static final double drivekAVoltsSecondsSquaredPerMeter = 0;
 
     /**
      * The maximum possible velocity of the robot in meters per second.
@@ -190,7 +192,7 @@ public final class Constants {
       /** Offset from true zero for the back left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.three,
-          SwerveModuleCorners.BACK_RIGHT);// -185.27;
+          SwerveModuleCorners.BACK_LEFT);// -185.27;
     }
 
     public static final class BackRightSwerveModule {
@@ -215,7 +217,7 @@ public final class Constants {
     public static int indexerRetractPneumaticsChannel = 1;
     public static int indexerExtendPneumaticsChannel = 0;
 
-    public static int clawLimitSwitchID;
+    public static int clawLimitSwitchID = 6;
 
     public static int intakeMotorID = 10;
     public static int conveyorMotorID = 9;
@@ -235,23 +237,22 @@ public final class Constants {
     public static int elevatorExtendPneumaticChannel = 3;
     public static int elevatorRetractPneumaticChannel = 2;
 
-    public static int distancePerRotation = 99;
+    public static int lowerLimitSwitchID = 2;
 
-    public static int lowerLimitSwitchID = 99;
-
-    public static double kPVoltsPerMeterPerSecond = 0;
+    public static double kPVoltsPerMeterPerSecond = 3.0;
     public static double kIVoltsPerMeter = 0;
     public static double kDVoltsPerMeterPerSecondSquared = 0;
 
     public static double kSVolts = 0.00;
-    public static double kVVoltSecondsPerMeter = 0; //represents voltage given to motor per m/s of desired elevator carriage velocity
+    public static double kVVoltSecondsPerMeter = 5; //represents voltage given to motor per m/s of desired elevator carriage velocity
 
-    public static double elevatorMaxVelMetersPerSecond = 4;
-    public static double elevatorMaxAccelMetersPerSecondSquared = 2;
+    public static double elevatorMaxVelMetersPerSecond = 1;
+    public static double elevatorMaxAccelMetersPerSecondSquared = 0.5;
 
-    public static double chainMetersPerRotation = 1.78*Math.PI;
+    public static double chainMetersPerRotation = Units.inchesToMeters(1.76)*Math.PI;
     public static double grabberMetersPerChain = 2;
     public static double grabberMetersPerRotation = chainMetersPerRotation*grabberMetersPerChain;
+    public static double grabberMetersPerSecondPerRPM = grabberMetersPerRotation/60; 
   }
 
   public static class LED {
