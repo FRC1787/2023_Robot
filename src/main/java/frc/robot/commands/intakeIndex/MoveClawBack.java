@@ -21,14 +21,14 @@ public class MoveClawBack extends CommandBase {
     this.clawMotorVoltage = Math.abs(clawMotorVoltage);
 
     
-    SmartDashboard.putNumber("indexer claw back voltage", 0.0);
+    // SmartDashboard.putNumber("indexer claw back voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
-    clawMotorVoltage = SmartDashboard.getNumber("indexer claw back voltage", 0.0);
+    // clawMotorVoltage = SmartDashboard.getNumber("indexer claw back voltage", 0.0);
 
     indexer.setClawMotorVolts(-clawMotorVoltage);
   }

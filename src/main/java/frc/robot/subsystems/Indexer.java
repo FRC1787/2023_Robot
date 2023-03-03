@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -24,6 +25,8 @@ public class Indexer extends SubsystemBase {
   private CANSparkMax clawMotor;
   private CANSparkMax leftIndexerMotor;
   private CANSparkMax rightIndexerMotor;
+  private Compressor phCompressor;
+
 
   private DigitalInput clawLimitSwitch;
   private RelativeEncoder clawMotorEncoder;
@@ -33,8 +36,8 @@ public class Indexer extends SubsystemBase {
   public Indexer() {
     indexerSolenoid = new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
-      Constants.IntakeIndexer.indexerRetractPneumaticsChannel,
-      Constants.IntakeIndexer.indexerExtendPneumaticsChannel
+      Constants.IntakeIndexer.indexerOpenPneumaticsChannel,
+      Constants.IntakeIndexer.indexerClosePneumaticsChannel
     );
     
     clawMotor = new CANSparkMax(
@@ -57,11 +60,10 @@ public class Indexer extends SubsystemBase {
 
     clawMotorEncoder = clawMotor.getEncoder();
     clawMotorEncoder.setPositionConversionFactor(0);
-  
+
+    phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
     indexerState = IndexerState.cone;
-
-
   }
 
   private void configureMotors() {
@@ -97,11 +99,10 @@ public class Indexer extends SubsystemBase {
   }
 
   /**
-   * Returns true if the claw is as far forward in the robot as possible.
+   * Returns true if the claw is as far forward in the robot as possible (24 rotations of the claw motor)
    */
   public boolean isClawForward() {
-    // TODO: probably fix this value 
-    return clawMotorEncoder.getPosition() > 24;
+    return clawMotorEncoder.getPosition() > 23;
   }
 
   public void setCubeMode() {
@@ -119,14 +120,14 @@ public class Indexer extends SubsystemBase {
   /**
    * Makes the indexer walls parallel
    */
-  public void extendIndexerSolenoid() {
+  public void closeIndexerWalls() {
     indexerSolenoid.set(Value.kForward);
   }
 
   /**
    * Makes the indexer walls angle inwards
    */
-  public void retractIndexerSolenoid() {
+  public void openIndexerWalls() {
     indexerSolenoid.set(Value.kReverse);
   }
 
@@ -145,5 +146,7 @@ public class Indexer extends SubsystemBase {
       zeroClawEncoder();
 
     SmartDashboard.putNumber("claw motor rotations", clawMotorEncoder.getPosition());
+    SmartDashboard.putBoolean("compressor enabled", phCompressor.isEnabled());
+    SmartDashboard.putString("intake indexer status", indexerSolenoid.get().toString());
   }
 }

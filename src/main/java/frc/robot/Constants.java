@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -100,7 +99,7 @@ public final class Constants {
      * <p>
      * This value will be tuned based off of driver preference.
      */
-    public static final double maxDesiredAngularVelocityRadiansPerSecond = 6.0;
+    public static final double maxDesiredAngularVelocityRadiansPerSecond = 4.0;
 
     public static final int angleContinuousCurrentLimit = 0;
     public static final boolean angleInvert = true;
@@ -214,8 +213,8 @@ public final class Constants {
     public static int intakeExtendPneumaticsChannel = 5;
     public static int intakeRetractPneumaticsChannel = 4;
 
-    public static int indexerRetractPneumaticsChannel = 1;
-    public static int indexerExtendPneumaticsChannel = 0;
+    public static int indexerOpenPneumaticsChannel = 1;
+    public static int indexerClosePneumaticsChannel = 0;
 
     public static int clawLimitSwitchID = 6;
 

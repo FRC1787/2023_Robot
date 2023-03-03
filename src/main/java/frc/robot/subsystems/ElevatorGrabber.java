@@ -45,7 +45,7 @@ public class ElevatorGrabber extends SubsystemBase {
     encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM);
 
     solenoid = new DoubleSolenoid(
-        PneumaticsModuleType.CTREPCM,
+        PneumaticsModuleType.REVPH,
         Constants.ElevatorGrabber.elevatorRetractPneumaticChannel,
         Constants.ElevatorGrabber.elevatorExtendPneumaticChannel);
 
@@ -70,6 +70,7 @@ public class ElevatorGrabber extends SubsystemBase {
     elevatorMotor.setInverted(true);
 
     grabberMotor.restoreFactoryDefaults();
+    grabberMotor.setInverted(false);
 
   }
 
@@ -112,12 +113,18 @@ public class ElevatorGrabber extends SubsystemBase {
     setElevatorMotorVolts(totalOutput);
   }
 
-  public void extendPneumatics() {
-    solenoid.set(DoubleSolenoid.Value.kForward);
+  /**
+   * Extend elevator to score a game piece outside the frame perimeter
+   */
+  public void extendElevator() {
+    solenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  public void retractPneumatics() {
-    solenoid.set(DoubleSolenoid.Value.kReverse);
+  /**
+   * Bring elevator within the frame perimeter
+   */
+  public void retractElevator() {
+    solenoid.set(DoubleSolenoid.Value.kForward);
   }
 
   /**
@@ -127,6 +134,10 @@ public class ElevatorGrabber extends SubsystemBase {
    */
   public void setGrabMotorVolts(double voltage) {
     grabberMotor.setVoltage(voltage);
+  }
+
+  public void setGrabMotorAmpLimit(int ampLimit) {
+    grabberMotor.setSmartCurrentLimit(ampLimit);
   }
 
   public double getElevatorPositionMeters() {
@@ -151,5 +162,6 @@ public class ElevatorGrabber extends SubsystemBase {
     SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
     SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());
     SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
+    SmartDashboard.putNumber("amp reading for grabber", getGrabOutputAmps());
   }
 }

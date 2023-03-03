@@ -13,16 +13,20 @@ import frc.robot.commands.intakeIndex.MoveClawBack;
 import frc.robot.commands.intakeIndex.MoveClawForward;
 import frc.robot.commands.intakeIndex.MoveConveyor;
 import frc.robot.commands.intakeIndex.MoveSideBelts;
+import frc.robot.commands.intakeIndex.UprightCone;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Vision;
@@ -37,6 +41,7 @@ public class RobotContainer {
 
   // CONTROLLERS
   public static final CommandXboxController controller = new CommandXboxController(0);
+  public static final Joystick joystick = new Joystick(3);
   public static final CommandXboxController backupController = new CommandXboxController(1);
   public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
 
@@ -47,6 +52,14 @@ public class RobotContainer {
   private final Vision vision = new Vision();
   private final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
   private final LED led = new LED();
+
+  // testing
+  private final JoystickButton intakeOut = new JoystickButton(joystick, 8);
+  private final JoystickButton intakeIn = new JoystickButton(joystick, 7);
+  private final JoystickButton extendElevator = new JoystickButton(joystick, 10);
+  private final JoystickButton retractElevator = new JoystickButton(joystick, 9);
+  private final JoystickButton sideBeltsIn = new JoystickButton(joystick, 12);
+  private final JoystickButton sideBeltsOut = new JoystickButton(joystick, 11);
 
   // AUTO
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -72,23 +85,34 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
     // toggles robot oriented with right bumper
     // controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
     // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, false));
 
-    controller.a().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 1.));
+    controller.a().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 1.5));
     controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
 
+    controller.povDown().whileTrue(new MoveSideBelts(indexer, -0.3));
+    controller.povUp().whileTrue(new MoveSideBelts(indexer, 0.3));
+    controller.povRight().whileTrue(new UprightCone(indexer, intake));
 
-    controller.x().whileTrue(new MoveSideBelts(indexer, 0));
-    controller.y().whileTrue(new IntakeGamePieces(intake, 0, 0));
+    controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -3, -12));
 
-    controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0));
-    controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0));
+    controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
+    controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));
+    controller.leftTrigger().whileTrue(new MoveConveyor(intake, 0.25));
+    controller.rightTrigger().whileTrue(new MoveConveyor(intake, -0.25));
+    
+    intakeIn.onTrue(new InstantCommand(intake::retractIntake));
+    intakeOut.onTrue(new InstantCommand(intake::extendIntake));
 
+    extendElevator.onTrue(new InstantCommand(elevatorGrabber::extendElevator));
+    retractElevator.onTrue(new InstantCommand(elevatorGrabber::retractElevator));
+
+    sideBeltsIn.onTrue(new InstantCommand(indexer::closeIndexerWalls));
+    sideBeltsOut.onTrue(new InstantCommand(indexer::openIndexerWalls));
 
     //buttonBoard.button(0).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
     //buttonBoard.button(0).onFalse(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setCubeMode)));

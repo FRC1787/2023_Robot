@@ -43,11 +43,12 @@ public class Intake extends SubsystemBase {
   }
 
   private void configureMotors() {
-    //TODO: set inversions and limits and ramp rates??
+    
     conveyorMotor.restoreFactoryDefaults();
     conveyorMotor.setInverted(true);
 
     intakeMotor.restoreFactoryDefaults();
+    intakeMotor.setInverted(false);
     
 
   }
@@ -57,17 +58,17 @@ public class Intake extends SubsystemBase {
   /* INTAKE/CONVEYOR STUFF */////////////////////////////
 
   /**
-  * Extends the intake solenoid.
+  * Extends the intake outwards to intake a game piece.
   */
   public void extendIntake() {
-    intakeSolenoid.set(Value.kForward);
+    intakeSolenoid.set(Value.kReverse);
   }
 
   /**
-   * Retracts the intake solenoid.
+   * Retracts the intake into the robot.
    */
   public void retractIntake() {
-    intakeSolenoid.set(Value.kReverse);
+    intakeSolenoid.set(Value.kForward);
   }
   
 
@@ -104,6 +105,5 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-
   }
 }

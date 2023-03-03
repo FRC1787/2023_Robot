@@ -88,7 +88,8 @@ public class Drivetrain extends SubsystemBase {
    * @return The current pitch value in degrees (-180 to 180). This value will be positive if the front of the robot is raised.
    */
   public double getRobotPitchDegrees() {
-    return 0.0; //TODO: unclear which axes of the gyro corresponds to the axes of the robot, do a test to verify after gyro omnimount
+    return gyro.getRoll(); //since navx is mounted silly and also axis convention this is correct
+    //also the navx comments are bad don't trust them
   }
 
   /**
@@ -97,15 +98,26 @@ public class Drivetrain extends SubsystemBase {
    * @return The current roll value in degrees (-180 to 180). This value will be positive if the left of the robot (positive Y) is raised.
    */
   public double getRobotRollDegrees() {
-    return 0.0; //TODO: see above
+    return gyro.getPitch(); //since navx is mounted silly and also axis convention this is correct
+    //also the navx comments are bad don't trust them
   }
 
+  /**
+   * Returns the current angular pitch velocity in degrees per second of the robot, based off of hte NavX.
+   * This represents how quickly the angle between the robot-oriented X-axis and the horizontal changes.
+   * @return The current pitch speed value in degrees per second. If the front of the robot is being raised, this will return a positive value.
+   */
   public double getRobotPitchDegreesPerSecond() {
-    return 0.0;
+    return gyro.getRawGyroY();
   }
   
+  /**
+   * Returns the current angular roll velocity in degrees per second of the robot, based off of the NavX.
+   * This represents how quickly the angle between the robot-oriented Y-axis and the horizontal changes.
+   * @return The current roll speed value in degrees per second. If the left side of the robot is being raised, this will return a positive value.
+   */
   public double getRobotRollDegreesPerSecond() {
-    return 0.0;
+    return gyro.getRawGyroX();
   }
 
   // POSE, FIELD, ODOMETRY
@@ -217,7 +229,5 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
 
-    SmartDashboard.putNumber("back left module speed", mSwerveMods[2].getState().speedMetersPerSecond);
-    
   }
 }

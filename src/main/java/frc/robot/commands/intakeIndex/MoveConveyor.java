@@ -24,14 +24,14 @@ public class MoveConveyor extends CommandBase {
     this.intake = intake;
     this.conveyorVoltage = conveyorVoltage;
 
-    SmartDashboard.putNumber("move conveyor motor voltage", 0.0);
+    // SmartDashboard.putNumber("move conveyor motor voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
-    conveyorVoltage = SmartDashboard.getNumber("move conveyor motor voltage", 0.0);
+    // conveyorVoltage = SmartDashboard.getNumber("move conveyor motor voltage", 0.0);
 
     intake.setConveyorMotorVolts(conveyorVoltage);
   }

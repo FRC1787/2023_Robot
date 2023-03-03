@@ -26,14 +26,14 @@ public class MoveSideBelts extends CommandBase {
     this.indexerSideBeltsMotorVoltage = indexerSideBeltsMotorVoltage;
 
     
-    SmartDashboard.putNumber("indexer side belt volts", 0);
+    // SmartDashboard.putNumber("indexer side belt volts", 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
-    indexerSideBeltsMotorVoltage = SmartDashboard.getNumber("indexer side belt volts", 0.0);
+    // indexerSideBeltsMotorVoltage = SmartDashboard.getNumber("indexer side belt volts", 0.0);
 
     indexer.setIndexerMotors(indexerSideBeltsMotorVoltage);
   }

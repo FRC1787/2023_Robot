@@ -20,7 +20,7 @@ public class MoveClawForward extends CommandBase {
     this.indexer = indexer;
     this.clawMotorVoltage = Math.abs(clawMotorVoltage);
     
-    SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
+    // SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +28,7 @@ public class MoveClawForward extends CommandBase {
   public void initialize() {
     
 
-    clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
+    // clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
 
     indexer.setClawMotorVolts(clawMotorVoltage);
 
