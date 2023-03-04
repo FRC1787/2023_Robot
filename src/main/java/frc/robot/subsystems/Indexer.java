@@ -113,6 +113,10 @@ public class Indexer extends SubsystemBase {
     indexerState = IndexerState.cone;
   }
 
+  public boolean isIndexerWallsOpen() {
+    return indexerSolenoid.get() == Value.kReverse;
+  }
+
   public IndexerState getIndexerState() {
     return indexerState;
   }
@@ -138,6 +142,10 @@ public class Indexer extends SubsystemBase {
   public void setIndexerMotors(double voltage) {
     leftIndexerMotor.set(voltage);
     rightIndexerMotor.set(voltage);
+  }
+
+  public double getIndexerDirection() {
+    return Math.signum(leftIndexerMotor.get());
   }
 
   @Override

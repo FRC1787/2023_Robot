@@ -238,8 +238,8 @@ public final class Constants {
 
     public static int lowerLimitSwitchID = 2;
 
-    public static double kPVoltsPerMeterPerSecond = 3.0;
-    public static double kIVoltsPerMeter = 0;
+    public static double kPVoltsPerMeterPerSecond = 4.0;
+    public static double kIVoltsPerMeter = 6.0;
     public static double kDVoltsPerMeterPerSecondSquared = 0;
 
     public static double kSVolts = 0.00;

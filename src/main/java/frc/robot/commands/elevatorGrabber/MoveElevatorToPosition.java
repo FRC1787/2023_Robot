@@ -23,7 +23,7 @@ public class MoveElevatorToPosition extends CommandBase {
      * @param targetPositionMeters - target position in meters, positive is elevator extended.
      */
     public MoveElevatorToPosition(ElevatorGrabber elevatorGrabber, double targetPositionMeters) {
-        addRequirements(elevatorGrabber);
+        // addRequirements(elevatorGrabber);
         this.elevatorGrabber = elevatorGrabber;
         this.targetPositionMeters = targetPositionMeters;
         timer = new Timer();

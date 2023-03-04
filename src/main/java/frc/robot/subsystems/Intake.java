@@ -97,6 +97,14 @@ public class Intake extends SubsystemBase {
     conveyorMotor.set(voltage);
   }
 
+  /**
+   * Get the direction of the conveyor
+   * @return - A positive value means the conveyor is moving towards the front of the robot
+   */
+  public double getConveyorMotorDirection() {
+    return Math.signum(conveyorMotor.get());
+  }
+
   /** Stops all motors in this subsystem */
   public void stopIntakeMotors() {
     setIntakeMotorVolts(0);

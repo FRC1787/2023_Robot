@@ -5,13 +5,16 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -28,6 +31,9 @@ public class ElevatorGrabber extends SubsystemBase {
 
   private PIDController velocityController;
   private SimpleMotorFeedforward feedforward;
+
+  private LinearFilter ampFilter = LinearFilter.movingAverage(25);
+  private double averageAmps;
 
   public ElevatorGrabber() {
     elevatorMotor = new CANSparkMax(
@@ -60,7 +66,7 @@ public class ElevatorGrabber extends SubsystemBase {
       Constants.ElevatorGrabber.kSVolts,
       Constants.ElevatorGrabber.kVVoltSecondsPerMeter);
 
-    
+    averageAmps = 0;
   }
 
   private void configureMotors() {
@@ -148,8 +154,12 @@ public class ElevatorGrabber extends SubsystemBase {
     encoder.setPosition(0);
   }
 
+  /**
+   * Gets moving window average of amp readings for grabber motor
+   * @return average amps over 8 readings
+   */
   public double getGrabOutputAmps() {
-    return grabberMotor.getOutputCurrent();
+    return averageAmps;
   }
 
   @Override
@@ -158,10 +168,16 @@ public class ElevatorGrabber extends SubsystemBase {
       zeroEncoder();
     }
 
+    averageAmps = ampFilter.calculate(
+      MathUtil.clamp(grabberMotor.getOutputCurrent(),
+        0,
+        50));
+
     SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
     SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
     SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());
     SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
     SmartDashboard.putNumber("amp reading for grabber", getGrabOutputAmps());
+    SmartDashboard.putNumber("unfiltered amp limit", grabberMotor.getOutputCurrent());
   }
 }

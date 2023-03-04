@@ -20,7 +20,7 @@ public class MoveSideBelts extends CommandBase {
    * @param indexerSideBeltsMotorVoltage - a positive value will move the belts towards the front of the robot.
    */
   public MoveSideBelts(Indexer indexer, double indexerSideBeltsMotorVoltage) {
-    addRequirements(indexer);
+    // addRequirements(indexer);
 
     this.indexer = indexer;
     this.indexerSideBeltsMotorVoltage = indexerSideBeltsMotorVoltage;

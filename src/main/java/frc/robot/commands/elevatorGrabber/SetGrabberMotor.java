@@ -4,7 +4,6 @@
 
 package frc.robot.commands.elevatorGrabber;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorGrabber;
 
@@ -12,26 +11,29 @@ public class SetGrabberMotor extends CommandBase {
 
   ElevatorGrabber elevatorGrabber;
   double voltage;
+  double ampLimit;
 
   /**
-   * Sets the voltage of the elevator grabber motor.
+   * Sets the voltage of the elevator grabber motor, until the amp limit is reached.
    * @param elevatorGrabber - The elevator grabber subsystem object.
    * @param voltage - Make this positive to intake a cone/outtake a cube,
-   * while negative to outtake a cone/intake a cube 
+   * while negative to outtake a cone/intake a cube
+   * @param ampLimit - When this amp limit is reached, the command ends.
    */
-  public SetGrabberMotor(ElevatorGrabber elevatorGrabber, double voltage) {
-    addRequirements(elevatorGrabber);
+  public SetGrabberMotor(ElevatorGrabber elevatorGrabber, double voltage, double ampLimit) {
+    // addRequirements(elevatorGrabber);
 
     this.elevatorGrabber = elevatorGrabber;
     this.voltage = voltage;
+    this.ampLimit = ampLimit;
   
-    SmartDashboard.putNumber("elevator grabber motor voltage", 0.0);
+    // SmartDashboard.putNumber("elevator grabber motor voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    voltage = SmartDashboard.getNumber("elevator grabber motor voltage", 0.0);
+    // voltage = SmartDashboard.getNumber("elevator grabber motor voltage", 0.0);
     elevatorGrabber.setGrabMotorVolts(voltage);
   }
 
@@ -48,7 +50,6 @@ public class SetGrabberMotor extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return elevatorGrabber.getGrabOutputAmps() > some value
-    return false;
+    return elevatorGrabber.getGrabOutputAmps() > ampLimit;
   }
 }
