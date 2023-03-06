@@ -2,13 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.intakeIndex;
+package frc.robot.commands.indexer;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
 
-public class MoveClawForward extends CommandBase {
+public class MoveClawBack extends CommandBase {
   /**
    * Moves claw towards back of robot.
    * @param percentage - percentage/speed of claw motor, the sign does not matter.
@@ -16,22 +15,21 @@ public class MoveClawForward extends CommandBase {
   private Indexer indexer;
   private double clawMotorVoltage;
 
-  public MoveClawForward(Indexer indexer, double clawMotorVoltage) {
+  public MoveClawBack(Indexer indexer, double clawMotorVoltage) {
     this.indexer = indexer;
     this.clawMotorVoltage = Math.abs(clawMotorVoltage);
+
     
-    // SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
+    // SmartDashboard.putNumber("indexer claw back voltage", 0.0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
 
-    // clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
+    // clawMotorVoltage = SmartDashboard.getNumber("indexer claw back voltage", 0.0);
 
-    indexer.setClawMotorVolts(clawMotorVoltage);
-
+    indexer.setClawMotorVolts(-clawMotorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -47,6 +45,6 @@ public class MoveClawForward extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return indexer.isClawForward();
+    return indexer.isClawBack();
   }
 }

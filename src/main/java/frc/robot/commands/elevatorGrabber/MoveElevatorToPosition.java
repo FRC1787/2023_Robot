@@ -56,12 +56,14 @@ public class MoveElevatorToPosition extends CommandBase {
         elevatorGrabber.setElevatorMotorMetersPerSecond(
             profile.calculate(timer.get()).velocity
             );
+        elevatorGrabber.desiredPosition = profile.calculate(timer.get()).position;
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         elevatorGrabber.setElevatorMotorMetersPerSecond(0); 
+        
     }
 
     // Returns true when the command should end.

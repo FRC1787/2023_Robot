@@ -10,14 +10,15 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
-import frc.robot.commands.intakeIndex.AlignCone;
+import frc.robot.commands.indexer.AlignCone;
+import frc.robot.commands.indexer.IndexConeFull;
+import frc.robot.commands.indexer.MoveClawBack;
+import frc.robot.commands.indexer.MoveClawForward;
+import frc.robot.commands.indexer.MoveSideBelts;
+import frc.robot.commands.indexer.PulseIndexerWalls;
+import frc.robot.commands.indexer.UprightCone;
 import frc.robot.commands.intakeIndex.IntakeGamePieces;
-import frc.robot.commands.intakeIndex.MoveClawBack;
-import frc.robot.commands.intakeIndex.MoveClawForward;
 import frc.robot.commands.intakeIndex.MoveConveyor;
-import frc.robot.commands.intakeIndex.MoveSideBelts;
-import frc.robot.commands.intakeIndex.PulseIndexerWalls;
-import frc.robot.commands.intakeIndex.UprightCone;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
@@ -100,18 +101,19 @@ public class RobotContainer {
 
     controller.povDown().whileTrue(new MoveSideBelts(indexer, -0.3));
     controller.povUp().whileTrue(new MoveSideBelts(indexer, 0.3));
-    controller.povRight().whileTrue(new UprightCone(indexer, intake));
+    // controller.povDown().whileTrue(new PulseIndexerWalls(indexer));
+    controller.leftBumper().whileTrue(new UprightCone(indexer, intake));
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake));
-    controller.start().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
+    controller.start().whileTrue(new IndexConeFull(intake, indexer));
 
-    controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -3, -12));
+    controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -8, -12));
     controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
     controller.back().whileTrue(new AlignCone(intake, indexer));
 
-    controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
+    //controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
     controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));
     controller.leftTrigger().whileTrue(new MoveConveyor(intake, 0.25));
-    controller.rightTrigger().whileTrue(new MoveConveyor(intake, -0.25));
+    controller.rightTrigger().whileTrue(new MoveConveyor(intake, -6));
     
     intakeIn.onTrue(new InstantCommand(intake::retractIntake));
     intakeOut.onTrue(new InstantCommand(intake::extendIntake));

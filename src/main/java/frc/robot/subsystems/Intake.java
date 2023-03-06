@@ -83,7 +83,7 @@ public class Intake extends SubsystemBase {
 
   /**
    * Sets the voltage of the intake motor.
-   * @param voltage - Make this positive if you are trying to intake something.
+   * @param voltage - Make this negative if you are trying to intake something.
    */
   public void setIntakeMotorVolts(double voltage) {
     intakeMotor.setVoltage(voltage);
