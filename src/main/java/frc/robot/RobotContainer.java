@@ -5,8 +5,11 @@
 package frc.robot;
 
 import frc.robot.commands.autonomous.AutoRoutine;
+import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
+import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
+import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionZero;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
@@ -74,6 +77,9 @@ public class RobotContainer {
     autoChooser.addOption("Curve 180", "curve180");
 
     SmartDashboard.putData(autoChooser);
+
+    // TODO: make the grabber have an idle mode
+    // elevatorGrabber.setDefaultCommand(new InstantCommand(elevatorGrabber::setIdleSpinningMode));
   }
 
   /**
@@ -92,8 +98,8 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, false));
 
-    controller.a().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 1.5));
-    controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
+    controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber, 0));
+    controller.b().whileTrue(new MoveElevatorToPositionZero(elevatorGrabber, 0));
 
     controller.povDown().whileTrue(new MoveSideBelts(indexer, -0.3));
     controller.povUp().whileTrue(new MoveSideBelts(indexer, 0.3));
@@ -101,15 +107,20 @@ public class RobotContainer {
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
 
     controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
-    controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
+    // controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
     controller.start().whileTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
-    controller.back().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
+    // controller.back().whileTrue(new AlignToTarget(drivetrain, vision, null))
+    // controller.back().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
 
-    controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
-    controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));
+    controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.5, 1000));
+    controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(1));
+
+    // controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
+    // controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));
     controller.leftTrigger().whileTrue(new MoveConveyor(intake, 0.25));
     controller.rightTrigger().whileTrue(new MoveConveyor(intake, -6));
     
+    // TODO: sorry i can't put this in a good place1.23 and 1.69 for elevator to move
     intakeIn.onTrue(new InstantCommand(intake::retractIntake));
     intakeOut.onTrue(new InstantCommand(intake::extendIntake));
 

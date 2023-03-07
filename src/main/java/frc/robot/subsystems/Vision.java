@@ -47,7 +47,7 @@ public class Vision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("apriltag lateral offset", getLateralOffsetMeters(Constants.Vision.LimelightTarget.midTape));
-    SmartDashboard.putNumber("tarfget distance meters", getTargetDistanceMeters(Constants.Vision.LimelightTarget.midTape));
+    SmartDashboard.putNumber("apriltag lateral offset", getLateralOffsetMeters(Constants.Vision.LimelightTarget.aprilTag));
+    SmartDashboard.putNumber("tarfget distance meters", getTargetDistanceMeters(Constants.Vision.LimelightTarget.aprilTag));
   }
 }

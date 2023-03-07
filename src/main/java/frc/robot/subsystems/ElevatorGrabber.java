@@ -39,6 +39,8 @@ public class ElevatorGrabber extends SubsystemBase {
 
   public double desiredVelocity;
 
+  private boolean hasBeenHomed;
+
   public ElevatorGrabber() {
     elevatorMotor = new CANSparkMax(
         Constants.ElevatorGrabber.elevatorMotorID,
@@ -73,6 +75,10 @@ public class ElevatorGrabber extends SubsystemBase {
 
     averageAmps = 0;
     desiredVelocity = 0;
+
+    hasBeenHomed = false;
+
+    
   }
 
   private void configureMotors() {
@@ -82,6 +88,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
 
     grabberMotor.restoreFactoryDefaults();
+    grabberMotor.setSmartCurrentLimit(50);
     grabberMotor.setInverted(true);
   }
 
@@ -102,6 +109,10 @@ public class ElevatorGrabber extends SubsystemBase {
   public double getElevatorVelocityMetersPerSecond() {
     return encoder.getVelocity();
   }
+
+  // public void setIdleSpinningMode() {
+  //   setGrabMotorVolts(0.3);
+  // }
 
   /**
    * Sets velocity of the elevator
@@ -173,6 +184,11 @@ public class ElevatorGrabber extends SubsystemBase {
   public void periodic() {
     if (atLowerLimit()) {
       zeroEncoder();
+      hasBeenHomed = true;
+    }
+
+    if (!hasBeenHomed) {
+      setElevatorMotorMetersPerSecond(-0.1);
     }
 
     averageAmps = ampFilter.calculate(
@@ -180,8 +196,9 @@ public class ElevatorGrabber extends SubsystemBase {
         0,
         50));
     
-    if (desiredVelocity == 0)
+    if (desiredVelocity == 0 && hasBeenHomed) {
       setElevatorMotorMetersPerSecond(0);
+    }
     
     SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
     SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());

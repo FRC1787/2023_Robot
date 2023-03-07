@@ -26,7 +26,7 @@ public class PickUpCone extends SequentialCommandGroup {
           new MoveElevatorToPosition(elevatorGrabber, 0.27),
           new InstantCommand(elevatorGrabber::extendElevator),
           new ParallelCommandGroup(
-            new SetGrabberMotor(elevatorGrabber, 9, 17),
+            new SetGrabberMotor(elevatorGrabber, 9, 13),
             new MoveElevatorToPosition(elevatorGrabber, 0.04)
           )  
         )

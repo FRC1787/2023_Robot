@@ -33,6 +33,8 @@ public class Indexer extends SubsystemBase {
 
   private IndexerState indexerState;
 
+  private boolean hasBeenHomed;
+
   public Indexer() {
     indexerSolenoid = new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
@@ -64,6 +66,8 @@ public class Indexer extends SubsystemBase {
     phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
     indexerState = IndexerState.cone;
+
+    hasBeenHomed = true;
   }
 
   private void configureMotors() {
@@ -150,8 +154,14 @@ public class Indexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (isClawBack())
+    if (isClawBack()) {
       zeroClawEncoder();
+      hasBeenHomed = true;
+    }
+
+    if (!hasBeenHomed) {
+      setClawMotorVolts(-0.1);
+    }
 
     SmartDashboard.putNumber("claw motor rotations", clawMotorEncoder.getPosition());
     SmartDashboard.putBoolean("compressor enabled", phCompressor.isEnabled());
