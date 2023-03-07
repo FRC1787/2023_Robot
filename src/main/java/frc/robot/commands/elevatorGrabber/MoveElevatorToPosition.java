@@ -56,7 +56,7 @@ public class MoveElevatorToPosition extends CommandBase {
         elevatorGrabber.setElevatorMotorMetersPerSecond(
             profile.calculate(timer.get()).velocity
             );
-        elevatorGrabber.desiredPosition = profile.calculate(timer.get()).position;
+        // elevatorGrabber.desiredPosition = profile.calculate(timer.get()).position;
     }
 
     // Called once the command ends or is interrupted.

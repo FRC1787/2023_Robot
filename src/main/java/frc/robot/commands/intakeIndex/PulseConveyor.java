@@ -12,7 +12,8 @@ public class PulseConveyor extends CommandBase {
   /** Creates a new PulseConveyor. */
   private Intake intake;
   private Timer timer;
-  private double timeBetweenPulses;
+  private double timeBetweenPulsesBack;
+  private double timeBetweenPulsesForward;
   private double volts;
   
   /**
@@ -21,12 +22,13 @@ public class PulseConveyor extends CommandBase {
    * @param time - time between each pulse of the conveyor
    * @param volts - should ALWAYS be positive, volts to apply to the conveyor motor
    */
-  public PulseConveyor(Intake intake, double time, double volts) {
+  public PulseConveyor(Intake intake, double timeBack, double timeForward, double volts) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
     this.volts = volts;
     timer = new Timer();
-    timeBetweenPulses = time;
+    timeBetweenPulsesBack = timeBack;
+    timeBetweenPulsesForward = timeForward;
   }
 
   // Called when the command is initially scheduled.
@@ -44,13 +46,16 @@ public class PulseConveyor extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() >= timeBetweenPulses) {
-      if(intake.getConveyorMotorDirection() < 0) {
+    if(intake.getConveyorMotorDirection() < 0) {
+      if(timer.get() >= timeBetweenPulsesBack) {
         intake.setConveyorMotorVolts(volts);
-      }else {
-        intake.setConveyorMotorVolts(-volts);
+        timer.reset();
       }
-      timer.reset();
+    }else {
+      if(timer.get() >= timeBetweenPulsesForward) {
+        intake.setConveyorMotorVolts(-volts);
+        timer.reset();
+      }
     }
   }
 

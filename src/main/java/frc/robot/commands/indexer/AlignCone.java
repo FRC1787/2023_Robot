@@ -36,9 +36,9 @@ public class AlignCone extends SequentialCommandGroup {
       //   new MoveSideBelts(indexer, -0.3)
       // ).withTimeout(1.5),
       new ParallelCommandGroup(
-        new PulseConveyor(intake, 0.4, .15),
+        new PulseConveyor(intake, 0.4, 0.4, .15),
         new PulseIndexerWalls(indexer, 0.5),
-        new PulseSideBelts(indexer, 0.4, .1)
+        new PulseSideBelts(indexer, 0.4, 0.4, .1)
       ).withTimeout(1),
       new InstantCommand(indexer::closeIndexerWalls),
       new ParallelCommandGroup(

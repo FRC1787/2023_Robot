@@ -22,7 +22,7 @@ public class PickUpCone extends SequentialCommandGroup {
     addCommands(
       new ParallelCommandGroup(
         new MoveConveyor(intake, -0.1),
-        new SequentialCommandGroup( //0.26017 is for during indexing
+        new SequentialCommandGroup(
           new MoveElevatorToPosition(elevatorGrabber, 0.27),
           new InstantCommand(elevatorGrabber::extendElevator),
           new ParallelCommandGroup(
@@ -30,7 +30,8 @@ public class PickUpCone extends SequentialCommandGroup {
             new MoveElevatorToPosition(elevatorGrabber, 0.04)
           )  
         )
-      )
+      ),
+      new SetGrabberMotor(elevatorGrabber, 0.5, 100)
     );
   }
 }

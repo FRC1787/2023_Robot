@@ -15,8 +15,6 @@ import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.indexer.MoveClawForward;
 import frc.robot.commands.indexer.MoveSideBelts;
-import frc.robot.commands.indexer.PulseIndexerWalls;
-import frc.robot.commands.indexer.UprightCone;
 import frc.robot.commands.intakeIndex.IntakeGamePieces;
 import frc.robot.commands.intakeIndex.MoveConveyor;
 import frc.robot.subsystems.Drivetrain;
@@ -24,7 +22,6 @@ import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,12 +48,12 @@ public class RobotContainer {
   public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
 
   // SUBSYSTEMS 
-  private final Drivetrain drivetrain = new Drivetrain();
-  private final Intake intake = new Intake();
-  private final Indexer indexer = new Indexer();
-  private final Vision vision = new Vision();
-  private final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
-  private final LED led = new LED();
+  final Drivetrain drivetrain = new Drivetrain();
+  final Intake intake = new Intake();
+  final Indexer indexer = new Indexer();
+  final Vision vision = new Vision();
+  final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
+  final LED led = new LED();
 
   // testing
   private final JoystickButton intakeOut = new JoystickButton(joystick, 8);
@@ -101,16 +98,18 @@ public class RobotContainer {
 
     controller.povDown().whileTrue(new MoveSideBelts(indexer, -0.3));
     controller.povUp().whileTrue(new MoveSideBelts(indexer, 0.3));
-    // controller.povDown().whileTrue(new PulseIndexerWalls(indexer));
-    controller.leftBumper().whileTrue(new UprightCone(indexer, intake));
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake));
-    controller.start().whileTrue(new IndexConeFull(intake, indexer));
+    controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
 
-    controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -8, -12));
+
+
+
+    controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
     controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
     controller.back().whileTrue(new AlignCone(intake, indexer));
+    controller.start().whileTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
-    //controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
+    controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
     controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));
     controller.leftTrigger().whileTrue(new MoveConveyor(intake, 0.25));
     controller.rightTrigger().whileTrue(new MoveConveyor(intake, -6));

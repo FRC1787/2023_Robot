@@ -41,6 +41,7 @@ public class IntakeGamePieces extends CommandBase {
     intake.setIntakeMotorVolts(intakeMotorVoltage);
     intake.setConveyorMotorVolts(conveyorMotorVoltage);
     indexer.openIndexerWalls();
+    indexer.setIndexerMotors(-0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,6 +53,7 @@ public class IntakeGamePieces extends CommandBase {
   public void end(boolean interrupted) {
     intake.stopIntakeMotors();
     intake.retractIntake();
+    indexer.setIndexerMotors(0);
   }
 
   // Returns true when the command should end.

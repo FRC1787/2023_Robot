@@ -242,8 +242,10 @@ public final class Constants {
     public static double kIVoltsPerMeter = 6.0;
     public static double kDVoltsPerMeterPerSecondSquared = 0;
 
-    public static double kSVolts = 0.00;
-    public static double kVVoltSecondsPerMeter = 5; //represents voltage given to motor per m/s of desired elevator carriage velocity
+    //TODO: characterize elevator and tune pid
+    public static double kSVolts = 0.1;
+    public static double kGVolts = 0.5;
+    public static double kVVoltSecondsPerMeter = 4; //represents voltage given to motor per m/s of desired elevator carriage velocity
 
     public static double elevatorMaxVelMetersPerSecond = 1;
     public static double elevatorMaxAccelMetersPerSecondSquared = 0.5;

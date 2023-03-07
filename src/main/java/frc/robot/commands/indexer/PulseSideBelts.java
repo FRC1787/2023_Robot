@@ -11,7 +11,8 @@ import frc.robot.subsystems.Indexer;
 public class PulseSideBelts extends CommandBase {
   private Indexer indexer;
   private Timer timer;
-  private double timeBetweenPulses;
+  private double timeBetweenPulsesBack;
+  private double timeBetweenPulsesForward;
   private double volts;
   
   /**
@@ -20,12 +21,13 @@ public class PulseSideBelts extends CommandBase {
    * @param time - time between each pulse
    * @param volts - should ALWAYS be positive, volts to apply to indexer motors
    */
-  public PulseSideBelts(Indexer indexer, double time, double volts) {
+  public PulseSideBelts(Indexer indexer, double timeBack, double timeForward, double volts) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.volts = volts;
     timer = new Timer();
-    timeBetweenPulses = time;
+    timeBetweenPulsesBack = timeBack;
+    timeBetweenPulsesForward = timeForward;
   }
 
   // Called when the command is initially scheduled.
@@ -43,13 +45,16 @@ public class PulseSideBelts extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() >= timeBetweenPulses) {
-      if(indexer.getIndexerDirection() < 0) {
+    if(indexer.getIndexerDirection() < 0) {
+      if(timer.get() >= timeBetweenPulsesBack) {
         indexer.setIndexerMotors(volts);
-      }else {
-        indexer.setIndexerMotors(-volts);
+        timer.reset();
       }
-      timer.reset();
+    }else {
+      if(timer.get() >= timeBetweenPulsesForward) {
+        indexer.setIndexerMotors(-volts);
+        timer.reset();
+      }
     }
   }
 
