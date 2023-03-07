@@ -296,12 +296,12 @@ public final class Constants {
     }
 
     /** Height of the Limelight from the ground. */
-    public static final double limelightHeightMeters = 0.432;
+    public static final double limelightHeightMeters = Units.inchesToMeters(23);
     /** Angle above the horizontal of the Limelight. */
-    public static final double limelightAngleDegrees = 14.61;
+    public static final double limelightAngleDegrees = 0.0;
     /** Lateral offset of the Limelight from the center of the robot. */
-    public static final double limelightLateralOffsetMeters = 0.152;
+    public static final double limelightLateralOffsetMeters = -0.27;
     /** Horizontal distance from limelight to front bumper. */
-    public static final double limelightBumperDistanceMeters = 0.0;
+    public static final double limelightBumperDistanceMeters = 0.315;
   }
 }

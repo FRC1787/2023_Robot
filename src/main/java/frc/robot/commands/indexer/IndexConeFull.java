@@ -27,7 +27,6 @@ public class IndexConeFull extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       //agitation/alignment procedure
-
       new MoveElevatorToPosition(elevatorGrabber, 0.55),
 
       new ParallelCommandGroup(

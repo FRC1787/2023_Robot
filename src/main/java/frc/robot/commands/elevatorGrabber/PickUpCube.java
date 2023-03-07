@@ -34,11 +34,11 @@ public class PickUpCube extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new MoveSideBelts(indexer, -0.1).withTimeout(3.0),
         new MoveConveyor(intake, -0.25).withTimeout(3.0),
-        new SetGrabberMotor(elevatorGrabber, -6, 8)
+        new SetGrabberMotor(elevatorGrabber, -6, 12)
       ),
       new InstantCommand(indexer::openIndexerWalls),
       new ParallelCommandGroup(
-        new SetGrabberMotor(elevatorGrabber, -6, 8)
+        new SetGrabberMotor(elevatorGrabber, -6, 12)
       ),
       new SetGrabberMotor(elevatorGrabber, -0.5, 100)
     );

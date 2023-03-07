@@ -82,7 +82,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
 
     grabberMotor.restoreFactoryDefaults();
-    grabberMotor.setInverted(false);
+    grabberMotor.setInverted(true);
   }
 
 
@@ -183,10 +183,6 @@ public class ElevatorGrabber extends SubsystemBase {
     if (desiredVelocity == 0)
       setElevatorMotorMetersPerSecond(0);
     
-    SmartDashboard.putNumber("pid output", 0.3 + velocityController.calculate(
-      getElevatorVelocityMetersPerSecond(),
-      desiredVelocity));
-    SmartDashboard.putBoolean("desired velocity is 0", desiredVelocity == 0);
     SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
     SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
     SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());

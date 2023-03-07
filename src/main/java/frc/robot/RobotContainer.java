@@ -10,7 +10,6 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
-import frc.robot.commands.indexer.AlignCone;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.indexer.MoveClawForward;
@@ -101,13 +100,10 @@ public class RobotContainer {
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake));
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
 
-
-
-
     controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
-    controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
-    controller.back().whileTrue(new AlignCone(intake, indexer));
+    controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
     controller.start().whileTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
+    controller.back().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
 
     controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
     controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));

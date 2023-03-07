@@ -16,8 +16,8 @@ public class SetGrabberMotor extends CommandBase {
   /**
    * Sets the voltage of the elevator grabber motor, until the amp limit is reached.
    * @param elevatorGrabber - The elevator grabber subsystem object.
-   * @param voltage - Make this positive to intake a cone/outtake a cube,
-   * while negative to outtake a cone/intake a cube
+   * @param voltage - Make this positive to intake a cone,
+   * while negative to outtake a cone/intake or outtake a cube
    * @param ampLimit - When this amp limit is reached, the command ends.
    */
   public SetGrabberMotor(ElevatorGrabber elevatorGrabber, double voltage, double ampLimit) {
