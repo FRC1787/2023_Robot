@@ -238,17 +238,21 @@ public final class Constants {
 
     public static int lowerLimitSwitchID = 2;
 
-    public static double kPVoltsPerMeterPerSecond = 4.0;
-    public static double kIVoltsPerMeter = 6.0;
+    public static double kPVoltsPerMeterPerSecond = 0.95385;  
+    public static double kIVoltsPerMeter = 0; // significant integral windup with this set to 0.2
     public static double kDVoltsPerMeterPerSecondSquared = 0;
 
     //TODO: characterize elevator and tune pid
-    public static double kSVolts = 0.1;
-    public static double kGVolts = 0.5;
-    public static double kVVoltSecondsPerMeter = 4; //represents voltage given to motor per m/s of desired elevator carriage velocity
+    public static double kSVolts = 0.032828; 
+    public static double kGVolts = 0.2156; 
+    public static double kVVoltsPer_MeterPerSecond = 4.8109; //represents voltage given to motor per m/s of desired elevator carriage velocity
+    public static double kAVoltsPer_MeterPerSecondSquared = 0.087606;
 
-    public static double elevatorMaxVelMetersPerSecond = 1;
+    public static double elevatorMaxVelMetersPerSecond = 2.0;
     public static double elevatorMaxAccelMetersPerSecondSquared = 0.5;
+    // We tried increasing max accel from 0.5 to 1.0, and found that
+    // this causes the encoder to no longer determine the elevator's positon
+    // accurately. We have no idea why, and no more time to debug this.
 
     public static double chainMetersPerRotation = Units.inchesToMeters(1.76)*Math.PI;
     public static double grabberMetersPerChain = 2;

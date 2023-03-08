@@ -17,6 +17,8 @@ public class MoveElevatorToPositionSmartDashboard extends CommandBase {
     double targetPositionMeters;
     TrapezoidProfile profile;
     Timer timer;
+    double prevTimestamp;
+    double currTimestamp;
 
     /**
      * Moves the elevator to a position in meters. The lowest position is marked as zero, and a higher position position is positive.
@@ -57,22 +59,40 @@ public class MoveElevatorToPositionSmartDashboard extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        // save info from the prev iteration before calculating for this iteration:
+        prevTimestamp = currTimestamp;
+        double prevVelocityCommand = profile.calculate(prevTimestamp).velocity;
+
+        // get current commands for velocity and acceleration
+        // from the motion profile
+        currTimestamp = timer.get();
+        double currVelocityCommand = profile.calculate(currTimestamp).velocity;
+        double currAccelerationCommand = (currVelocityCommand - prevVelocityCommand) / (currTimestamp - prevTimestamp);
+        currAccelerationCommand = 0; // Temporarily disable this!
+
+        // incorporate position feedback!
+        double measuredPosition = elevatorGrabber.getElevatorPositionMeters();
+        double desiredPosition = profile.calculate(currTimestamp).position;
+        double positionError = desiredPosition - measuredPosition;
+        double extraVelocityPerMeter = 8;
+
+        currVelocityCommand += positionError * extraVelocityPerMeter;
+
         elevatorGrabber.setElevatorMotorMetersPerSecond(
-            profile.calculate(timer.get()).velocity
+            currVelocityCommand, currAccelerationCommand
             );
-        // elevatorGrabber.desiredPosition = profile.calculate(timer.get()).position;
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        elevatorGrabber.setElevatorMotorMetersPerSecond(0); 
-        
+        elevatorGrabber.setElevatorMotorMetersPerSecond(0, 0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return profile.isFinished(timer.get());
+        //return profile.isFinished(timer.get());
+        return false;
     }
 }

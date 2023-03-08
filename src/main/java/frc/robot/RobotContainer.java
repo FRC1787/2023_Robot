@@ -103,7 +103,7 @@ public class RobotContainer {
 
     controller.povDown().whileTrue(new MoveSideBelts(indexer, -0.3));
     controller.povUp().whileTrue(new MoveSideBelts(indexer, 0.3));
-    controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake));
+    controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
 
     controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
@@ -112,8 +112,8 @@ public class RobotContainer {
     // controller.back().whileTrue(new AlignToTarget(drivetrain, vision, null))
     // controller.back().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
 
-    controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.5, 1000));
-    controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(1));
+    controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
+    controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5));
 
     // controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
     // controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));

@@ -53,8 +53,15 @@ public class ElevatorGrabber extends SubsystemBase {
     configureMotors();
 
     encoder = elevatorMotor.getAlternateEncoder(8192);
+    // encoder.setPositionConversionFactor(1);
+    // encoder.setVelocityConversionFactor(1);
     encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
     encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM);
+    
+    // sysid recommends an depth of 5 - 10 samples per average (we picked 8 because 2^3)
+    encoder.setAverageDepth(8);
+
+    // encoder.setMeasurementPeriod(0);
 
     solenoid = new DoubleSolenoid(
         PneumaticsModuleType.REVPH,
@@ -71,7 +78,8 @@ public class ElevatorGrabber extends SubsystemBase {
     feedforward = new ElevatorFeedforward(
       Constants.ElevatorGrabber.kSVolts,
       Constants.ElevatorGrabber.kGVolts,
-      Constants.ElevatorGrabber.kVVoltSecondsPerMeter);
+      Constants.ElevatorGrabber.kVVoltsPer_MeterPerSecond,
+      Constants.ElevatorGrabber.kAVoltsPer_MeterPerSecondSquared);
 
     averageAmps = 0;
     desiredVelocity = 0;
@@ -118,13 +126,13 @@ public class ElevatorGrabber extends SubsystemBase {
    * Sets velocity of the elevator
    * @param targetMetersPerSecond - Make this positive if you want to extend the elevator up.
    */
-  public void setElevatorMotorMetersPerSecond(double targetMetersPerSecond) {
+  public void setElevatorMotorMetersPerSecond(double targetMetersPerSecond, double targetMetersPerSecondSquared) {
     desiredVelocity = targetMetersPerSecond;
     
     double currentMetersPerSecond = getElevatorVelocityMetersPerSecond();
 
     double pidOutput = velocityController.calculate(currentMetersPerSecond, targetMetersPerSecond);
-    double feedforwardOutput = feedforward.calculate(targetMetersPerSecond);
+    double feedforwardOutput = feedforward.calculate(targetMetersPerSecond, targetMetersPerSecondSquared);
 
     double totalOutput = pidOutput + feedforwardOutput;
 
@@ -188,7 +196,7 @@ public class ElevatorGrabber extends SubsystemBase {
     }
 
     if (!hasBeenHomed) {
-      setElevatorMotorMetersPerSecond(-0.1);
+      setElevatorMotorMetersPerSecond(-0.2, 0);
     }
 
     averageAmps = ampFilter.calculate(
@@ -197,7 +205,7 @@ public class ElevatorGrabber extends SubsystemBase {
         50));
     
     if (desiredVelocity == 0 && hasBeenHomed) {
-      setElevatorMotorMetersPerSecond(0);
+      setElevatorMotorMetersPerSecond(0, 0);
     }
     
     SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());

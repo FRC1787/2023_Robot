@@ -54,7 +54,7 @@ public class MoveElevatorToPosition extends CommandBase {
     @Override
     public void execute() {
         elevatorGrabber.setElevatorMotorMetersPerSecond(
-            profile.calculate(timer.get()).velocity
+            profile.calculate(timer.get()).velocity, 0
             );
         // elevatorGrabber.desiredPosition = profile.calculate(timer.get()).position;
     }
@@ -62,7 +62,7 @@ public class MoveElevatorToPosition extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        elevatorGrabber.setElevatorMotorMetersPerSecond(0); 
+        elevatorGrabber.setElevatorMotorMetersPerSecond(0, 0); 
         
     }
 
