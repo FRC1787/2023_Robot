@@ -23,6 +23,7 @@ public class SwerveModule {
   private CANSparkMax mAngleMotor;
   private CANSparkMax mDriveMotor;
   private RelativeEncoder mDriveEncoder;
+  private RelativeEncoder mAngleEncoder;
 
   public static PIDController mDrivePID;
   public static PIDController mAnglePID;
@@ -51,13 +52,17 @@ public class SwerveModule {
 
     /* Angle Motor Config */
     mAngleMotor = new CANSparkMax(angleMotorID, MotorType.kBrushless);
+    mAngleEncoder = mAngleMotor.getEncoder();
     configAngleMotor();
+
+    //this encoder will always have units of degrees of the wheel
+    mAngleEncoder.setPosition(absoluteEncoder.getAbsolutePosition());
 
     /* Drive Motor Config */
     mDriveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     mDriveEncoder = mDriveMotor.getEncoder();
     configDriveMotor();
-
+    
     mAnglePID.enableContinuousInput(-180, 180);
   }
 
@@ -91,14 +96,16 @@ public class SwerveModule {
     
     Rotation2d angle =
         Rotation2d.fromDegrees(
-          absoluteEncoder.getAbsolutePosition());
+          mAngleEncoder.getPosition());
             
     return new SwerveModuleState(velocityMetersPerSecond, angle);
   }
 
+
+
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-      mDriveEncoder.getPosition(), Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition())
+      mDriveEncoder.getPosition(), Rotation2d.fromDegrees(mAngleEncoder.getPosition())
     );
   }
 
@@ -117,6 +124,7 @@ public class SwerveModule {
     mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     mAngleMotor.setInverted(Constants.Swerve.angleInvert);
     mAngleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
+    mAngleEncoder.setPositionConversionFactor(Constants.Swerve.steerReduction*360);
     mAngleMotor.burnFlash();
   }
 

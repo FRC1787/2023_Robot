@@ -67,7 +67,7 @@ public class Indexer extends SubsystemBase {
 
     indexerState = IndexerState.cone;
 
-    hasBeenHomed = true;
+    hasBeenHomed = false;
   }
 
   private void configureMotors() {

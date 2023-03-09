@@ -229,6 +229,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
     
-    SmartDashboard.putNumber("front left wheel distance traveled", mSwerveMods[0].getPosition().distanceMeters);
+    SmartDashboard.putNumber("front left distance traveled", mSwerveMods[0].getPosition().distanceMeters);
+    SmartDashboard.putNumber("front right distance meters", mSwerveMods[1].getPosition().distanceMeters);
   }
 }

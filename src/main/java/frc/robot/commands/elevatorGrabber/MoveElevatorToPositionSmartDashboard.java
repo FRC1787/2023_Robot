@@ -25,7 +25,7 @@ public class MoveElevatorToPositionSmartDashboard extends CommandBase {
      * @param elevatorGrabber - elevatorGrabber subsystem object.
      * @param targetPositionMeters - target position in meters, positive is elevator extended.
      */
-    public MoveElevatorToPositionSmartDashboard(ElevatorGrabber elevatorGrabber, double targetPositionMeters) {
+    public MoveElevatorToPositionSmartDashboard(ElevatorGrabber elevatorGrabber) {
         // addRequirements(elevatorGrabber);
         this.elevatorGrabber = elevatorGrabber;
         this.targetPositionMeters = 1.5;
@@ -92,7 +92,6 @@ public class MoveElevatorToPositionSmartDashboard extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        //return profile.isFinished(timer.get());
-        return false;
+        return profile.isFinished(timer.get());
     }
 }

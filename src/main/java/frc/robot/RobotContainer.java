@@ -9,7 +9,6 @@ import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
-import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionZero;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
@@ -17,8 +16,9 @@ import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.indexer.MoveClawForward;
 import frc.robot.commands.indexer.MoveSideBelts;
-import frc.robot.commands.intakeIndex.IntakeGamePieces;
-import frc.robot.commands.intakeIndex.MoveConveyor;
+import frc.robot.commands.intake.EjectGamePiece;
+import frc.robot.commands.intake.IntakeGamePieces;
+import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
@@ -98,29 +98,24 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, false));
 
-    controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber, 0));
-    controller.b().whileTrue(new MoveElevatorToPositionZero(elevatorGrabber, 0));
+    controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
+    controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
 
-    controller.povDown().whileTrue(new MoveSideBelts(indexer, -0.3));
-    controller.povUp().whileTrue(new MoveSideBelts(indexer, 0.3));
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
 
-    controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
-    // controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
-    controller.start().whileTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
-    controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
-    // controller.back().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
+    controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
+    controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8));
 
+    controller.start().onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
+    controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
+
+    controller.leftBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
     controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
     controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5));
-
-    // controller.leftBumper().whileTrue(new MoveClawForward(indexer, 0.2));
-    // controller.rightBumper().whileTrue(new MoveClawBack(indexer, 0.2));
-    controller.leftTrigger().whileTrue(new MoveConveyor(intake, 0.25));
-    controller.rightTrigger().whileTrue(new MoveConveyor(intake, -6));
     
-    // TODO: sorry i can't put this in a good place1.23 and 1.69 for elevator to move
+
+    //pneumatics stuff delete later
     intakeIn.onTrue(new InstantCommand(intake::retractIntake));
     intakeOut.onTrue(new InstantCommand(intake::extendIntake));
 
@@ -130,8 +125,34 @@ public class RobotContainer {
     sideBeltsIn.onTrue(new InstantCommand(indexer::closeIndexerWalls));
     sideBeltsOut.onTrue(new InstantCommand(indexer::openIndexerWalls));
 
-    //buttonBoard.button(0).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
-    //buttonBoard.button(0).onFalse(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setCubeMode)));
+    buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
+
+    //mid cone score
+    buttonBoard.button(16).and(buttonBoard.button(4))
+      .onTrue(
+        new InstantCommand(elevatorGrabber::extendElevator)
+        .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.23))
+        .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
+        .andThen(new InstantCommand(elevatorGrabber::retractElevator))
+        .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
+      );
+
+    //high cone score
+    buttonBoard.button(16).and(buttonBoard.button(5))
+      .onTrue(
+        new InstantCommand(elevatorGrabber::extendElevator)
+        .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.69))
+        .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
+        .andThen(new InstantCommand(elevatorGrabber::retractElevator))
+        .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
+      );
+
+    
+
+
+    buttonBoard.button(1).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
+    buttonBoard.button(2).onTrue(new InstantCommand(led::setPurple).andThen(new InstantCommand(indexer::setCubeMode)));
+
   }
 
   /**

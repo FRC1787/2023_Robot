@@ -16,6 +16,8 @@ public class MoveElevatorToPosition extends CommandBase {
     double targetPositionMeters;
     TrapezoidProfile profile;
     Timer timer;
+    double prevTimestamp;
+    double currTimestamp;
 
     /**
      * Moves the elevator to a position in meters. The lowest position is marked as zero, and a higher position position is positive.
@@ -32,7 +34,6 @@ public class MoveElevatorToPosition extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-
         profile = new TrapezoidProfile(
             new TrapezoidProfile.Constraints(
                 Constants.ElevatorGrabber.elevatorMaxVelMetersPerSecond,
@@ -48,22 +49,39 @@ public class MoveElevatorToPosition extends CommandBase {
         
         timer.reset();
         timer.start();
+        System.out.println("New Elevator Target: " + targetPositionMeters);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        // save info from the prev iteration before calculating for this iteration:
+        prevTimestamp = currTimestamp;
+        double prevVelocityCommand = profile.calculate(prevTimestamp).velocity;
+
+        // get current commands for velocity and acceleration
+        // from the motion profile
+        currTimestamp = timer.get();
+        double currVelocityCommand = profile.calculate(currTimestamp).velocity;
+        double currAccelerationCommand = (currVelocityCommand - prevVelocityCommand) / (currTimestamp - prevTimestamp);
+        currAccelerationCommand = 0; // Temporarily disable this!
+
+        // incorporate position feedback!
+        double measuredPosition = elevatorGrabber.getElevatorPositionMeters();
+        double desiredPosition = profile.calculate(currTimestamp).position;
+        double positionError = desiredPosition - measuredPosition;
+        double extraVelocityPerMeter = 8;  //analagous to I term of velocity controller
+
+        currVelocityCommand += positionError * extraVelocityPerMeter;
+
         elevatorGrabber.setElevatorMotorMetersPerSecond(
-            profile.calculate(timer.get()).velocity, 0
-            );
-        // elevatorGrabber.desiredPosition = profile.calculate(timer.get()).position;
+            currVelocityCommand, currAccelerationCommand);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        elevatorGrabber.setElevatorMotorMetersPerSecond(0, 0); 
-        
+        elevatorGrabber.setElevatorMotorMetersPerSecond(0, 0);
     }
 
     // Returns true when the command should end.

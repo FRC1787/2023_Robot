@@ -83,7 +83,7 @@ public final class Constants {
      * <p>
      * This value will be less than or equal to the maxAchievableVelocityMetersPerSecond, depending on driver preference.
      */
-    public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.0;
+    public static final double maxDesiredTeleopVelocityMetersPerSecond = 0.5;
 
     /**
      * The maximum achievable angular velocity of the robot in radians per second.

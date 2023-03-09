@@ -5,13 +5,14 @@
 package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
-import frc.robot.commands.intakeIndex.MoveConveyor;
-import frc.robot.commands.intakeIndex.MoveIntakeWheels;
-import frc.robot.commands.intakeIndex.PulseConveyor;
+import frc.robot.commands.intake.MoveConveyor;
+import frc.robot.commands.intake.MoveIntakeWheels;
+import frc.robot.commands.intake.PulseConveyor;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -27,6 +28,7 @@ public class IndexConeFull extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       //agitation/alignment procedure
+      new InstantCommand(elevatorGrabber::retractElevator),
       new MoveElevatorToPosition(elevatorGrabber, 0.55),
 
       new ParallelCommandGroup(
@@ -34,9 +36,9 @@ public class IndexConeFull extends SequentialCommandGroup {
         new MoveConveyor(intake, -0.4)
       ).withTimeout(0.25),
       new ParallelCommandGroup(
-        new PulseConveyor(intake, 0.2, 0.05, .6),
+        new PulseConveyor(intake, 0.2, 0.05, .3),
         new PulseIndexerWalls(indexer, 0.3),
-        new PulseSideBelts(indexer, 0.2, 0.05, .6)
+        new PulseSideBelts(indexer, 0.2, 0.05, .4)
       ).withTimeout(0.6),
       new InstantCommand(indexer::closeIndexerWalls),
       new ParallelCommandGroup(

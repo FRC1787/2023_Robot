@@ -2,25 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.intakeIndex;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 
-public class IntakeGamePieces extends CommandBase {
+public class EjectGamePiece extends CommandBase {
   private Intake intake;
   private Indexer indexer;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
 
   /**
-   * Extends the intake and intakes a game piece.
+   * Extends the intake, closes indexer walls, and ejects a game piece.
    * @param intake - intake subsystem object
-   * @param intakeMotorVoltage - Voltage to send to the intake (upper) motor. Make this negative to intake a piece.
-   * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this negative to intake a piece.
+   * @param indexer - indexer subsystem object
+   * @param intakeMotorVoltage - Voltage to send to the intake (upper) motor. Make this positive to eject a piece.
+   * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this positive to eject a piece.
    */
-  public IntakeGamePieces(Intake intake, Indexer indexer, double intakeMotorVoltage, double conveyorMotorVoltage) {
+  public EjectGamePiece(Intake intake, Indexer indexer, double intakeMotorVoltage, double conveyorMotorVoltage) {
     addRequirements(intake);
     this.intake = intake;
     this.indexer = indexer;
@@ -40,8 +41,8 @@ public class IntakeGamePieces extends CommandBase {
     intake.extendIntake();
     intake.setIntakeMotorVolts(intakeMotorVoltage);
     intake.setConveyorMotorVolts(conveyorMotorVoltage);
-    indexer.openIndexerWalls();
-    indexer.setIndexerMotors(-0.5);
+    indexer.closeIndexerWalls();
+    indexer.setIndexerMotors(1.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

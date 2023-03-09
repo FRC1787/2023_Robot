@@ -48,17 +48,25 @@ public class AlignToTarget extends CommandBase {
     double lateralOffsetMeters = vision.getLateralOffsetMeters(target);
     double distanceOffsetMeters = vision.getTargetDistanceMeters(target);
 
-    double lateralVel = MathUtil.clamp(
-      lateralPID.calculate(lateralOffsetMeters),
-      -1,
-      1
-    );
+    double lateralVel;
+    //sometimes limelight messes up and gives bs distance measurements so this mitigates the robot from shooting away
+    if (Math.abs(lateralOffsetMeters) > 1.5)
+      lateralVel = 0;
+    else {
+      lateralVel = MathUtil.clamp(
+        lateralPID.calculate(lateralOffsetMeters),
+        -1,
+        1
+      );
+    }
 
+    
     double distanceVel;
-    if (distanceOffsetMeters == 0.0)
+    //see above comment
+    if (Math.abs(distanceOffsetMeters) > 2.5)
       distanceVel = 0;
     else {
-      distanceVel = -1. * MathUtil.clamp(
+      distanceVel = -MathUtil.clamp(
         distancePID.calculate(distanceOffsetMeters),
         -1,
         1

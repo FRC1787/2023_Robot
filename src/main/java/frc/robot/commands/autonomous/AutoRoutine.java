@@ -45,8 +45,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       true,
       drivetrain
     );
-
-    // TODO: if continue to drive then set chassisspeeds 0 
+    
     addCommands(
       autoBuilder.fullAuto(pathGroup)
     );
