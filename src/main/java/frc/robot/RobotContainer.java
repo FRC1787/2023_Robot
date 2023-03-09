@@ -109,7 +109,7 @@ public class RobotContainer {
     controller.y().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
     // controller.x().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
     controller.start().whileTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
-    // controller.back().whileTrue(new AlignToTarget(drivetrain, vision, null))
+    controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     // controller.back().whileTrue(new SetGrabberMotor(elevatorGrabber, -6, 15));
 
     controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
@@ -140,6 +140,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision);
+    return new AutoRoutine("two cone", drivetrain, vision);
   }
 }

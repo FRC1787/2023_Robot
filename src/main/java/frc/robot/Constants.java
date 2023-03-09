@@ -30,16 +30,17 @@ public final class Constants {
      * distance between the center point of the left wheels and the center point of
      * the right wheels
      */
-    public static final double trackwidthMeters = Units.inchesToMeters(22.75);
+    public static final double trackwidthMeters = 0.689; //Units.inchesToMeters(22.75);
     /**
      * distance between the center point of the front wheels and the center point of
      * the back wheels
      */
-    public static final double wheelbaseMeters = Units.inchesToMeters(22.75);
+    public static final double wheelbaseMeters = 0.689; //Units.inchesToMeters(22.75);
+    
     public static final double driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
     public static final double steerReduction = (14.0 / 50.0) * (10.0 / 60.0);
 
-    public static final double wheelDiamaterMeters = Units.inchesToMeters(4.0);
+    public static final double wheelDiamaterMeters = 0.10033;
     public static final double wheelCircumferenceMeters = wheelDiamaterMeters * Math.PI;
 
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
@@ -51,7 +52,7 @@ public final class Constants {
 
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
     // pid for drive motor
-    public static final double drivekPVoltsPerMeterPerSecond = 0.8;
+    public static final double drivekPVoltsPerMeterPerSecond = 0.8; //sysid says this should 0.27
     public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
     public static final double drivekDVoltsPerMeter = 0.01;
 
@@ -61,8 +62,8 @@ public final class Constants {
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
 
     // TODO: fix characterization + pid values for driving
-    public static final double drivekSVolts = 0.12584;
-    public static final double drivekVVoltsSecondsPerMeter = 2.6; // .8679
+    public static final double drivekSVolts = 0.146;
+    public static final double drivekVVoltsSecondsPerMeter = 2.703; // .8679
     public static final double drivekAVoltsSecondsSquaredPerMeter = 0;
 
     /**

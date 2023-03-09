@@ -19,8 +19,8 @@ public class AlignToTarget extends CommandBase {
   Constants.Vision.LimelightTarget target;
 
   // TODO: tune these pid controllers and maybe change the clamp values
-  PIDController lateralPID = new PIDController(3, 0, 0);
-  PIDController distancePID = new PIDController(3, 0, 0);
+  PIDController lateralPID = new PIDController(1, 0, 0);
+  PIDController distancePID = new PIDController(1, 0, 0);
 
   public AlignToTarget(Drivetrain drivetrain, Vision vision, Constants.Vision.LimelightTarget target) {
     addRequirements(drivetrain);
@@ -35,6 +35,8 @@ public class AlignToTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    vision.changePipeline(target);
+
     lateralPID.setSetpoint(Constants.Vision.limelightLateralOffsetMeters);
     distancePID.setSetpoint(target.distanceMeters + Constants.Vision.limelightBumperDistanceMeters);
   }

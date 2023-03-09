@@ -27,7 +27,7 @@ public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
   public AutoRoutine(String path, Drivetrain drivetrain, Vision vision) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
-      path, new PathConstraints(2, 2));
+      path, new PathConstraints(3, 1.5));
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
@@ -38,8 +38,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(10, 0, 0),
-      new PIDConstants(10, 0, 0),
+      new PIDConstants(20, 0, 0),
+      new PIDConstants(5, 0, 0),
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,

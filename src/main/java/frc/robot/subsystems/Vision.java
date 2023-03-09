@@ -32,7 +32,6 @@ public class Vision extends SubsystemBase {
   }
 
   public double getTargetDistanceMeters(Constants.Vision.LimelightTarget target) {
-    changePipeline(target);
 
     return (target.heightMeters - Constants.Vision.limelightHeightMeters)
         / Math.tan(
@@ -40,8 +39,6 @@ public class Vision extends SubsystemBase {
   }
 
   public double getLateralOffsetMeters(Constants.Vision.LimelightTarget target) {
-    changePipeline(target);
-
     return getTargetDistanceMeters(target) * Math.tan(Math.toRadians(getTXDegrees()));
   }
 
