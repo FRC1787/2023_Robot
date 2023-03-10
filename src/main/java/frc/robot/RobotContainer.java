@@ -106,7 +106,7 @@ public class RobotContainer {
 
     controller.povRight().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
-    controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
+    controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12));
     controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8));
 
     controller.start().onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));

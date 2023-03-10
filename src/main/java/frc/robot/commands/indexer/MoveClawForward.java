@@ -4,6 +4,7 @@
 
 package frc.robot.commands.indexer;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Indexer;
 
@@ -14,10 +15,13 @@ public class MoveClawForward extends CommandBase {
    */
   private Indexer indexer;
   private double clawMotorVoltage;
+  private Timer timer;
 
   public MoveClawForward(Indexer indexer, double clawMotorVoltage) {
     this.indexer = indexer;
     this.clawMotorVoltage = Math.abs(clawMotorVoltage);
+
+    timer = new Timer();
     
     // SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
   }
@@ -28,7 +32,7 @@ public class MoveClawForward extends CommandBase {
     
 
     // clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
-
+    timer.start();
     indexer.setClawMotorVolts(clawMotorVoltage);
 
   }

@@ -29,7 +29,7 @@ public class IndexConeFull extends SequentialCommandGroup {
     addCommands(
       //agitation/alignment procedure
       new InstantCommand(elevatorGrabber::retractElevator),
-      new MoveElevatorToPosition(elevatorGrabber, 0.55),
+      new MoveElevatorToPosition(elevatorGrabber, 0.31),
 
       new ParallelCommandGroup(
         new MoveSideBelts(indexer, -0.4),
