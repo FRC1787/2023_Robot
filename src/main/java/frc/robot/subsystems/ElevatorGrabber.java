@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class ElevatorGrabber extends SubsystemBase {
@@ -94,6 +95,8 @@ public class ElevatorGrabber extends SubsystemBase {
     elevatorMotor.restoreFactoryDefaults();
     elevatorMotor.setSmartCurrentLimit(50);
     elevatorMotor.setInverted(true);
+    elevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    elevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
 
     grabberMotor.restoreFactoryDefaults();
@@ -143,6 +146,7 @@ public class ElevatorGrabber extends SubsystemBase {
     if (atUpperLimit() && totalOutput > 0)
       totalOutput = 0;
 
+    //System.out.println("volts sent: " + totalOutput);
     setElevatorMotorVolts(totalOutput);
   }
 

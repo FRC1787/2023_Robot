@@ -252,7 +252,7 @@ public final class Constants {
     public static double kAVoltsPer_MeterPerSecondSquared = 0.087606;
 
     public static double elevatorReduction = (18. / 44.) * (1. / 4.);
-    public static double elevatorMaxVelMetersPerSecond = 7;
+    public static double elevatorMaxVelMetersPerSecond = 4;
     public static double elevatorMaxAccelMetersPerSecondSquared = 4;
     // We tried increasing max accel from 0.5 to 1.0, and found that
     // this causes the encoder to no longer determine the elevator's positon

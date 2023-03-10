@@ -77,7 +77,7 @@ public class MoveElevatorToPositionSmartDashboard extends CommandBase {
         double extraVelocityPerMeter = 8;
 
         currVelocityCommand += positionError * extraVelocityPerMeter;
-
+        
         elevatorGrabber.setElevatorMotorMetersPerSecond(
             currVelocityCommand, currAccelerationCommand
             );
