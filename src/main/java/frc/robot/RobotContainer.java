@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.commands.autonomous.AutoRoutine;
-import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
@@ -15,7 +14,6 @@ import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.indexer.MoveClawForward;
-import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
@@ -28,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -106,18 +105,28 @@ public class RobotContainer {
 
     controller.povRight().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
-    controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12));
-    controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8));
 
-    controller.start().onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
-    controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
+    controller.rightTrigger().whileTrue(
+      new ParallelCommandGroup(
+        new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6),
+        new MoveElevatorToPosition(elevatorGrabber, 0))
+    );
+    controller.rightTrigger().onFalse(
+      new MoveConveyor(intake, -8).withTimeout(0.70)
+    );
+      
+    controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8, 8));
+
+    controller.x().onTrue(
+      new IndexConeFull(intake, indexer, elevatorGrabber)
+        .andThen(new PickUpCone(elevatorGrabber, intake, indexer)));
+
+    
+    //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
 
     controller.leftBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
     controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
     controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5));
-
-    controller.y().whileTrue(new MoveClawForward(indexer, 1));
-    controller.x().whileTrue(new MoveClawBack(indexer, -1));
 
     
 

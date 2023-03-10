@@ -22,22 +22,21 @@ public class PickUpCone extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     double grabbingVolts = 6;
-    double holdingVolts = 1.0;
     double pickupPosition = 0.14;
-    double grabbingAmpLimit = 23;
-    double holdingAmpLimit = 50;
+    double grabbingAmpLimit = 17;
     addCommands(
       new InstantCommand(indexer::closeIndexerWalls),
       new InstantCommand(elevatorGrabber::retractElevator),
       new MoveElevatorToPosition(elevatorGrabber, pickupPosition),
       new ParallelRaceGroup(
         new SequentialCommandGroup(
-          new MoveConveyor(intake, -0.5).withTimeout(1),
-          new MoveConveyor(intake, 0.1)
+          new MoveConveyor(intake, -6).withTimeout(0.5),
+          new MoveConveyor(intake, 4)
         ),
-        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit)
-      ),
-      new SetGrabberMotor(elevatorGrabber, holdingVolts, holdingAmpLimit)
+        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(1.0)
+      )
     );
+
+    //0.09
   }
 }

@@ -13,6 +13,7 @@ public class EjectGamePiece extends CommandBase {
   private Indexer indexer;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
+  private double indexerMotorVoltage;
 
   /**
    * Extends the intake, closes indexer walls, and ejects a game piece.
@@ -20,13 +21,15 @@ public class EjectGamePiece extends CommandBase {
    * @param indexer - indexer subsystem object
    * @param intakeMotorVoltage - Voltage to send to the intake (upper) motor. Make this positive to eject a piece.
    * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this positive to eject a piece.
+   * @param indexerMotorVoltage - Voltage to send to the side belts. Make this positive to eject a piece.
    */
-  public EjectGamePiece(Intake intake, Indexer indexer, double intakeMotorVoltage, double conveyorMotorVoltage) {
+  public EjectGamePiece(Intake intake, Indexer indexer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage) {
     addRequirements(intake);
     this.intake = intake;
     this.indexer = indexer;
     this.intakeMotorVoltage = intakeMotorVoltage;
     this.conveyorMotorVoltage = conveyorMotorVoltage;
+    this.indexerMotorVoltage = indexerMotorVoltage;
 
     // SmartDashboard.putNumber("intake motor voltage", 0.0);
     // SmartDashboard.putNumber("conveyor motor voltage", 0.0);
@@ -42,7 +45,7 @@ public class EjectGamePiece extends CommandBase {
     intake.setIntakeMotorVolts(intakeMotorVoltage);
     intake.setConveyorMotorVolts(conveyorMotorVoltage);
     indexer.closeIndexerWalls();
-    indexer.setIndexerMotors(1.0);
+    indexer.setIndexerMotors(indexerMotorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

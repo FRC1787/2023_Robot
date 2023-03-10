@@ -15,20 +15,23 @@ public class IntakeGamePieces extends CommandBase {
   private ElevatorGrabber elevatorGrabber;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
+  private double sideBeltVoltage;
 
   /**
    * Extends the intake and intakes a game piece.
    * @param intake - intake subsystem object
    * @param intakeMotorVoltage - Voltage to send to the intake (upper) motor. Make this negative to intake a piece.
    * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this negative to intake a piece.
+   * @param sideBeltVoltage - Voltage to send to the side belt motors. Make this negative to intake a piece.
    */
-  public IntakeGamePieces(Intake intake, Indexer indexer, ElevatorGrabber elevatorGrabber, double intakeMotorVoltage, double conveyorMotorVoltage) {
+  public IntakeGamePieces(Intake intake, Indexer indexer, ElevatorGrabber elevatorGrabber, double intakeMotorVoltage, double conveyorMotorVoltage, double sideBeltVoltage) {
     addRequirements(intake);
     this.intake = intake;
     this.indexer = indexer;
     this.elevatorGrabber = elevatorGrabber;
     this.intakeMotorVoltage = intakeMotorVoltage;
     this.conveyorMotorVoltage = conveyorMotorVoltage;
+    this.sideBeltVoltage = sideBeltVoltage;
 
     // SmartDashboard.putNumber("intake motor voltage", 0.0);
     // SmartDashboard.putNumber("conveyor motor voltage", 0.0);
@@ -45,7 +48,7 @@ public class IntakeGamePieces extends CommandBase {
     intake.setConveyorMotorVolts(conveyorMotorVoltage);
     elevatorGrabber.retractElevator();
     indexer.openIndexerWalls();
-    indexer.setIndexerMotors(-0.5);
+    indexer.setIndexerMotors(sideBeltVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

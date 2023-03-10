@@ -29,46 +29,31 @@ public class IndexConeFull extends SequentialCommandGroup {
     addCommands(
       //agitation/alignment procedure
       new InstantCommand(elevatorGrabber::retractElevator),
-      new MoveElevatorToPosition(elevatorGrabber, 0.31),
+      
 
       new ParallelCommandGroup(
-        new MoveSideBelts(indexer, -0.4),
-        new MoveConveyor(intake, -0.4)
-      ).withTimeout(0.25),
-      new ParallelCommandGroup(
-        new PulseConveyor(intake, 0.2, 0.05, .3),
+        new MoveElevatorToPosition(elevatorGrabber, 0.4),
+        new PulseConveyor(intake, 0.2, 0.05, 3.6),
         new PulseIndexerWalls(indexer, 0.3),
-        new PulseSideBelts(indexer, 0.2, 0.05, .4)
+        new PulseSideBelts(indexer, 0.2, 0.05, 4.8)
       ).withTimeout(0.6),
       new InstantCommand(indexer::closeIndexerWalls),
       new ParallelCommandGroup(
-        new MoveSideBelts(indexer, -0.4),
-        new MoveConveyor(intake, -0.4)
-      ).withTimeout(0.75),
+        new MoveSideBelts(indexer, -5),
+        new MoveConveyor(intake, -5)
+      ).withTimeout(0.5),
 
       //uprighting procedure
       new ParallelRaceGroup(
-        new MoveConveyor(intake, -0.25),
-        new MoveSideBelts(indexer, -0.3),
-        new MoveClawForward(indexer, 0.3).withTimeout(1.0),
+        new MoveConveyor(intake, -3),
+        new MoveSideBelts(indexer, -3.6),
+        new MoveClawForward(indexer, 3.6).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
       ),
       new ParallelRaceGroup(
-        new MoveConveyor(intake, 0.25),
-        new MoveSideBelts(indexer, 0.3),
-        new MoveClawBack(indexer, 0.3).withTimeout(1.0),
-        new MoveIntakeWheels(intake, 2.0)
-      ),
-      new ParallelRaceGroup(
-        new MoveConveyor(intake, -0.25),
-        new MoveSideBelts(indexer, -0.3),
-        new MoveClawForward(indexer, 0.3).withTimeout(1.0),
-        new MoveIntakeWheels(intake, 2.0)
-      ),
-      new ParallelRaceGroup(
-        new MoveConveyor(intake, 0.25),
-        new MoveSideBelts(indexer, 0.3),
-        new MoveClawBack(indexer, 0.3).withTimeout(1.0),
+        new MoveConveyor(intake, 3),
+        new MoveSideBelts(indexer, 3.6),
+        new MoveClawBack(indexer, 3.6).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
       )
     );

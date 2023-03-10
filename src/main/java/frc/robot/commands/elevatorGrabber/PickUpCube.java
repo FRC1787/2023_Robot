@@ -27,13 +27,13 @@ public class PickUpCube extends SequentialCommandGroup {
       new MoveElevatorToPosition(elevatorGrabber, 0.27),
       new InstantCommand(indexer::closeIndexerWalls),
       new ParallelCommandGroup(
-        new MoveSideBelts(indexer, 0.1).withTimeout(1.0),
-        new MoveConveyor(intake, 0.25).withTimeout(1.0)
+        new MoveSideBelts(indexer, 0.1*12).withTimeout(1.0),
+        new MoveConveyor(intake, 0.25*12).withTimeout(1.0)
       ),
       new MoveElevatorToPosition(elevatorGrabber, 0.0),
       new ParallelRaceGroup(
-        new MoveSideBelts(indexer, -0.1).withTimeout(3.0),
-        new MoveConveyor(intake, -0.25).withTimeout(3.0),
+        new MoveSideBelts(indexer, -0.1*12).withTimeout(3.0),
+        new MoveConveyor(intake, -0.25*12).withTimeout(3.0),
         new SetGrabberMotor(elevatorGrabber, -6, 12)
       ),
       new InstantCommand(indexer::openIndexerWalls),
