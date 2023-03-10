@@ -54,7 +54,7 @@ public final class Constants {
     // pid for drive motor
     public static final double drivekPVoltsPerMeterPerSecond = 0.8; //sysid says this should 0.27
     public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
-    public static final double drivekDVoltsPerMeter = 0.01;
+    public static final double drivekDVoltsPerMeter = 0.00;
 
     // pid for angle motor
     public static final double anglekPVoltsPerDegree = 0.065;
@@ -83,7 +83,7 @@ public final class Constants {
      * <p>
      * This value will be less than or equal to the maxAchievableVelocityMetersPerSecond, depending on driver preference.
      */
-    public static final double maxDesiredTeleopVelocityMetersPerSecond = 0.5;
+    public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.0;
 
     /**
      * The maximum achievable angular velocity of the robot in radians per second.
@@ -100,12 +100,14 @@ public final class Constants {
      * <p>
      * This value will be tuned based off of driver preference.
      */
-    public static final double maxDesiredAngularVelocityRadiansPerSecond = 4.0;
+    public static final double maxDesiredAngularVelocityRadiansPerSecond = 5.4;
+
+    public static final double maxDesiredDriverAccel = 18.0;
 
     public static final int angleContinuousCurrentLimit = 0;
     public static final boolean angleInvert = true;
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
-    public static final int driveContinuousCurrentLimit = 0;
+    public static final int driveContinuousCurrentLimit = 60;
     public static final boolean driveInvert = true;
     public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 

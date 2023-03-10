@@ -75,7 +75,7 @@ public class SwerveModule {
 
       double feedforward = mDriveFeedforward.calculate(desiredState.speedMetersPerSecond);
       double pidCorrection = mDrivePID.calculate(wheelMetersPerSecond, desiredState.speedMetersPerSecond);
-      double outputVolts = MathUtil.clamp(feedforward + pidCorrection, -6, 6);
+      double outputVolts = MathUtil.clamp(feedforward + pidCorrection, -12, 12);
 
       mDriveMotor.setVoltage(outputVolts);
     }

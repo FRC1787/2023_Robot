@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -27,6 +29,9 @@ public class Drivetrain extends SubsystemBase {
   private Field2d field;
 
   private ChassisSpeeds desiredChassisSpeeds;
+
+  private SlewRateLimiter chassisSpeedsXSlewLimiter;
+  private SlewRateLimiter chassisSpeedsYSlewLimiter;
 
   public Drivetrain() {
     gyro = new AHRS(SPI.Port.kMXP);
@@ -61,6 +66,9 @@ public class Drivetrain extends SubsystemBase {
 
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
     field = new Field2d();
+
+    chassisSpeedsXSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);
+    chassisSpeedsYSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);
   }
 
   // GYROSCOPE
@@ -166,6 +174,9 @@ public class Drivetrain extends SubsystemBase {
 
     this.desiredChassisSpeeds = desiredChassisSpeeds;
 
+    desiredChassisSpeeds.vxMetersPerSecond = chassisSpeedsXSlewLimiter.calculate(desiredChassisSpeeds.vxMetersPerSecond);
+    desiredChassisSpeeds.vyMetersPerSecond = chassisSpeedsYSlewLimiter.calculate(desiredChassisSpeeds.vyMetersPerSecond);
+
     SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(desiredChassisSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxAchievableVelocityMetersPerSecond);
@@ -226,10 +237,9 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("field", field);
 
     SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
+    SmartDashboard.putNumber("DesiredChassisSpeedsYMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
     SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
     
-    SmartDashboard.putNumber("front left distance traveled", mSwerveMods[0].getPosition().distanceMeters);
-    SmartDashboard.putNumber("front right distance meters", mSwerveMods[1].getPosition().distanceMeters);
+    SmartDashboard.putNumber("front left module speed", mSwerveMods[0].getState().speedMetersPerSecond);
   }
 }

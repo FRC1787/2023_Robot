@@ -96,13 +96,15 @@ public class RobotContainer {
     // controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
     // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
-    drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, false));
+    drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
 
     controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
     controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
 
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
+
+    controller.povRight().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
     controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, indexer, -6, -12));
     controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8));
