@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -79,6 +80,8 @@ public class Indexer extends SubsystemBase {
 
     clawMotor.restoreFactoryDefaults();
     clawMotor.setSmartCurrentLimit(20);
+    clawMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+    clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
   }
 
 
@@ -87,7 +90,13 @@ public class Indexer extends SubsystemBase {
    * @param voltage - A positive value should move the claw towards the front of the robot.
    */
   public void setClawMotorVolts(double voltage) {
-    clawMotor.set(voltage);
+    if (isClawBack() && voltage < 0)
+      clawMotor.setVoltage(0);
+    else if (isClawForward() && voltage > 0)
+      clawMotor.setVoltage(0);
+    else 
+      clawMotor.setVoltage(voltage);
+
   }
 
   /**
@@ -144,8 +153,8 @@ public class Indexer extends SubsystemBase {
    * @param voltage - A positive value here should move the belts towards the front of the robot.
    */
   public void setIndexerMotors(double voltage) {
-    leftIndexerMotor.set(voltage);
-    rightIndexerMotor.set(voltage);
+    leftIndexerMotor.setVoltage(voltage);
+    rightIndexerMotor.setVoltage(voltage);
   }
 
   public double getIndexerDirection() {
@@ -157,13 +166,22 @@ public class Indexer extends SubsystemBase {
     if (isClawBack()) {
       zeroClawEncoder();
       hasBeenHomed = true;
+
+      // once claw has been homed, this sends
+      // one more command to make sure we're not backdriving.
+      if (clawMotor.getAppliedOutput() < 0) {
+        this.setClawMotorVolts(0);
+      }
     }
 
     if (!hasBeenHomed) {
-      setClawMotorVolts(-0.1);
+      this.setClawMotorVolts(-1.0);
     }
 
     SmartDashboard.putNumber("claw motor rotations", clawMotorEncoder.getPosition());
+    SmartDashboard.putNumber("claw percent output", clawMotor.getAppliedOutput());
+    SmartDashboard.putBoolean("isClawBack()", isClawBack());
+    SmartDashboard.putBoolean("clawHomed", hasBeenHomed);
     SmartDashboard.putBoolean("compressor enabled", phCompressor.isEnabled());
     SmartDashboard.putString("intake indexer status", indexerSolenoid.get().toString());
   }

@@ -50,25 +50,25 @@ public class IndexConeFull extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new MoveConveyor(intake, -0.25),
         new MoveSideBelts(indexer, -0.3),
-        new MoveClawForward(indexer, 0.3),
+        new MoveClawForward(indexer, 0.3).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
       ),
       new ParallelRaceGroup(
         new MoveConveyor(intake, 0.25),
         new MoveSideBelts(indexer, 0.3),
-        new MoveClawBack(indexer, 0.3),
+        new MoveClawBack(indexer, 0.3).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
       ),
       new ParallelRaceGroup(
         new MoveConveyor(intake, -0.25),
         new MoveSideBelts(indexer, -0.3),
-        new MoveClawForward(indexer, 0.3),
+        new MoveClawForward(indexer, 0.3).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
       ),
       new ParallelRaceGroup(
         new MoveConveyor(intake, 0.25),
         new MoveSideBelts(indexer, 0.3),
-        new MoveClawBack(indexer, 0.3),
+        new MoveClawBack(indexer, 0.3).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
       )
     );

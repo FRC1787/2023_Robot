@@ -115,6 +115,10 @@ public class RobotContainer {
     controller.leftBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
     controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
     controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5));
+
+    controller.y().whileTrue(new MoveClawForward(indexer, 1));
+    controller.x().whileTrue(new MoveClawBack(indexer, -1));
+
     
 
     //pneumatics stuff delete later
