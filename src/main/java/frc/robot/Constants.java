@@ -30,7 +30,7 @@ public final class Constants {
      * distance between the center point of the left wheels and the center point of
      * the right wheels
      */
-    public static final double trackwidthMeters = 0.689; //Units.inchesToMeters(22.75);
+    public static final double trackwidthMeters = Units.inchesToMeters(22.75);
     /**
      * distance between the center point of the front wheels and the center point of
      * the back wheels
@@ -52,12 +52,12 @@ public final class Constants {
 
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
     // pid for drive motor
-    public static final double drivekPVoltsPerMeterPerSecond = 0.8; //sysid says this should 0.27
+    public static final double drivekPVoltsPerMeterPerSecond = 1.6; //sysid says this should 0.27
     public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
     public static final double drivekDVoltsPerMeter = 0.00;
 
     // pid for angle motor
-    public static final double anglekPVoltsPerDegree = 0.065;
+    public static final double anglekPVoltsPerDegree = 0.08;//0.065;
     public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk 
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
 

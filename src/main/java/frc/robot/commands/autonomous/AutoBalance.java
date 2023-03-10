@@ -23,26 +23,31 @@ public class AutoBalance extends CommandBase {
     tiltController = new PIDController(0.1/10, 0, 0); 
     tiltController.setSetpoint(0);
 
-    hasTilted = false;
-
     addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain.drive(ChassisSpeeds.fromFieldRelativeSpeeds(1.5, 0., 0., drivetrain.getRobotRotation2d()), true);
+    hasTilted = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 50) {
+    if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 40) {
       hasTilted = true;
     }
-    if (hasTilted) {
+    if (!hasTilted) 
+      drivetrain.drive(new ChassisSpeeds(0.75, 0., 0.), true);
+    else {
       double desiredVxMetersPerSecond = tiltController.calculate(drivetrain.getRobotPitchDegrees());
-      drivetrain.drive(new ChassisSpeeds(desiredVxMetersPerSecond, 0, 0), true);
+      drivetrain.drive(
+        new ChassisSpeeds(
+          desiredVxMetersPerSecond,
+          0,
+          0),
+        true);
     }
   }
 

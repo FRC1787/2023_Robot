@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
@@ -128,6 +129,8 @@ public class RobotContainer {
     controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
     controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5));
 
+    controller.back().whileTrue(new AutoBalance(drivetrain));
+
     
 
     //pneumatics stuff delete later
@@ -176,6 +179,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutoRoutine("two cone", drivetrain, vision);
+    return new AutoRoutine("score and balance", drivetrain, vision, elevatorGrabber);
   }
 }
