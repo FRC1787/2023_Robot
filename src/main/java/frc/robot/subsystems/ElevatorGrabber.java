@@ -52,14 +52,15 @@ public class ElevatorGrabber extends SubsystemBase {
 
     configureMotors();
 
-    encoder = elevatorMotor.getAlternateEncoder(8192);
+    // encoder = elevatorMotor.getAlternateEncoder(8192);
     // encoder.setPositionConversionFactor(1);
     // encoder.setVelocityConversionFactor(1);
-    encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation);
-    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM);
+    encoder = elevatorMotor.getEncoder();
+    encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation * Constants.ElevatorGrabber.elevatorReduction);
+    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM * Constants.ElevatorGrabber.elevatorReduction);
     
     // sysid recommends an depth of 5 - 10 samples per average (we picked 8 because 2^3)
-    encoder.setAverageDepth(8);
+    // encoder.setAverageDepth(8);
 
     // encoder.setMeasurementPeriod(0);
 
@@ -214,6 +215,11 @@ public class ElevatorGrabber extends SubsystemBase {
     SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
     SmartDashboard.putNumber("amp reading for grabber", getGrabOutputAmps());
     SmartDashboard.putNumber("unfiltered amp limit", grabberMotor.getOutputCurrent());
+
+    SmartDashboard.putNumber("relative encoder position", encoder.getPosition());
+    SmartDashboard.putNumber("relative encoder velocity", encoder.getVelocity());
+
+
     
   }
 }

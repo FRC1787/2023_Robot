@@ -251,8 +251,9 @@ public final class Constants {
     public static double kVVoltsPer_MeterPerSecond = 4.8109; //represents voltage given to motor per m/s of desired elevator carriage velocity
     public static double kAVoltsPer_MeterPerSecondSquared = 0.087606;
 
-    public static double elevatorMaxVelMetersPerSecond = 2.0;
-    public static double elevatorMaxAccelMetersPerSecondSquared = 0.5;
+    public static double elevatorReduction = (18. / 44.) * (1. / 4.);
+    public static double elevatorMaxVelMetersPerSecond = 7;
+    public static double elevatorMaxAccelMetersPerSecondSquared = 4;
     // We tried increasing max accel from 0.5 to 1.0, and found that
     // this causes the encoder to no longer determine the elevator's positon
     // accurately. We have no idea why, and no more time to debug this.
