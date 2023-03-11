@@ -35,7 +35,7 @@ public final class Constants {
      * distance between the center point of the front wheels and the center point of
      * the back wheels
      */
-    public static final double wheelbaseMeters = 0.689; //Units.inchesToMeters(22.75);
+    public static final double wheelbaseMeters = Units.inchesToMeters(22.75);
     
     public static final double driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
     public static final double steerReduction = (14.0 / 50.0) * (10.0 / 60.0);
@@ -61,7 +61,6 @@ public final class Constants {
     public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk 
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
 
-    // TODO: fix characterization + pid values for driving
     public static final double drivekSVolts = 0.146;
     public static final double drivekVVoltsSecondsPerMeter = 2.703; // .8679
     public static final double drivekAVoltsSecondsSquaredPerMeter = 0;
@@ -117,15 +116,15 @@ public final class Constants {
      * All values are relative to the front left corner configuration.
      */
     public static final class CANCoderOffsets {
-      public static final double one = -61.523;
-      public static final double two = -314.209;
-      public static final double three = -176.045;
-      public static final double four = -63.193;// 254.17969796160835;
-      public static final double five = 0;// 297.68554453125;
-      public static final double six = 0;// 84.73;
-      public static final double seven = 0.00;
-      public static final double eight = 0.00;
-      public static final double nine = 0.00;
+      public static final double one = -61.1719;
+      public static final double two = -45.527 + 90;
+      public static final double three = -80.507 + 270;
+      public static final double four = 117.334 - 180;
+      public static final double five = 0;
+      public static final double six = 0;
+      public static final double seven = 0;
+      public static final double eight = 0;
+      public static final double nine = 0;
     }
 
     // This enum is used to determine the offset for the swerve modules.
@@ -168,7 +167,7 @@ public final class Constants {
       public static final int steerEncoderID = 1;
       /** Offset from true zero for the front left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
-          CANCoderOffsets.one, SwerveModuleCorners.FRONT_LEFT);// 107;
+          CANCoderOffsets.one, SwerveModuleCorners.FRONT_LEFT);
     }
 
     public static final class FrontRightSwerveModule {
@@ -181,7 +180,7 @@ public final class Constants {
       /** Offset from true zero for the front right swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.two,
-          SwerveModuleCorners.FRONT_RIGHT);// 121.99;
+          SwerveModuleCorners.FRONT_RIGHT);
     }
 
     public static final class BackLeftSwerveModule {
@@ -194,7 +193,7 @@ public final class Constants {
       /** Offset from true zero for the back left swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.three,
-          SwerveModuleCorners.BACK_LEFT);// -185.27;
+          SwerveModuleCorners.BACK_LEFT);
     }
 
     public static final class BackRightSwerveModule {
@@ -207,7 +206,7 @@ public final class Constants {
       /** Offset from true zero for the back right swerve module in degrees */
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.four,
-          SwerveModuleCorners.BACK_RIGHT);// 279.73;
+          SwerveModuleCorners.BACK_RIGHT);
     }
   }
 
@@ -245,7 +244,6 @@ public final class Constants {
     public static double kIVoltsPerMeter = 0; // significant integral windup with this set to 0.2
     public static double kDVoltsPerMeterPerSecondSquared = 0;
 
-    //TODO: characterize elevator and tune pid
     public static double kSVolts = 0.032828; 
     public static double kGVolts = 0.2156; 
     public static double kVVoltsPer_MeterPerSecond = 4.8109; //represents voltage given to motor per m/s of desired elevator carriage velocity

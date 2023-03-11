@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LED extends SubsystemBase {
   // 0 and 1 are the PWM ports on the RoboRIO the Blinkin and LED strips are attached to
-  private Spark blinkin = new Spark(0);
+  private Spark blinkin = new Spark(9);
 
   public LED() {}
 
@@ -38,6 +38,10 @@ public class LED extends SubsystemBase {
 
   public void flashRed() {
     setBlinkin(-0.11);
+  }
+
+  public void setOrange() {
+    setBlinkin(0.65);
   }
 
   @Override

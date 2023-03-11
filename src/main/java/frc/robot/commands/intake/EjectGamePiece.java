@@ -58,6 +58,7 @@ public class EjectGamePiece extends CommandBase {
     intake.stopIntakeMotors();
     intake.retractIntake();
     indexer.setIndexerMotors(0);
+    indexer.openIndexerWalls();
   }
 
   // Returns true when the command should end.

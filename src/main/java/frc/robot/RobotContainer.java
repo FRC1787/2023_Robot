@@ -11,10 +11,9 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
+import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
-import frc.robot.commands.indexer.MoveClawBack;
-import frc.robot.commands.indexer.MoveClawForward;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
@@ -72,6 +71,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    led.setOrange();
 
     autoChooser.setDefaultOption("Full Path", "FullPath");
     autoChooser.addOption("Curve 180", "curve180");
@@ -146,30 +146,29 @@ public class RobotContainer {
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
     //mid cone score
-    buttonBoard.button(16).and(buttonBoard.button(4))
-      .onTrue(
-        new InstantCommand(elevatorGrabber::extendElevator)
-        .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.23))
-        .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
-        .andThen(new InstantCommand(elevatorGrabber::retractElevator))
-        .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
-      );
+    buttonBoard.button(16).and(buttonBoard.button(4)).onTrue(new ScoreGamePiece(elevatorGrabber, indexer, 1.21));
+    // buttonBoard.button(16).and(buttonBoard.button(4))
+    //   .onTrue(
+    //     new InstantCommand(elevatorGrabber::extendElevator)
+    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.21))
+    //     .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
+    //     .andThen(new InstantCommand(elevatorGrabber::retractElevator))
+    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
+    //   );
 
     //high cone score
-    buttonBoard.button(16).and(buttonBoard.button(5))
-      .onTrue(
-        new InstantCommand(elevatorGrabber::extendElevator)
-        .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.69))
-        .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
-        .andThen(new InstantCommand(elevatorGrabber::retractElevator))
-        .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
-      );
+    buttonBoard.button(16).and(buttonBoard.button(5)).onTrue(new ScoreGamePiece(elevatorGrabber, indexer, 1.69));
+    // buttonBoard.button(16).and(buttonBoard.button(5))
+    //   .onTrue(
+    //     new InstantCommand(elevatorGrabber::extendElevator)
+    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.69))
+    //     .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
+    //     .andThen(new InstantCommand(elevatorGrabber::retractElevator))
+    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
+    //   );
 
-    
-
-
-    buttonBoard.button(1).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
-    buttonBoard.button(2).onTrue(new InstantCommand(led::setPurple).andThen(new InstantCommand(indexer::setCubeMode)));
+    // buttonBoard.button(1).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
+    // buttonBoard.button(2).onTrue(new InstantCommand(led::setPurple).andThen(new InstantCommand(indexer::setCubeMode)));
 
   }
 
@@ -179,6 +178,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutoRoutine("score and balance", drivetrain, vision, elevatorGrabber);
+    return new AutoRoutine("1 cone barrier", drivetrain, vision, elevatorGrabber, indexer);
   }
 }
