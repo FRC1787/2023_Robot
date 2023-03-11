@@ -21,6 +21,8 @@ import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.drivetrain.AlignToTarget;
+import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
+import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.intake.IntakeGamePieces;
@@ -39,7 +41,10 @@ public class AutoRoutine extends SequentialCommandGroup {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
     eventMap.put("autoBalance", new AutoBalance(drivetrain));
-    eventMap.put("scoreConeHigh", new ScoreGamePiece(elevatorGrabber, indexer, 1.69));
+    eventMap.put("pickUpCone", new PickUpCone(elevatorGrabber, intake, indexer));
+    eventMap.put("scoreConeHigh", 
+      new ExtendElevatorToPosition(elevatorGrabber, 1.69)
+        .andThen(new ScoreGamePiece(elevatorGrabber, indexer)));
     eventMap.put("intakeOut", new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, indexer, elevatorGrabber));
@@ -49,7 +54,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(20, 0, 0),
+      new PIDConstants(15, 0, 0),
       new PIDConstants(5, 0, 0),
       drivetrain::setModuleStatesClosedLoop,
       eventMap,

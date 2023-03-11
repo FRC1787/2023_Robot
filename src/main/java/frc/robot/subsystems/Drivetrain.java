@@ -80,6 +80,16 @@ public class Drivetrain extends SubsystemBase {
    */
   public void zeroYaw() {
     gyro.zeroYaw(); //this is the exact same thing as saying gyro.reset();
+    gyro.setAngleAdjustment(0);
+  }
+
+  /**
+   * Sets the gyroscope angle adjustment to be 180.
+   * In other words, if the robot is facing towards the grid, calling this method will field orient it.
+   */
+  public void setGyroscope180() {
+    gyro.zeroYaw();
+    gyro.setAngleAdjustment(180);
   }
 
   /**

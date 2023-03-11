@@ -7,10 +7,12 @@ package frc.robot;
 import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
+import frc.robot.commands.elevatorGrabber.RetractAndHomeElevator;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
@@ -107,14 +109,18 @@ public class RobotContainer {
     controller.povRight().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
 
-    controller.rightTrigger().whileTrue(
-      new ParallelCommandGroup(
-        new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6),
-        new MoveElevatorToPosition(elevatorGrabber, 0))
-    );
-    controller.rightTrigger().onFalse(
-      new MoveConveyor(intake, -8).withTimeout(0.70)
-    );
+    controller.rightTrigger()
+      .whileTrue(
+        new ParallelCommandGroup(
+          new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6),
+          new MoveElevatorToPosition(elevatorGrabber, 0))
+      );
+
+    controller.rightTrigger()
+      .onFalse(
+        new MoveConveyor(intake, -8).withTimeout(0.70)
+        .andThen(new IndexConeFull(intake, indexer, elevatorGrabber))
+      );
       
     controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8, 8));
 
@@ -146,29 +152,16 @@ public class RobotContainer {
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
     //mid cone score
-    buttonBoard.button(16).and(buttonBoard.button(4)).onTrue(new ScoreGamePiece(elevatorGrabber, indexer, 1.21));
-    // buttonBoard.button(16).and(buttonBoard.button(4))
-    //   .onTrue(
-    //     new InstantCommand(elevatorGrabber::extendElevator)
-    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.21))
-    //     .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
-    //     .andThen(new InstantCommand(elevatorGrabber::retractElevator))
-    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
-    //   );
+    buttonBoard.button(4).and(buttonBoard.button(16))
+      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.21));
+    buttonBoard.button(4).and(buttonBoard.button(1))
+      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer));
 
     //high cone score
-    buttonBoard.button(16).and(buttonBoard.button(5)).onTrue(new ScoreGamePiece(elevatorGrabber, indexer, 1.69));
-    // buttonBoard.button(16).and(buttonBoard.button(5))
-    //   .onTrue(
-    //     new InstantCommand(elevatorGrabber::extendElevator)
-    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 1.69))
-    //     .andThen(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5))
-    //     .andThen(new InstantCommand(elevatorGrabber::retractElevator))
-    //     .andThen(new MoveElevatorToPosition(elevatorGrabber, 0))
-    //   );
-
-    // buttonBoard.button(1).onTrue(new InstantCommand(led::setYellow).andThen(new InstantCommand(indexer::setConeMode)));
-    // buttonBoard.button(2).onTrue(new InstantCommand(led::setPurple).andThen(new InstantCommand(indexer::setCubeMode)));
+    buttonBoard.button(5).and(buttonBoard.button(16))
+      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.69));
+    buttonBoard.button(5).and(buttonBoard.button(1))
+      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer));
 
   }
 
@@ -178,6 +171,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutoRoutine("1 cone barrier", drivetrain, vision, elevatorGrabber, indexer);
+    return new InstantCommand(drivetrain::setGyroscope180)
+      .andThen(new AutoRoutine("1 cone + balance wire guard", drivetrain, vision, elevatorGrabber, indexer, intake));
   }
 }

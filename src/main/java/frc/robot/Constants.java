@@ -52,7 +52,7 @@ public final class Constants {
 
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
     // pid for drive motor
-    public static final double drivekPVoltsPerMeterPerSecond = 1.6; //sysid says this should 0.27
+    public static final double drivekPVoltsPerMeterPerSecond = 0.27; //sysid says this should 0.27
     public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
     public static final double drivekDVoltsPerMeter = 0.00;
 
@@ -118,7 +118,7 @@ public final class Constants {
     public static final class CANCoderOffsets {
       public static final double one = -61.1719;
       public static final double two = -45.527 + 90;
-      public static final double three = -80.507 + 270;
+      public static final double three = 17.23 - 90;
       public static final double four = 117.334 - 180;
       public static final double five = 0;
       public static final double six = 0;
@@ -194,6 +194,8 @@ public final class Constants {
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.three,
           SwerveModuleCorners.BACK_LEFT);
+
+      // public static final double steerOffset = 0;
     }
 
     public static final class BackRightSwerveModule {

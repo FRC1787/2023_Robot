@@ -5,23 +5,18 @@
 package frc.robot.commands.elevatorGrabber;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.ElevatorGrabber;
-import frc.robot.subsystems.Indexer;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreGamePiece extends SequentialCommandGroup {
-  /** Creates a new ScoreGamePiece. */
-  public ScoreGamePiece(ElevatorGrabber elevatorGrabber, Indexer indexer) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+public class RetractAndHomeElevator extends ParallelCommandGroup {
+  /** Creates a new RetractAndHomeElevator. */
+  public RetractAndHomeElevator(ElevatorGrabber elevatorGrabber) {
     addCommands(
-      new SetGrabberMotor(elevatorGrabber, -6, 100).withTimeout(0.5),
       new InstantCommand(elevatorGrabber::retractElevator),
-      new MoveElevatorToPosition(elevatorGrabber, 0),
-      new InstantCommand(indexer::openIndexerWalls)
+      new MoveElevatorToPosition(elevatorGrabber, 0)
     );
   }
 }

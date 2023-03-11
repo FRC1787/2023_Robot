@@ -15,13 +15,12 @@ public class AutoBalance extends CommandBase {
   
   private final Drivetrain drivetrain;
   private final PIDController tiltController;
-  private boolean hasTilted;
 
   public AutoBalance(Drivetrain drivetrain) {
     this.drivetrain = drivetrain;
-    // TODO: tune pid controller and maybe add rotation adjustment if needed
-    tiltController = new PIDController(0.1/10, 0, 0); 
+    tiltController = new PIDController(0.5/10, 0, 0.0045); 
     tiltController.setSetpoint(0);
+    tiltController.setTolerance(1.0, 15);
 
     addRequirements(drivetrain);
   }
@@ -29,26 +28,23 @@ public class AutoBalance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    hasTilted = false;
+    tiltController.setP(0.5/10);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 40) {
-      hasTilted = true;
+    if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 35) {
+      tiltController.setP(0.17/10);
     }
-    if (!hasTilted) 
-      drivetrain.drive(new ChassisSpeeds(0.75, 0., 0.), true);
-    else {
-      double desiredVxMetersPerSecond = tiltController.calculate(drivetrain.getRobotPitchDegrees());
-      drivetrain.drive(
-        new ChassisSpeeds(
-          desiredVxMetersPerSecond,
-          0,
-          0),
-        true);
-    }
+    
+    double desiredVxMetersPerSecond = -tiltController.calculate(drivetrain.getRobotPitchDegrees());
+    drivetrain.drive(
+      new ChassisSpeeds(
+        desiredVxMetersPerSecond,
+        0,
+        0),
+      true);
   }
 
   // Called once the command ends or is interrupted.
