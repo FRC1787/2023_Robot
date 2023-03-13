@@ -39,6 +39,7 @@ public class ElevatorGrabber extends SubsystemBase {
   private double averageAmps;
 
   public double desiredVelocity;
+  private double desiredGrabberVoltage;
 
   private boolean hasBeenHomed;
 
@@ -88,7 +89,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
     hasBeenHomed = false;
 
-    
+    this.desiredGrabberVoltage = 0;
   }
 
   private void configureMotors() {
@@ -101,7 +102,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
     grabberMotor.restoreFactoryDefaults();
     grabberMotor.setSmartCurrentLimit(50);
-    grabberMotor.setInverted(true);
+    grabberMotor.setInverted(false);
   }
 
 
@@ -171,6 +172,7 @@ public class ElevatorGrabber extends SubsystemBase {
    */
   public void setGrabMotorVolts(double voltage) {
     grabberMotor.setVoltage(voltage);
+    this.desiredGrabberVoltage = voltage;
   }
 
   public void setGrabMotorAmpLimit(int ampLimit) {
@@ -212,6 +214,10 @@ public class ElevatorGrabber extends SubsystemBase {
     if (desiredVelocity == 0 && hasBeenHomed) {
       setElevatorMotorMetersPerSecond(0, 0);
     }
+
+    if (desiredGrabberVoltage == 0) {
+      setGrabMotorVolts(0.5);
+    }
     
     SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
     SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
@@ -222,8 +228,5 @@ public class ElevatorGrabber extends SubsystemBase {
 
     SmartDashboard.putNumber("relative encoder position", encoder.getPosition());
     SmartDashboard.putNumber("relative encoder velocity", encoder.getVelocity());
-
-
-    
   }
 }

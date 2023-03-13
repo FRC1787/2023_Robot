@@ -79,9 +79,6 @@ public class RobotContainer {
     autoChooser.addOption("Curve 180", "curve180");
 
     SmartDashboard.putData(autoChooser);
-
-    // TODO: make the grabber have an idle mode
-    // elevatorGrabber.setDefaultCommand(new InstantCommand(elevatorGrabber::setIdleSpinningMode));
   }
 
   /**
@@ -106,38 +103,40 @@ public class RobotContainer {
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
 
-    controller.povRight().onTrue(new InstantCommand(drivetrain::zeroYaw));
+    controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
-
+    //intake
     controller.rightTrigger()
       .whileTrue(
         new ParallelCommandGroup(
           new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6),
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );
-
-    controller.rightTrigger()
+    
+    //index cone upon trigger release
+    controller.rightTrigger().and(buttonBoard.button(16))
       .onFalse(
         new MoveConveyor(intake, -8).withTimeout(0.70)
         .andThen(new IndexConeFull(intake, indexer, elevatorGrabber))
       );
-      
-    controller.leftTrigger().whileTrue(new EjectGamePiece(intake, indexer, 4, 8, 8));
 
-    controller.x().onTrue(
-      new IndexConeFull(intake, indexer, elevatorGrabber)
-        .andThen(new PickUpCone(elevatorGrabber, intake, indexer)));
+    //get cube in grabber upon intake release
+    controller.rightTrigger().and(buttonBoard.button(16).negate())
+      .onFalse(
+        new PickUpCube(intake, elevatorGrabber, indexer)
+      );
+    
+    //eject cone
+    controller.leftTrigger().and(buttonBoard.button(16)).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, -6));
+    //eject cube
+    controller.leftTrigger().and(buttonBoard.button(16).negate()).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, 6));
 
+    //pick up cone
+    controller.rightBumper().onTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
 
-    controller.leftBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 6, 15));
-    controller.rightBumper().whileTrue(new SetGrabberMotor(elevatorGrabber, 1.0, 1000));
-    controller.rightBumper().onFalse(new SetGrabberMotor(elevatorGrabber, -6, 1000).withTimeout(0.5));
-
     controller.back().whileTrue(new AutoBalance(drivetrain));
-
-    
 
     //pneumatics stuff delete later
     intakeIn.onTrue(new InstantCommand(intake::retractIntake));
@@ -154,15 +153,29 @@ public class RobotContainer {
     //mid cone score
     buttonBoard.button(4).and(buttonBoard.button(16))
       .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.21));
-    buttonBoard.button(4).and(buttonBoard.button(1))
-      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer));
+    buttonBoard.button(4).and(buttonBoard.button(1).or(buttonBoard.button(2)))
+      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, true));
 
     //high cone score
     buttonBoard.button(5).and(buttonBoard.button(16))
       .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.69));
-    buttonBoard.button(5).and(buttonBoard.button(1))
-      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer));
+    buttonBoard.button(5).and(buttonBoard.button(1).or(buttonBoard.button(2)))
+      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, true));
 
+    // cube is separate because possible different elevator heights and maybe reversed scoregamepiece
+    //mid cube score
+    buttonBoard.button(4).and(buttonBoard.button(16).negate())
+      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.21));
+    buttonBoard.button(4).and(buttonBoard.button(2))
+      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, false));
+
+    //high cube score
+    buttonBoard.button(5).and(buttonBoard.button(16).negate())
+      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.69));
+    buttonBoard.button(5).and(buttonBoard.button(2))
+      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, false));
+
+    
   }
 
   /**

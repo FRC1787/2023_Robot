@@ -44,7 +44,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("pickUpCone", new PickUpCone(elevatorGrabber, intake, indexer));
     eventMap.put("scoreConeHigh", 
       new ExtendElevatorToPosition(elevatorGrabber, 1.69)
-        .andThen(new ScoreGamePiece(elevatorGrabber, indexer)));
+        .andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
     eventMap.put("intakeOut", new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, indexer, elevatorGrabber));

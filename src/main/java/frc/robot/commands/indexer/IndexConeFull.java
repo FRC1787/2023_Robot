@@ -29,8 +29,6 @@ public class IndexConeFull extends SequentialCommandGroup {
     addCommands(
       //agitation/alignment procedure
       new InstantCommand(elevatorGrabber::retractElevator),
-      
-
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevatorGrabber, 0.4),
         new PulseConveyor(intake, 0.2, 0.05, 3.6),
@@ -57,7 +55,7 @@ public class IndexConeFull extends SequentialCommandGroup {
         new MoveIntakeWheels(intake, 2.0)
       ),
 
-      new MoveElevatorToPosition(elevatorGrabber, 0)
+      new MoveElevatorToPosition(elevatorGrabber, 0.14)
     );
   }
 }

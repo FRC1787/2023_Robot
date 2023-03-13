@@ -30,7 +30,7 @@ public class PickUpCone extends SequentialCommandGroup {
       new MoveElevatorToPosition(elevatorGrabber, pickupPosition),
       new ParallelRaceGroup(
         new SequentialCommandGroup(
-          new MoveConveyor(intake, -6).withTimeout(0.5),
+          new MoveConveyor(intake, -6).withTimeout(0.525),
           new MoveConveyor(intake, 4)
         ),
         new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(2)
