@@ -66,6 +66,7 @@ public class EjectGamePiece extends CommandBase {
     intake.retractIntake();
     indexer.setIndexerMotors(0);
     indexer.openIndexerWalls();
+    elevatorGrabber.setGrabMotorVolts(0);
   }
 
   // Returns true when the command should end.

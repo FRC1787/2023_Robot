@@ -112,7 +112,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
   private boolean atUpperLimit() {
     //returns true if elevator position is greater than max elevator height (1.72 meters)
-    return getElevatorPositionMeters() >= 1.7;
+    return getElevatorPositionMeters() >= 1.71;
   }
 
   public void setElevatorMotorVolts(double volts) {

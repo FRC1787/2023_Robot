@@ -171,7 +171,7 @@ public class RobotContainer {
 
     //high cube score
     buttonBoard.button(5).and(buttonBoard.button(16).negate())
-      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.69));
+      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.7));
     buttonBoard.button(5).and(buttonBoard.button(2))
       .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, false));
 
