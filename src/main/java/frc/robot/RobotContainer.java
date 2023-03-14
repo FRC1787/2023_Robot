@@ -12,9 +12,7 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
-import frc.robot.commands.elevatorGrabber.RetractAndHomeElevator;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
-import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
@@ -23,7 +21,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Vision;
@@ -46,7 +42,6 @@ public class RobotContainer {
 
   // CONTROLLERS
   public static final CommandXboxController controller = new CommandXboxController(0);
-  public static final Joystick joystick = new Joystick(3);
   public static final CommandXboxController backupController = new CommandXboxController(1);
   public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
 
@@ -58,13 +53,6 @@ public class RobotContainer {
   final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
   final LED led = new LED();
 
-  // testing
-  private final JoystickButton intakeOut = new JoystickButton(joystick, 8);
-  private final JoystickButton intakeIn = new JoystickButton(joystick, 7);
-  private final JoystickButton extendElevator = new JoystickButton(joystick, 10);
-  private final JoystickButton retractElevator = new JoystickButton(joystick, 9);
-  private final JoystickButton sideBeltsIn = new JoystickButton(joystick, 12);
-  private final JoystickButton sideBeltsOut = new JoystickButton(joystick, 11);
 
   // AUTO
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -75,8 +63,12 @@ public class RobotContainer {
     configureBindings();
     led.setOrange();
 
-    autoChooser.setDefaultOption("Full Path", "FullPath");
-    autoChooser.addOption("Curve 180", "curve180");
+    autoChooser.setDefaultOption("1 cone + balance wire guard", "1 cone + balance wire guard");
+    autoChooser.addOption("1 cone + balance middle", "1 cone + balance middle");
+    autoChooser.addOption("1 cone + balance barrier", "1 cone + balance barrier");
+    autoChooser.addOption("1 cone barrier", "1 cone barrier");
+    autoChooser.addOption("1 cone middle", "1 cone middle");
+    autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
 
     SmartDashboard.putData(autoChooser);
   }
@@ -138,16 +130,6 @@ public class RobotContainer {
 
     controller.back().whileTrue(new AutoBalance(drivetrain));
 
-    //pneumatics stuff delete later
-    intakeIn.onTrue(new InstantCommand(intake::retractIntake));
-    intakeOut.onTrue(new InstantCommand(intake::extendIntake));
-
-    extendElevator.onTrue(new InstantCommand(elevatorGrabber::extendElevator));
-    retractElevator.onTrue(new InstantCommand(elevatorGrabber::retractElevator));
-
-    sideBeltsIn.onTrue(new InstantCommand(indexer::closeIndexerWalls));
-    sideBeltsOut.onTrue(new InstantCommand(indexer::openIndexerWalls));
-
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
     //mid cone score
@@ -184,7 +166,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new InstantCommand(drivetrain::setGyroscope180)
-      .andThen(new AutoRoutine("1 cone + balance wire guard", drivetrain, vision, elevatorGrabber, indexer, intake));
+    // return new InstantCommand(drivetrain::setGyroscope180)
+      // .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake));
+    return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake);  
   }
 }

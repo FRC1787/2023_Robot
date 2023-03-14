@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 
 public class LED extends SubsystemBase {
   // 0 and 1 are the PWM ports on the RoboRIO the Blinkin and LED strips are attached to
@@ -46,5 +47,11 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (RobotContainer.buttonBoard.button(16).getAsBoolean()) {
+      setYellow();
+    }
+    else {
+      setPurple();
+    }
   }
 }

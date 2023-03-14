@@ -6,6 +6,7 @@ package frc.robot.commands.elevatorGrabber;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 
@@ -23,9 +24,12 @@ public class ScoreGamePiece extends SequentialCommandGroup {
     }
     addCommands(
       new SetGrabberMotor(elevatorGrabber, ejectionVolts, 100).withTimeout(0.5),
-      new InstantCommand(elevatorGrabber::retractElevator),
+      new SetGrabberMotor(elevatorGrabber, 4, 100).withTimeout(0.5),
       new MoveElevatorToPosition(elevatorGrabber, 0),
-      new InstantCommand(indexer::openIndexerWalls)
+      new InstantCommand(indexer::openIndexerWalls),
+      new WaitCommand(0.2),
+      new InstantCommand(elevatorGrabber::retractElevator)
+
     );
   }
 }

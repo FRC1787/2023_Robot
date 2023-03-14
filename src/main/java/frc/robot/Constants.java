@@ -82,7 +82,7 @@ public final class Constants {
      * <p>
      * This value will be less than or equal to the maxAchievableVelocityMetersPerSecond, depending on driver preference.
      */
-    public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.0;
+    public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.3;
 
     /**
      * The maximum achievable angular velocity of the robot in radians per second.
@@ -118,9 +118,9 @@ public final class Constants {
     public static final class CANCoderOffsets {
       public static final double one = -61.1719;
       public static final double two = 116;//-45.527 + 90;
-      public static final double three = 17.23 - 90;
-      public static final double four = 117.334 - 180;
-      public static final double five = 0;
+      public static final double three = 17.23 - 90; 
+      public static final double four = 117.33 - 180;
+      public static final double five = 105.08; // 253.92
       public static final double six = 0;
       public static final double seven = 0;
       public static final double eight = 0;

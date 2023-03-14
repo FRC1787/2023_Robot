@@ -18,7 +18,7 @@ public class AlignToTarget extends CommandBase {
   Vision vision;
   Constants.Vision.LimelightTarget target;
 
-  // TODO: tune these pid controllers and maybe change the clamp values
+  
   PIDController lateralPID = new PIDController(1, 0, 0);
   PIDController distancePID = new PIDController(1, 0, 0);
 

@@ -74,9 +74,11 @@ public class Indexer extends SubsystemBase {
   private void configureMotors() {
     leftIndexerMotor.restoreFactoryDefaults();
     leftIndexerMotor.setInverted(true);
+    leftIndexerMotor.setSmartCurrentLimit(50);
     
     rightIndexerMotor.restoreFactoryDefaults();
     rightIndexerMotor.setInverted(false);
+    rightIndexerMotor.setSmartCurrentLimit(50);
 
     clawMotor.restoreFactoryDefaults();
     clawMotor.setSmartCurrentLimit(20);

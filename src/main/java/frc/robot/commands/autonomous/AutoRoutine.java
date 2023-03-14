@@ -49,7 +49,6 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, indexer, elevatorGrabber));
 
-    // TODO: tune these pid constants to be the same as the AlignToTarget (inputs to pid are desired position error (m) and output is velocity (m/s))
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
