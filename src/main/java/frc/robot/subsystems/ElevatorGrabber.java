@@ -52,15 +52,16 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.grabberMotorID,
         MotorType.kBrushless);
 
-    configureMotors();
-
     // encoder = elevatorMotor.getAlternateEncoder(8192);
     // encoder.setPositionConversionFactor(1);
     // encoder.setVelocityConversionFactor(1);
-    encoder = elevatorMotor.getEncoder();
-    encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation * Constants.ElevatorGrabber.elevatorReduction);
-    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM * Constants.ElevatorGrabber.elevatorReduction);
+
     
+
+    encoder = elevatorMotor.getEncoder();
+    configureMotors();
+  
+
     // sysid recommends an depth of 5 - 10 samples per average (we picked 8 because 2^3)
     // encoder.setAverageDepth(8);
 
@@ -98,11 +99,14 @@ public class ElevatorGrabber extends SubsystemBase {
     elevatorMotor.setInverted(true);
     elevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     elevatorMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
-
+    encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation * Constants.ElevatorGrabber.elevatorReduction);
+    encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM * Constants.ElevatorGrabber.elevatorReduction);
+    elevatorMotor.burnFlash();
 
     grabberMotor.restoreFactoryDefaults();
     grabberMotor.setSmartCurrentLimit(50);
     grabberMotor.setInverted(false);
+    grabberMotor.burnFlash();
   }
 
 

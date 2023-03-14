@@ -27,9 +27,8 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       new SetGrabberMotor(elevatorGrabber, 4, 100).withTimeout(0.5),
       new MoveElevatorToPosition(elevatorGrabber, 0),
       new InstantCommand(indexer::openIndexerWalls),
-      new WaitCommand(0.2),
+      new WaitCommand(0.1),
       new InstantCommand(elevatorGrabber::retractElevator)
-
     );
   }
 }

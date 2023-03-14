@@ -41,6 +41,7 @@ public class IndexConeFull extends SequentialCommandGroup {
         new MoveConveyor(intake, -5)
       ).withTimeout(0.5),
 
+
       //uprighting procedure
       new ParallelRaceGroup(
         new MoveConveyor(intake, -3),

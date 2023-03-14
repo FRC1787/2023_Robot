@@ -53,8 +53,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(15, 0, 0),
-      new PIDConstants(5, 0, 0),
+      new PIDConstants(15, 0, 0), //TODO: CHANGE THESE LOW AND SEE WHAT HAPPENS
+      new PIDConstants(5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,

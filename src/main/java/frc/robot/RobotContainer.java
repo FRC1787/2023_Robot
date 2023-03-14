@@ -54,6 +54,8 @@ public class RobotContainer {
   final LED led = new LED();
 
 
+  public final Trigger inConeMode = new Trigger(indexer::inConeMode);
+
   // AUTO
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
@@ -132,6 +134,8 @@ public class RobotContainer {
 
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
+
+
     //mid cone score
     buttonBoard.button(4).and(buttonBoard.button(16))
       .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.21));
@@ -166,8 +170,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return new InstantCommand(drivetrain::setGyroscope180)
-      // .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake));
-    return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake);  
+    return new InstantCommand(drivetrain::setGyroscope180) 
+    .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake));  
   }
 }

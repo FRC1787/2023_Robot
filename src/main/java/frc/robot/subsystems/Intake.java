@@ -47,15 +47,15 @@ public class Intake extends SubsystemBase {
     
     conveyorMotor.restoreFactoryDefaults();
     conveyorMotor.setInverted(true);
-    conveyorMotor.setSmartCurrentLimit(50);
+    conveyorMotor.setSmartCurrentLimit(40);
+    conveyorMotor.burnFlash();
 
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setInverted(false);
     //this leaves the motor spinning in order to further pull the cone in and ensure it doesn't get stuck on the intake
     intakeMotor.setIdleMode(IdleMode.kCoast);
-    conveyorMotor.setSmartCurrentLimit(50);
-    
-
+    intakeMotor.burnFlash();
+  
   }
 
 

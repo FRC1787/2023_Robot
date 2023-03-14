@@ -48,6 +48,8 @@ public class Indexer extends SubsystemBase {
       MotorType.kBrushless
     );
 
+    clawMotorEncoder = clawMotor.getEncoder();
+    
     leftIndexerMotor = new CANSparkMax(
       Constants.IntakeIndexer.leftIndexerMotorID,
       MotorType.kBrushless
@@ -58,11 +60,9 @@ public class Indexer extends SubsystemBase {
     );
 
     configureMotors();
+    
 
     clawLimitSwitch = new DigitalInput(Constants.IntakeIndexer.clawLimitSwitchID);
-
-    clawMotorEncoder = clawMotor.getEncoder();
-    clawMotorEncoder.setPositionConversionFactor(0);
 
     phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
@@ -75,15 +75,18 @@ public class Indexer extends SubsystemBase {
     leftIndexerMotor.restoreFactoryDefaults();
     leftIndexerMotor.setInverted(true);
     leftIndexerMotor.setSmartCurrentLimit(50);
+    leftIndexerMotor.burnFlash();
     
     rightIndexerMotor.restoreFactoryDefaults();
     rightIndexerMotor.setInverted(false);
     rightIndexerMotor.setSmartCurrentLimit(50);
+    rightIndexerMotor.burnFlash();
 
     clawMotor.restoreFactoryDefaults();
     clawMotor.setSmartCurrentLimit(20);
     clawMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     clawMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    clawMotor.burnFlash();
   }
 
 
@@ -127,13 +130,13 @@ public class Indexer extends SubsystemBase {
   public void setConeMode() {
     indexerState = IndexerState.cone;
   }
+  
+  public boolean inConeMode() {
+    return indexerState == IndexerState.cone;
+  }
 
   public boolean isIndexerWallsOpen() {
     return indexerSolenoid.get() == Value.kReverse;
-  }
-
-  public IndexerState getIndexerState() {
-    return indexerState;
   }
 
   /**
