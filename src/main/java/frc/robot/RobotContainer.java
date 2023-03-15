@@ -20,6 +20,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,6 +53,7 @@ public class RobotContainer {
 
 
   public final Trigger inConeMode = new Trigger(indexer::inConeMode); // TODO: do we need this?
+  //public static final GenericHID simpleButtonBoard = new GenericHID(2); // alternate LED sync method?
 
   // AUTO
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -100,6 +102,8 @@ public class RobotContainer {
     controller.b().onTrue(new InstantCommand(indexer::setCubeMode));
     buttonBoard.button(1).onTrue(new InstantCommand(indexer::setConeMode));
     buttonBoard.button(2).onTrue(new InstantCommand(indexer::setCubeMode));
+    //controller.a().onTrue((new InstantCommand(indexer::setConeMode)).andThen(new InstantCommand(this::syncCone)));
+    //controller.b().onTrue((new InstantCommand(indexer::setCubeMode)).andThen(new InstantCommand(this::syncCube)));
 
     
     // drivetrain
@@ -227,4 +231,17 @@ public class RobotContainer {
     .andThen(new AutoRoutine("TESTING DO NOT CHOOSE", drivetrain, vision, elevatorGrabber, indexer, intake));  
 
   }
+
+// maybe sync button board LEDs?
+/*
+  public void syncCone() {
+    simpleButtonBoard.setOutput(1, true);
+    System.out.println("sync cone");
+  }
+
+  public void syncCube() {
+    simpleButtonBoard.setOutput(2, true);
+    System.out.println("sync cube");
+  }
+*/
 }
