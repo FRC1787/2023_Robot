@@ -121,8 +121,8 @@ public final class Constants {
       public static final double three = 17.23 - 90; 
       public static final double four = 117.33 - 180;
       public static final double five = 105.08; // 253.92
-      public static final double six = 0;
-      public static final double seven = 0;
+      public static final double six = 85.43;
+      public static final double seven = 99.492;
       public static final double eight = 0;
       public static final double nine = 0;
     }
