@@ -144,9 +144,9 @@ public class RobotContainer {
     controller.rightBumper().onTrue(new PickUpCone(elevatorGrabber, intake, indexer));
 
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
-    this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
+    //this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
     //this.operatorConfirmBindings(); //operator moves elevator with one button, then confirms with another button
-    //this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
+    this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
   }
 
   private void originalScoringBindings() {
