@@ -87,23 +87,28 @@ public class RobotContainer {
     // controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
     // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
-    drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
-
     // stuff we're testing TODO: (maybe delete for competition?)
-    controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
-    controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
+    //controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
+    //controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
     controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     controller.back().whileTrue(new AutoBalance(drivetrain));
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
+
+    // cube mode and cone mode toggles
+    controller.a().onTrue(new InstantCommand(indexer::setConeMode));
+    controller.b().onTrue(new InstantCommand(indexer::setCubeMode));
+    buttonBoard.button(1).onTrue(new InstantCommand(indexer::setConeMode));
+    buttonBoard.button(2).onTrue(new InstantCommand(indexer::setCubeMode));
+
     
     // drivetrain
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
-    //intake
+    // intake cone
     controller.rightTrigger().and(inConeMode)
       .whileTrue(
         new ParallelCommandGroup(
@@ -111,6 +116,7 @@ public class RobotContainer {
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );
 
+    // intake cube
     controller.rightTrigger().and(inConeMode.negate())
       .whileTrue(
         new ParallelCommandGroup(
@@ -120,26 +126,24 @@ public class RobotContainer {
 
     
     //index cone upon trigger release
-    controller.rightTrigger().and(buttonBoard.button(16))
+    controller.rightTrigger().and(inConeMode)
       .onFalse(
         new MoveConveyor(intake, -8).withTimeout(0.70)
         .andThen(new IndexConeFull(intake, indexer, elevatorGrabber))
       );
 
     //get cube in grabber upon intake release
-    controller.rightTrigger().and(buttonBoard.button(16).negate())
+    controller.rightTrigger().and(inConeMode.negate())
       .onFalse(
         new PickUpCube(intake, elevatorGrabber, indexer)
       );
     
     //eject cone
-    controller.leftTrigger().and(buttonBoard.button(16)).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, -6));
+    controller.leftTrigger().and(inConeMode).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, -6));
     //eject cube
-    controller.leftTrigger().and(buttonBoard.button(16).negate()).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, 6));
+    controller.leftTrigger().and(inConeMode.negate()).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, 6));
     // hand off cone from indexer to grabber
     controller.rightBumper().onTrue(new PickUpCone(elevatorGrabber, intake, indexer));
-    //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
-    controller.back().whileTrue(new AutoBalance(drivetrain));
 
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
     //this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
@@ -151,25 +155,19 @@ public class RobotContainer {
 
   private void originalScoringBindings() {
     //mid cone score
-    buttonBoard.button(4).and(buttonBoard.button(16))
+    buttonBoard.button(4).and(inConeMode)
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
 
     //high cone score
-    buttonBoard.button(5).and(buttonBoard.button(16))
+    buttonBoard.button(5).and(inConeMode)
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
 
-    //changes cone/cube mode
-    buttonBoard.button(1).onTrue(new InstantCommand(indexer::setConeMode));
-    buttonBoard.button(2).onTrue(new InstantCommand(indexer::setCubeMode));
     //mid cube score
-    buttonBoard.button(4).and(buttonBoard.button(16).negate())
+    buttonBoard.button(4).and(inConeMode.negate())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
 
-    //backup cone/cube mode
-    controller.a().onTrue(new InstantCommand(indexer::setConeMode));
-    controller.b().onTrue(new InstantCommand(indexer::setCubeMode));
     //high cube score
-    buttonBoard.button(5).and(buttonBoard.button(16).negate())
+    buttonBoard.button(5).and(inConeMode.negate())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
   }
 
@@ -181,7 +179,7 @@ public class RobotContainer {
       .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, true));
 
     //high cone score
-    buttonBoard.button(5).and(buttonBoard.button(16))
+    buttonBoard.button(5).and(inConeMode)
       .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.69));
     buttonBoard.button(5).and(buttonBoard.button(1))
       .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, true));
@@ -204,19 +202,19 @@ public class RobotContainer {
 
   private void driverConfirmBindings() {
     //mid cone score
-    buttonBoard.button(4).and(buttonBoard.button(16)).and(controller.leftBumper())
+    buttonBoard.button(4).and(inConeMode).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
 
     //high cone score
-    buttonBoard.button(5).and(buttonBoard.button(16)).and(controller.leftBumper())
+    buttonBoard.button(5).and(inConeMode).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
 
     //mid cube score
-    buttonBoard.button(4).and(buttonBoard.button(16).negate()).and(controller.leftBumper())
+    buttonBoard.button(4).and(inConeMode.negate()).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
 
     //high cube score
-    buttonBoard.button(5).and(buttonBoard.button(16).negate()).and(controller.leftBumper())
+    buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
   }
 
