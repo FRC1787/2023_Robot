@@ -5,6 +5,7 @@
 package frc.robot.commands.elevatorGrabber;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ElevatorGrabber;
@@ -27,13 +28,17 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       new SetGrabberMotor(elevatorGrabber, ejectionVolts, 100).withTimeout(0.5),
 
       // move the cube hat (goober) out of the way
-      new SetGrabberMotor(elevatorGrabber, 4, 100).withTimeout(0.5),
-
+      new SetGrabberMotor(elevatorGrabber, 6, 100).withTimeout(0.15),
+      new ParallelCommandGroup(
+  
       // reset the elevator and indexer walls to prepare for getting the next game piece
       new MoveElevatorToPosition(elevatorGrabber, 0),
-      new InstantCommand(indexer::openIndexerWalls),
-      new WaitCommand(0.1), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
-      new InstantCommand(elevatorGrabber::retractElevator)
+        new SequentialCommandGroup(
+          new WaitCommand(0.06), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
+          new InstantCommand(elevatorGrabber::retractElevator)
+        )
+      ),
+      new InstantCommand(indexer::openIndexerWalls)
     );
   }
 }

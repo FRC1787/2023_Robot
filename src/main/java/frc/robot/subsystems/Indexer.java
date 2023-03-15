@@ -9,11 +9,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,11 +26,12 @@ public class Indexer extends SubsystemBase {
   private CANSparkMax clawMotor;
   private CANSparkMax leftIndexerMotor;
   private CANSparkMax rightIndexerMotor;
-  private Compressor phCompressor;
 
 
   private DigitalInput clawLimitSwitch;
   private RelativeEncoder clawMotorEncoder;
+
+  private Spark blinkin;
 
   private IndexerState indexerState;
 
@@ -61,10 +62,9 @@ public class Indexer extends SubsystemBase {
 
     configureMotors();
     
+    blinkin = new Spark(9);
 
     clawLimitSwitch = new DigitalInput(Constants.IntakeIndexer.clawLimitSwitchID);
-
-    phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
     indexerState = IndexerState.cone;
 
@@ -166,8 +166,23 @@ public class Indexer extends SubsystemBase {
     return Math.signum(leftIndexerMotor.get());
   }
 
+  public void setLEDsYellow() {
+    blinkin.set(0.69);
+  }
+
+  public void setLEDsPurple() {
+    blinkin.set(0.91);
+  }
+
+
   @Override
   public void periodic() {
+    
+    //update LEDs
+    if (inConeMode()) setLEDsYellow();
+    else setLEDsPurple();
+    
+    
     if (isClawBack()) {
       zeroClawEncoder();
       hasBeenHomed = true;
@@ -183,11 +198,8 @@ public class Indexer extends SubsystemBase {
       this.setClawMotorVolts(-1.0);
     }
 
-    SmartDashboard.putNumber("claw motor rotations", clawMotorEncoder.getPosition());
-    SmartDashboard.putNumber("claw percent output", clawMotor.getAppliedOutput());
-    SmartDashboard.putBoolean("isClawBack()", isClawBack());
-    SmartDashboard.putBoolean("clawHomed", hasBeenHomed);
-    SmartDashboard.putBoolean("compressor enabled", phCompressor.isEnabled());
-    SmartDashboard.putString("intake indexer status", indexerSolenoid.get().toString());
+    
+
+    SmartDashboard.putBoolean("in cone mode", inConeMode());
   }
 }
