@@ -124,7 +124,8 @@ public class SwerveModule {
     mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     mAngleMotor.setInverted(Constants.Swerve.angleInvert);
     mAngleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
-    mAngleEncoder.setPositionConversionFactor(Constants.Swerve.steerReduction*360);
+    mAngleEncoder.setPositionConversionFactor(Constants.Swerve.steerReduction*360.0);
+    mAngleEncoder.setVelocityConversionFactor(Constants.Swerve.steerReduction*360.0/60.0);
     mAngleMotor.burnFlash();
   }
 

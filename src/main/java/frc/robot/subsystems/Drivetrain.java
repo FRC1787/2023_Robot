@@ -81,6 +81,8 @@ public class Drivetrain extends SubsystemBase {
   public void zeroYaw() {
     gyro.zeroYaw(); //this is the exact same thing as saying gyro.reset();
     gyro.setAngleAdjustment(0);
+
+    swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), getPoseMeters());
   }
 
   /**
@@ -90,6 +92,8 @@ public class Drivetrain extends SubsystemBase {
   public void setGyroscope180() {
     gyro.zeroYaw();
     gyro.setAngleAdjustment(180);
+
+    swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), getPoseMeters());
   }
 
   /**
@@ -252,9 +256,22 @@ public class Drivetrain extends SubsystemBase {
     
     // SmartDashboard.putNumber("front left module speed", mSwerveMods[0].getState().speedMetersPerSecond);
   
-    SmartDashboard.putNumber("front left degrees", mSwerveMods[0].getCanCoder().getDegrees());
-    SmartDashboard.putNumber("front right degrees", mSwerveMods[1].getCanCoder().getDegrees());
-    SmartDashboard.putNumber("back left degrees", mSwerveMods[2].getCanCoder().getDegrees());
-    SmartDashboard.putNumber("back right degrees", mSwerveMods[3].getCanCoder().getDegrees());
+    SmartDashboard.putNumber("front left distance meters", mSwerveMods[0].getPosition().distanceMeters);
+    SmartDashboard.putNumber("front right distance meters", mSwerveMods[1].getPosition().distanceMeters);
+    SmartDashboard.putNumber("back left distance meters", mSwerveMods[2].getPosition().distanceMeters);
+    SmartDashboard.putNumber("back right distance meters", mSwerveMods[3].getPosition().distanceMeters);
+  
+    SmartDashboard.putNumber("front left degrees", mSwerveMods[0].getPosition().angle.getDegrees());
+    SmartDashboard.putNumber("front right degrees", mSwerveMods[1].getPosition().angle.getDegrees());
+    SmartDashboard.putNumber("back left degrees", mSwerveMods[2].getPosition().angle.getDegrees());
+    SmartDashboard.putNumber("back right degrees", mSwerveMods[3].getPosition().angle.getDegrees());
+    
+    SmartDashboard.putNumber("front left distance velocity", mSwerveMods[0].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("front right distance velocity", mSwerveMods[1].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("back left distance velocity", mSwerveMods[2].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("back right distance velocity", mSwerveMods[3].getState().speedMetersPerSecond);
+
+
+    SmartDashboard.putBoolean("gyro is calibrating", gyro.isCalibrating());
   }
 }

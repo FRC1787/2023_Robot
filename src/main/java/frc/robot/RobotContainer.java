@@ -9,7 +9,6 @@ import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
-import frc.robot.commands.elevatorGrabber.MoveElevatorToPositionSmartDashboard;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
@@ -21,7 +20,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -146,11 +144,9 @@ public class RobotContainer {
     controller.rightBumper().onTrue(new PickUpCone(elevatorGrabber, intake, indexer));
 
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
-    //this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
-    this.operatorConfirmBindings(); //operator moves elevator with one button, then confirms with another button
+    this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
+    //this.operatorConfirmBindings(); //operator moves elevator with one button, then confirms with another button
     //this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
-
-
   }
 
   private void originalScoringBindings() {
@@ -224,7 +220,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // TODO: CHANGE THIS BACK
+    // return new InstantCommand(drivetrain::setGyroscope180) 
+    // .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake));  
     return new InstantCommand(drivetrain::setGyroscope180) 
-    .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake));  
+    .andThen(new AutoRoutine("TESTING DO NOT CHOOSE", drivetrain, vision, elevatorGrabber, indexer, intake));  
+
   }
 }

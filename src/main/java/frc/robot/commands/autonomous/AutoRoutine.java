@@ -36,7 +36,7 @@ public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
   public AutoRoutine(String path, Drivetrain drivetrain, Vision vision, ElevatorGrabber elevatorGrabber, Indexer indexer, Intake intake) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
-      path, new PathConstraints(3, 1.5));
+      path, new PathConstraints(0.5, 0.5)); // TODO: CHANGE THIS BACK
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
@@ -53,8 +53,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(15, 0, 0), //TODO: CHANGE THESE LOW AND SEE WHAT HAPPENS
-      new PIDConstants(5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
+      new PIDConstants(5, 0, 0), // 15: TODO: CHANGE THESE LOW AND SEE WHAT HAPPENS
+      new PIDConstants(0.5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,
