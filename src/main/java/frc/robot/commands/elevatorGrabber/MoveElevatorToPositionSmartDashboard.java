@@ -13,6 +13,20 @@ import frc.robot.subsystems.ElevatorGrabber;
 
 public class MoveElevatorToPositionSmartDashboard extends CommandBase {
 
+    /*
+      Idea From Simon: Maybe just have this class own a member of type "MoveElevatorToPosition",
+                       then simply call each of it's functions.
+                       e.g.
+                       MoveElevatorToPositionSmartDashboard.execute()
+                       just calls MoveElevatorToPosition.execute().
+                       that way, if we change the implementation of moving the elevator,
+                       the regular version and the smart dashboard version don't get out of sync.
+     
+                       the only thing I'm unsure of is the kosherness of one command calling methods
+                       on another command, though I suppose that's how command groups are implemented,
+                       so it's probably fine, or at least worth a shot.
+    */
+
     ElevatorGrabber elevatorGrabber;
     double targetPositionMeters;
     TrapezoidProfile profile;

@@ -25,9 +25,13 @@ public class PickUpCone extends SequentialCommandGroup {
     double pickupPosition = 0.14;
     double grabbingAmpLimit = 25;
     addCommands(
+      // move all subsystems into the grabbing position
       new InstantCommand(indexer::closeIndexerWalls),
       new InstantCommand(elevatorGrabber::retractElevator),
       new MoveElevatorToPosition(elevatorGrabber, pickupPosition),
+
+      // start spinning the grabber wheel, while the belts push the cone
+      // into the grabber wheel, then reverse the belts to kick up the cone.
       new ParallelRaceGroup(
         new SequentialCommandGroup(
           new MoveConveyor(intake, -6).withTimeout(0.525),
@@ -36,7 +40,5 @@ public class PickUpCone extends SequentialCommandGroup {
         new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(2)
       )
     );
-
-    //0.09
   }
 }

@@ -23,11 +23,16 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       ejectionVolts = -1 * ejectionVolts;
     }
     addCommands(
+      // spit out the game piece
       new SetGrabberMotor(elevatorGrabber, ejectionVolts, 100).withTimeout(0.5),
+
+      // move the cube hat (goober) out of the way
       new SetGrabberMotor(elevatorGrabber, 4, 100).withTimeout(0.5),
+
+      // reset the elevator and indexer walls to prepare for getting the next game piece
       new MoveElevatorToPosition(elevatorGrabber, 0),
       new InstantCommand(indexer::openIndexerWalls),
-      new WaitCommand(0.1),
+      new WaitCommand(0.1), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
       new InstantCommand(elevatorGrabber::retractElevator)
     );
   }

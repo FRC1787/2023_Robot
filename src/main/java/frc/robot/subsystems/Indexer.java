@@ -74,12 +74,12 @@ public class Indexer extends SubsystemBase {
   private void configureMotors() {
     leftIndexerMotor.restoreFactoryDefaults();
     leftIndexerMotor.setInverted(true);
-    leftIndexerMotor.setSmartCurrentLimit(50);
+    leftIndexerMotor.setSmartCurrentLimit(50); // TODO: double check this, if it's a neo550, this should be 20-40 amps.
     leftIndexerMotor.burnFlash();
     
     rightIndexerMotor.restoreFactoryDefaults();
     rightIndexerMotor.setInverted(false);
-    rightIndexerMotor.setSmartCurrentLimit(50);
+    rightIndexerMotor.setSmartCurrentLimit(50); // TODO: double check this, if it's a neo550, this should be 20-40 amps.
     rightIndexerMotor.burnFlash();
 
     clawMotor.restoreFactoryDefaults();
