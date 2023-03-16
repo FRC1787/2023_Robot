@@ -21,6 +21,8 @@ public class PickUpCone extends SequentialCommandGroup {
   public PickUpCone(ElevatorGrabber elevatorGrabber, Intake intake, Indexer indexer) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    addRequirements(intake);
+
     double grabbingVolts = 6;
     double pickupPosition = 0.13;
     double grabbingAmpLimit = 25;

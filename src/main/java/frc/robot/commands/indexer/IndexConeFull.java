@@ -26,6 +26,11 @@ public class IndexConeFull extends SequentialCommandGroup {
   public IndexConeFull(Intake intake, Indexer indexer, ElevatorGrabber elevatorGrabber) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    /*
+     * TODO: hacky way to allow index cone full to be interrupted by pickupcone
+     */
+    addRequirements(intake);
+    
     addCommands(
       //agitation/alignment procedure
       new InstantCommand(elevatorGrabber::retractElevator),

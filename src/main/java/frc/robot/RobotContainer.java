@@ -12,7 +12,6 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
-import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotorHatHack;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.intake.EjectGamePiece;
