@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -25,6 +26,7 @@ import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.indexer.IndexConeFull;
+import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -46,8 +48,13 @@ public class AutoRoutine extends SequentialCommandGroup {
       new ExtendElevatorToPosition(elevatorGrabber, 1.69)
         .andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
     eventMap.put("intakeOut", new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6));
+    eventMap.put("indexCube", new PickUpCone(elevatorGrabber, intake, indexer));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, indexer, elevatorGrabber));
+    eventMap.put("shootCube", new SequentialCommandGroup(
+      new WaitCommand(0.75),
+      new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, 6).withTimeout(1)
+    ));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       drivetrain::getPoseMeters,
