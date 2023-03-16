@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorGrabber;
-import frc.robot.subsystems.HatFlipHack;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.drivetrain.AlignToTarget;
@@ -35,17 +34,17 @@ import frc.robot.subsystems.Vision;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
-  public AutoRoutine(String path, Drivetrain drivetrain, Vision vision, ElevatorGrabber elevatorGrabber, Indexer indexer, Intake intake, HatFlipHack hatFlip) {
+  public AutoRoutine(String path, Drivetrain drivetrain, Vision vision, ElevatorGrabber elevatorGrabber, Indexer indexer, Intake intake) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
       path, new PathConstraints(3.0, 1.5)); // TODO: CHANGE THIS BACK TO 3, 1.5, (0.5, 0.5 is safe)
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
     eventMap.put("autoBalance", new AutoBalance(drivetrain));
-    eventMap.put("pickUpCone", new PickUpCone(elevatorGrabber, intake, indexer, hatFlip));
+    eventMap.put("pickUpCone", new PickUpCone(elevatorGrabber, intake, indexer));
     eventMap.put("scoreConeHigh", 
       new ExtendElevatorToPosition(elevatorGrabber, 1.69)
-        .andThen(new ScoreGamePiece(elevatorGrabber, indexer, true, hatFlip)));
+        .andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
     eventMap.put("intakeOut", new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, indexer, elevatorGrabber));

@@ -6,7 +6,6 @@ package frc.robot.commands.elevatorGrabber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ElevatorGrabber;
-import frc.robot.subsystems.HatFlipHack;
 
 public class SetGrabberMotor extends CommandBase {
 
@@ -21,9 +20,7 @@ public class SetGrabberMotor extends CommandBase {
    * while negative to outtake a cone/intake or outtake a cube
    * @param ampLimit - When this amp limit is reached, the command ends.
    */
-  public SetGrabberMotor(ElevatorGrabber elevatorGrabber, double voltage, double ampLimit, HatFlipHack hatFlip) {
-    addRequirements(hatFlip);
-
+  public SetGrabberMotor(ElevatorGrabber elevatorGrabber, double voltage, double ampLimit) {
     this.elevatorGrabber = elevatorGrabber;
     this.voltage = voltage;
     this.ampLimit = ampLimit;
