@@ -90,7 +90,6 @@ public class Drivetrain extends SubsystemBase {
    * In other words, if the robot is facing towards the grid, calling this method will field orient it.
    */
   public void setGyroscope180() {
-    gyro.zeroYaw();
     gyro.setAngleAdjustment(180);
 
     swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), getPoseMeters());
@@ -265,6 +264,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("front right degrees", mSwerveMods[1].getPosition().angle.getDegrees());
     SmartDashboard.putNumber("back left degrees", mSwerveMods[2].getPosition().angle.getDegrees());
     SmartDashboard.putNumber("back right degrees", mSwerveMods[3].getPosition().angle.getDegrees());
+
+    // SmartDashboard.putNumber("front right cancoder")
     
     SmartDashboard.putNumber("front left distance velocity", mSwerveMods[0].getState().speedMetersPerSecond);
     SmartDashboard.putNumber("front right distance velocity", mSwerveMods[1].getState().speedMetersPerSecond);

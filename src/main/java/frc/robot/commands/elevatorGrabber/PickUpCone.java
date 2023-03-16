@@ -7,6 +7,7 @@ package frc.robot.commands.elevatorGrabber;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.ElevatorGrabber;
+import frc.robot.subsystems.HatFlipHack;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Indexer;
 
@@ -18,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCone extends SequentialCommandGroup {
   /** Creates a new PickUpCone. */
-  public PickUpCone(ElevatorGrabber elevatorGrabber, Intake intake, Indexer indexer) {
+  public PickUpCone(ElevatorGrabber elevatorGrabber, Intake intake, Indexer indexer, HatFlipHack hatFlip) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     double grabbingVolts = 6;
@@ -37,7 +38,7 @@ public class PickUpCone extends SequentialCommandGroup {
           new MoveConveyor(intake, -6).withTimeout(0.525),
           new MoveConveyor(intake, 4)
         ),
-        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(2)
+        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit, hatFlip).withTimeout(2)
       )
     );
   }
