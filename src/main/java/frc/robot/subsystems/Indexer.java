@@ -120,7 +120,7 @@ public class Indexer extends SubsystemBase {
    * Returns true if the claw is as far forward in the robot as possible (24 rotations of the claw motor)
    */
   public boolean isClawForward() {
-    return clawMotorEncoder.getPosition() > 23;
+    return clawMotorEncoder.getPosition() > 22;
   }
 
   public void setCubeMode() {
@@ -201,5 +201,7 @@ public class Indexer extends SubsystemBase {
     
 
     SmartDashboard.putBoolean("in cone mode", inConeMode());
+    SmartDashboard.putNumber("claw distance", clawMotorEncoder.getPosition());
+    SmartDashboard.putBoolean("claw is back", isClawBack());
   }
 }
