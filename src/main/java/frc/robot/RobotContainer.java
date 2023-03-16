@@ -13,10 +13,12 @@ import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
+import frc.robot.commands.elevatorGrabber.SetGrabberMotorHatHack;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
+import frc.robot.subsystems.CubeHatHack;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
@@ -50,6 +52,7 @@ public class RobotContainer {
   final Indexer indexer = new Indexer();
   final Vision vision = new Vision();
   final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
+  final CubeHatHack hatHack = new CubeHatHack();
 
 
   public final Trigger inConeMode = new Trigger(indexer::inConeMode); // TODO: do we need this?
@@ -90,13 +93,13 @@ public class RobotContainer {
     // stuff we're testing TODO: (maybe delete for competition?)
     //controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
     //controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
-    controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
-    controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer));
+    // controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
+    // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     controller.back().whileTrue(new AutoBalance(drivetrain));
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
 
-    inConeMode.onTrue(new SetGrabberMotor(elevatorGrabber, 6, 100).withTimeout(0.15));
+    inConeMode.onTrue(new SetGrabberMotorHatHack(elevatorGrabber, 6, 100, hatHack).withTimeout(0.15));
 
     // cube mode and cone mode toggles
     controller.a().onTrue(new InstantCommand(indexer::setConeMode));
@@ -138,7 +141,7 @@ public class RobotContainer {
     //get cube in grabber upon intake release
     controller.rightTrigger().and(inConeMode.negate())
       .onFalse(
-        new PickUpCube(intake, elevatorGrabber, indexer)
+        new PickUpCube(intake, elevatorGrabber, indexer, hatHack)
       );
     
     //eject cone

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.commands.intake.MoveConveyor;
+import frc.robot.subsystems.CubeHatHack;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -19,9 +20,11 @@ import frc.robot.subsystems.Intake;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCube extends SequentialCommandGroup {
   /** Creates a new PickUpCube. */
-  public PickUpCube(Intake intake, ElevatorGrabber elevatorGrabber, Indexer indexer) {
+  public PickUpCube(Intake intake, ElevatorGrabber elevatorGrabber, Indexer indexer, CubeHatHack hatHack) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    addRequirements(hatHack);
+
     addCommands(
       // move subsystems into the pickup position
       new InstantCommand(elevatorGrabber::retractElevator),
