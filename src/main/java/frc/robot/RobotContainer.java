@@ -14,6 +14,7 @@ import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotorHatHack;
 import frc.robot.commands.indexer.IndexConeFull;
+import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
@@ -117,6 +118,7 @@ public class RobotContainer {
     controller.rightTrigger().and(inConeMode)
       .whileTrue(
         new ParallelCommandGroup(
+          new MoveClawBack(indexer, 3.6),
           new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6),
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );
@@ -125,6 +127,7 @@ public class RobotContainer {
     controller.rightTrigger().and(inConeMode.negate())
       .whileTrue(
         new ParallelCommandGroup(
+          new MoveClawBack(indexer, 3.6),
           new IntakeGamePieces(intake, indexer, elevatorGrabber, -3, -8, -6),
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );

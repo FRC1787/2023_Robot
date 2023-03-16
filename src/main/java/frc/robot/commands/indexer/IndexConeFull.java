@@ -36,9 +36,9 @@ public class IndexConeFull extends SequentialCommandGroup {
       new InstantCommand(elevatorGrabber::retractElevator),
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevatorGrabber, 0.4),
-        new PulseConveyor(intake, 0.2, 0.05, 3.6),
+        new PulseConveyor(intake, 0.2, 0.05, 3),
         new PulseIndexerWalls(indexer, 0.3),
-        new PulseSideBelts(indexer, 0.2, 0.05, 4.8)
+        new PulseSideBelts(indexer, 0.2, 0.05, 4)
       ).withTimeout(0.6),
       new InstantCommand(indexer::closeIndexerWalls),
       new ParallelCommandGroup(

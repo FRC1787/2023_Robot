@@ -24,7 +24,7 @@ public class PickUpCone extends SequentialCommandGroup {
     addRequirements(intake);
 
     double grabbingVolts = 6;
-    double pickupPosition = 0.13;
+    double pickupPosition = 0.135;
     double grabbingAmpLimit = 25;
     addCommands(
       // move all subsystems into the grabbing position
