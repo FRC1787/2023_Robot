@@ -17,18 +17,18 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 4.247813781341849,
+        "x": 3.5,
         "y": 4.45
       },
       "prevControl": {
-        "x": 3.9185746942922455,
+        "x": 3.1707609129503966,
         "y": 4.45
       },
       "nextControl": null,

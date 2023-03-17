@@ -25,6 +25,7 @@ import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
+import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
@@ -52,8 +53,11 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("autoBalance", new AutoBalance(drivetrain));
     eventMap.put("pickUpCone", new PickUpCone(elevatorGrabber, intake, indexer));
     eventMap.put("scoreConeHigh", 
-      new ExtendElevatorToPosition(elevatorGrabber, 1.69)
-        .andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+      new SequentialCommandGroup(
+        new SetGrabberMotor(elevatorGrabber, 6, 25).withTimeout(0.5),
+        new ExtendElevatorToPosition(elevatorGrabber, 1.69),
+        new ScoreGamePiece(elevatorGrabber, indexer, true))
+    );
     eventMap.put("intakeOut", new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6));
     eventMap.put("indexCube", new PickUpCone(elevatorGrabber, intake, indexer));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));

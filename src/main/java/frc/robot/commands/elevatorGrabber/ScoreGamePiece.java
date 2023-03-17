@@ -28,7 +28,7 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       new SetGrabberMotor(elevatorGrabber, ejectionVolts, 100).withTimeout(0.5),
 
       // move the cube hat (goober) out of the way
-      new SetGrabberMotor(elevatorGrabber, 6, 100).withTimeout(0.15),
+      new SetGrabberMotor(elevatorGrabber, 2, 100).withTimeout(0.15), 
       new ParallelCommandGroup(
   
       // reset the elevator and indexer walls to prepare for getting the next game piece
