@@ -129,7 +129,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(indexer, 3.6),
-          new IntakeGamePieces(intake, indexer, elevatorGrabber, -3, -8, -6),
+          new IntakeGamePieces(intake, indexer, elevatorGrabber, -3, -5, -6),
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );
 

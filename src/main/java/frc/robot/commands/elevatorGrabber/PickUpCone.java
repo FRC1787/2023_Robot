@@ -36,10 +36,10 @@ public class PickUpCone extends SequentialCommandGroup {
       // into the grabber wheel, then reverse the belts to kick up the cone.
       new ParallelRaceGroup(
         new SequentialCommandGroup(
-          new MoveConveyor(intake, -9).withTimeout(0.5), // 0.525
-          new MoveConveyor(intake, 4)
+          new MoveConveyor(intake, -10).withTimeout(0.35), // 0.525
+          new MoveConveyor(intake, 3.5)
         ),
-        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(2)
+        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(1)
       )
     );
   }
