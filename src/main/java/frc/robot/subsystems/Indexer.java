@@ -36,7 +36,6 @@ public class Indexer extends SubsystemBase {
   private IndexerState indexerState;
 
   private boolean hasBeenHomed;
-  private boolean homedOnPrevIteration = false;
 
   public Indexer() {
     indexerSolenoid = new DoubleSolenoid(
@@ -186,23 +185,23 @@ public class Indexer extends SubsystemBase {
     else {
       setLEDsPurple();
     }
-    
-    
-    if (isClawBack()) {
-      zeroClawEncoder();
-      hasBeenHomed = true;
-    }
-
-    // once claw has been homed, this sends
-    // one more command to make sure we're not backdriving.
-    if (hasBeenHomed && !homedOnPrevIteration) {
-      homedOnPrevIteration = true;
-      this.setClawMotorVolts(0);
-      System.out.println("done with homeing, this should never happen again!!!AAAAAAA");
-    }
 
     if (!hasBeenHomed) {
-      this.setClawMotorVolts(-1.0);
+      if (!isClawBack()) {
+        this.setClawMotorVolts(-1.0);
+      }
+      else {
+        // once claw has been homed, this sends
+        // one more command to make sure we're not backdriving.
+        hasBeenHomed = true;
+        this.setClawMotorVolts(0);
+        System.out.println("done with homeing, this should never happen again!!!AAAAAAA");
+      }
+    }
+    
+
+    if (isClawBack()) {
+      zeroClawEncoder();
     }
 
     

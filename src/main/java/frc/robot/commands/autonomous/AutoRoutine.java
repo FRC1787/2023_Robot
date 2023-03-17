@@ -37,8 +37,15 @@ import frc.robot.subsystems.Vision;
 public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
   public AutoRoutine(String path, Drivetrain drivetrain, Vision vision, ElevatorGrabber elevatorGrabber, Indexer indexer, Intake intake) {
+    double maxVelocityMetersPerSecond = 4.0;
+    double accelerationMetersPerSecondSquared = 2.5;
+    if (path.equals("1 cone + balance middle") || path.equals("1 cone middle")) {
+      maxVelocityMetersPerSecond = 4.0;
+      accelerationMetersPerSecondSquared = 2.0;
+    }
+
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
-      path, new PathConstraints(4.0, 2.0)); //3, 1.5 is previous but it is not fast enough with square paths
+      path, new PathConstraints(maxVelocityMetersPerSecond, accelerationMetersPerSecondSquared)); //3, 1.5 is previous but it is not fast enough with square paths
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
