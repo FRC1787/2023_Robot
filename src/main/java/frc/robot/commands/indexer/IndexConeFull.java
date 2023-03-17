@@ -73,10 +73,10 @@ public class IndexConeFull extends SequentialCommandGroup {
         new MoveSideBelts(indexer, 3.6),
         new MoveClawBack(indexer, 3.6).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)
-      ),
+      )
 
 
-      new MoveElevatorToPosition(elevatorGrabber, 0.13)
+      // new MoveElevatorToPosition(elevatorGrabber, 0.13) <- We don't need this, because PickupCone does it already?
     );
   }
 }
