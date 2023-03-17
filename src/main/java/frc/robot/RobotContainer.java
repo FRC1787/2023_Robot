@@ -233,7 +233,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new InstantCommand(drivetrain::setGyroscope180)
-      .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake));
+      .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
 
     // return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake)
       // .andThen(new InstantCommand(drivetrain::setGyroscope180));  
