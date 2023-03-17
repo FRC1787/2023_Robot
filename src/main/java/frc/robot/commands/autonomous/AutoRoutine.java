@@ -38,7 +38,7 @@ public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
   public AutoRoutine(String path, Drivetrain drivetrain, Vision vision, ElevatorGrabber elevatorGrabber, Indexer indexer, Intake intake) {
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
-      path, new PathConstraints(3.0, 1.5)); // TODO: CHANGE THIS BACK TO 3, 1.5, (0.5, 0.5 is safe)
+      path, new PathConstraints(4.0, 2.0)); //3, 1.5 is previous but it is not fast enough with square paths
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));

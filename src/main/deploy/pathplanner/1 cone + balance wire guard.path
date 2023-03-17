@@ -34,11 +34,11 @@
         "y": 0.52
       },
       "nextControl": {
-        "x": 5.996283687608899,
+        "x": 6.003716312391101,
         "y": 0.52
       },
       "holonomicAngle": 180.0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -60,10 +60,10 @@
       },
       "nextControl": {
         "x": 6.0,
-        "y": 2.693229772424458
+        "y": 2.7067702275755425
       },
       "holonomicAngle": 0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
