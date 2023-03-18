@@ -232,11 +232,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new InstantCommand(drivetrain::setGyroscope180)
-      .andThen(new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
+    //return new InstantCommand(drivetrain::setGyroscope180)
+    //  .andThen(new AutoRoutine("gigachad auto wire guard", drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
 
-    // return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake)
-      // .andThen(new InstantCommand(drivetrain::setGyroscope180));  
+     return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake, hatHack)
+       .andThen(new InstantCommand(drivetrain::setGyroscope180));  
   }
 
 // maybe sync button board LEDs?
