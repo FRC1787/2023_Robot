@@ -25,7 +25,7 @@ public class PickUpCone extends SequentialCommandGroup {
 
     double grabbingVolts = 6;
     double pickupPosition = 0.135;
-    double grabbingAmpLimit = 25;
+    double grabbingAmpLimit = 26;
     addCommands(
       // move all subsystems into the grabbing position
       new InstantCommand(indexer::closeIndexerWalls),
@@ -39,7 +39,7 @@ public class PickUpCone extends SequentialCommandGroup {
           new MoveConveyor(intake, -10).withTimeout(0.35), // 0.525
           new MoveConveyor(intake, 3.5)
         ),
-        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(1)
+        new SetGrabberMotor(elevatorGrabber, grabbingVolts, grabbingAmpLimit).withTimeout(2)
       )
     );
   }

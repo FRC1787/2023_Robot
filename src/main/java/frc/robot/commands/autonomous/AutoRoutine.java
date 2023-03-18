@@ -68,6 +68,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       new WaitCommand(0.75),
       new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, 6).withTimeout(1)
     ));
+    eventMap.put("waitOneSecond", new WaitCommand(1));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       drivetrain::getPoseMeters,

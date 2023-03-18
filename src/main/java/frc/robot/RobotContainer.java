@@ -23,6 +23,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Vision;
 
@@ -46,6 +48,7 @@ public class RobotContainer {
   public static final CommandXboxController controller = new CommandXboxController(0);
   public static final CommandXboxController backupController = new CommandXboxController(1);
   public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
+  public static final Joystick joystick = new Joystick(3);
 
   // SUBSYSTEMS 
   final Drivetrain drivetrain = new Drivetrain();
@@ -55,9 +58,14 @@ public class RobotContainer {
   final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
   final CubeHatHack hatHack = new CubeHatHack();
 
-
   public final Trigger inConeMode = new Trigger(indexer::inConeMode); // TODO: do we need this?
   //public static final GenericHID simpleButtonBoard = new GenericHID(2); // alternate LED sync method?
+
+  // BACKUP JOYSTICK
+  private final Trigger highScoreJoystick = new JoystickButton(joystick, 7);
+  private final Trigger midScoreJoystick = new JoystickButton(joystick, 9);
+  private final Trigger coneModeJoystick = new JoystickButton(joystick, 11);
+  private final Trigger cubeModeJoystick = new JoystickButton(joystick, 12);
 
   // AUTO
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -107,10 +115,13 @@ public class RobotContainer {
     controller.b().onTrue(new InstantCommand(indexer::setCubeMode));
     buttonBoard.button(1).onTrue(new InstantCommand(indexer::setConeMode));
     buttonBoard.button(2).onTrue(new InstantCommand(indexer::setCubeMode));
+
+    coneModeJoystick.onTrue(new InstantCommand(indexer::setConeMode));
+    cubeModeJoystick.onTrue(new InstantCommand(indexer::setCubeMode));
+
     //controller.a().onTrue((new InstantCommand(indexer::setConeMode)).andThen(new InstantCommand(this::syncCone)));
     //controller.b().onTrue((new InstantCommand(indexer::setCubeMode)).andThen(new InstantCommand(this::syncCube)));
 
-    
     // drivetrain
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
@@ -224,7 +235,24 @@ public class RobotContainer {
     //high cube score
     buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
-  }
+  
+    //BACKUP CONTROLLER
+    midScoreJoystick.and(inConeMode).and(controller.leftBumper())
+    .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+
+    //high cone score
+    highScoreJoystick.and(inConeMode).and(controller.leftBumper())
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+
+    //mid cube score
+    midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
+
+    //high cube score
+    highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
+
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
