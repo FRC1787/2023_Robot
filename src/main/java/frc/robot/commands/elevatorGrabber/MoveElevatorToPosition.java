@@ -8,11 +8,11 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ElevatorGrabber;
+import frc.robot.subsystems.elevator.Elevator;
 
 public class MoveElevatorToPosition extends CommandBase {
 
-    ElevatorGrabber elevatorGrabber;
+    Elevator elevator;
     double targetPositionMeters;
     TrapezoidProfile profile;
     Timer timer;
@@ -24,9 +24,10 @@ public class MoveElevatorToPosition extends CommandBase {
      * @param elevatorGrabber - elevatorGrabber subsystem object.
      * @param targetPositionMeters - target position in meters, positive is elevator extended.
      */
-    public MoveElevatorToPosition(ElevatorGrabber elevatorGrabber, double targetPositionMeters) {
-        // addRequirements(elevatorGrabber);
-        this.elevatorGrabber = elevatorGrabber;
+    public MoveElevatorToPosition(Elevator elevator, double targetPositionMeters) {
+        addRequirements(elevator);
+
+        this.elevator = elevator;
         this.targetPositionMeters = targetPositionMeters;
         timer = new Timer();
     }
@@ -42,7 +43,7 @@ public class MoveElevatorToPosition extends CommandBase {
                 targetPositionMeters, 0.0
             ),
             new TrapezoidProfile.State(
-                elevatorGrabber.getElevatorPositionMeters(), elevatorGrabber.getElevatorVelocityMetersPerSecond()
+                elevator.getElevatorPositionMeters(), elevator.getElevatorVelocityMetersPerSecond()
             )  
         );
 
@@ -67,21 +68,21 @@ public class MoveElevatorToPosition extends CommandBase {
         currAccelerationCommand = 0; // Temporarily disable this!
 
         // incorporate position feedback!
-        double measuredPosition = elevatorGrabber.getElevatorPositionMeters();
+        double measuredPosition = elevator.getElevatorPositionMeters();
         double desiredPosition = profile.calculate(currTimestamp).position;
         double positionError = desiredPosition - measuredPosition;
         double extraVelocityPerMeter = 8;  //analagous to I term of velocity controller
 
         currVelocityCommand += positionError * extraVelocityPerMeter;
 
-        elevatorGrabber.setElevatorMotorMetersPerSecond(
+        elevator.setElevatorMotorMetersPerSecond(
             currVelocityCommand, currAccelerationCommand);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        elevatorGrabber.setElevatorMotorMetersPerSecond(0, 0);
+        elevator.setElevatorMotorMetersPerSecond(0, 0);
     }
 
     // Returns true when the command should end.
