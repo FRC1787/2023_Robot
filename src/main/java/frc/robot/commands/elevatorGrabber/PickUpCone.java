@@ -32,7 +32,7 @@ public class PickUpCone extends SequentialCommandGroup {
       // move all subsystems into the grabbing position
       new InstantCommand(indexer::closeIndexerWalls),
       new InstantCommand(pivot::retractElevator, pivot),
-      new MoveElevatorToPosition(elevator, pickupPosition),
+      new MoveElevatorToPosition(elevator, pickupPosition).asProxy(),
 
       // start spinning the grabber wheel, while the belts push the cone
       // into the grabber wheel, then reverse the belts to kick up the cone.

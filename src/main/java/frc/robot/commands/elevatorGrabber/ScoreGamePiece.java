@@ -30,11 +30,11 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       new SetGrabberMotor(grabberPlacer, ejectionVolts, 100).withTimeout(0.5),
 
       // move the cube hat (goober) out of the way
-      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15), 
+      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.2), 
       new ParallelCommandGroup(
   
       // reset the elevator and indexer walls to prepare for getting the next game piece
-      new MoveElevatorToPosition(elevator, 0),
+      new MoveElevatorToPosition(elevator, 0).asProxy(),
         new SequentialCommandGroup(
           new WaitCommand(0.06), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
           new InstantCommand(pivot::retractElevator, pivot)

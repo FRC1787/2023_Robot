@@ -29,7 +29,7 @@ public class PickUpCube extends SequentialCommandGroup {
       // move subsystems into the pickup position
       new InstantCommand(pivot::retractElevator, pivot),
       new InstantCommand(indexer::closeIndexerWalls),
-      new MoveElevatorToPosition(elevator, 0.0),
+      new MoveElevatorToPosition(elevator, 0.0).asProxy(),
 
       // start pushing the cube towards the grabber wheels,
       // then spin the grabber wheels while the cube is being pushed into them

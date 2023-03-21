@@ -139,7 +139,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           new MoveClawBack(indexer, 3.6),
           new IntakeGamePieces(intake, indexer, pivot, -4, -12, -6),
-          new MoveElevatorToPosition(elevator, 0))
+          new MoveElevatorToPosition(elevator, 0).asProxy())
       );
 
     // intake cube
@@ -148,7 +148,7 @@ public class RobotContainer {
         new ParallelCommandGroup(
           new MoveClawBack(indexer, 3.6),
           new IntakeGamePieces(intake, indexer, pivot, -3, -5, -6),
-          new MoveElevatorToPosition(elevator, 0))
+          new MoveElevatorToPosition(elevator, 0).asProxy())
       );
 
     

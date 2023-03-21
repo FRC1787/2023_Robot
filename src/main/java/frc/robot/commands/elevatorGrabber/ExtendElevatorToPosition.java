@@ -19,7 +19,7 @@ public class ExtendElevatorToPosition extends SequentialCommandGroup {
     addCommands(
       new InstantCommand(pivot::extendElevator, pivot),
       new WaitCommand(0.2),
-      new MoveElevatorToPosition(elevator, elevatorPositionMeters)
+      new MoveElevatorToPosition(elevator, elevatorPositionMeters).asProxy()
     );
   }
 }
