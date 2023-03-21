@@ -10,8 +10,6 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,7 +24,6 @@ public class ElevatorGrabber extends SubsystemBase {
   private CANSparkMax grabberMotor;
 
   private RelativeEncoder encoder;
-  private DoubleSolenoid solenoid;
   
   private DigitalInput lowerLimitSwitch;
 
@@ -67,10 +64,6 @@ public class ElevatorGrabber extends SubsystemBase {
 
     // encoder.setMeasurementPeriod(0);
 
-    solenoid = new DoubleSolenoid(
-        PneumaticsModuleType.REVPH,
-        Constants.ElevatorGrabber.elevatorRetractPneumaticChannel,
-        Constants.ElevatorGrabber.elevatorExtendPneumaticChannel);
 
     lowerLimitSwitch = new DigitalInput(Constants.ElevatorGrabber.lowerLimitSwitchID);
 
@@ -153,20 +146,6 @@ public class ElevatorGrabber extends SubsystemBase {
 
     //System.out.println("volts sent: " + totalOutput);
     setElevatorMotorVolts(totalOutput);
-  }
-
-  /**
-   * Extend elevator to score a game piece outside the frame perimeter
-   */
-  public void extendElevator() {
-    solenoid.set(DoubleSolenoid.Value.kReverse);
-  }
-
-  /**
-   * Bring elevator within the frame perimeter
-   */
-  public void retractElevator() {
-    solenoid.set(DoubleSolenoid.Value.kForward);
   }
 
   /**

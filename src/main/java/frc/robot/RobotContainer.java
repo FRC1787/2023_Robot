@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.elevator.Pivot;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -57,6 +58,7 @@ public class RobotContainer {
   final Vision vision = new Vision();
   final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
   final CubeHatHack hatHack = new CubeHatHack();
+  final Pivot pivot = new Pivot();
 
   public final Trigger inConeMode = new Trigger(indexer::inConeMode);
   //public static final GenericHID simpleButtonBoard = new GenericHID(2); // alternate LED sync method?
@@ -106,7 +108,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     controller.back().whileTrue(new AutoBalance(drivetrain));
-    buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber));
+    buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexer, elevatorGrabber, pivot));
 
     inConeMode.onTrue(new SetGrabberMotorHatHack(elevatorGrabber, 6, 100, hatHack).withTimeout(0.15));
 
@@ -131,7 +133,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(indexer, 3.6),
-          new IntakeGamePieces(intake, indexer, elevatorGrabber, -4, -12, -6),
+          new IntakeGamePieces(intake, indexer, pivot, -4, -12, -6),
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );
 
@@ -140,7 +142,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(indexer, 3.6),
-          new IntakeGamePieces(intake, indexer, elevatorGrabber, -3, -5, -6),
+          new IntakeGamePieces(intake, indexer, pivot, -3, -5, -6),
           new MoveElevatorToPosition(elevatorGrabber, 0))
       );
 
@@ -149,14 +151,14 @@ public class RobotContainer {
     controller.rightTrigger().and(inConeMode)
       .onFalse(
         new MoveConveyor(intake, -8).withTimeout(0.70)
-        .andThen(new IndexConeFull(intake, indexer, elevatorGrabber))
+        .andThen(new IndexConeFull(intake, indexer, elevatorGrabber, pivot))
       );
 
     //get cube in grabber upon intake release
     controller.rightTrigger().and(inConeMode.negate())
       .onFalse(
         new WaitCommand(0.5).andThen(
-        new PickUpCube(intake, elevatorGrabber, indexer, hatHack))
+        new PickUpCube(intake, elevatorGrabber, pivot, indexer, hatHack))
       );
     
     //eject cone
@@ -164,7 +166,7 @@ public class RobotContainer {
     //eject cube
     controller.leftTrigger().and(inConeMode.negate()).whileTrue(new EjectGamePiece(intake, indexer, elevatorGrabber, 12, 8, 8, 6));
     // hand off cone from indexer to grabber
-    controller.rightBumper().onTrue(new PickUpCone(elevatorGrabber, intake, indexer));
+    controller.rightBumper().onTrue(new PickUpCone(elevatorGrabber, pivot, intake, indexer));
 
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
     //this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
@@ -172,85 +174,38 @@ public class RobotContainer {
     this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
   }
 
-  private void originalScoringBindings() {
-    //mid cone score
-    buttonBoard.button(4).and(inConeMode)
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
-
-    //high cone score
-    buttonBoard.button(5).and(inConeMode)
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
-
-    //mid cube score
-    buttonBoard.button(4).and(inConeMode.negate())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
-
-    //high cube score
-    buttonBoard.button(5).and(inConeMode.negate())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
-  }
-
-  private void operatorConfirmBindings() {
-    //mid cone score
-    buttonBoard.button(4).and(inConeMode)
-      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.21));
-    buttonBoard.button(4).and(buttonBoard.button(1))
-      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, true));
-
-    //high cone score
-    buttonBoard.button(5).and(inConeMode)
-      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.69));
-    buttonBoard.button(5).and(buttonBoard.button(1))
-      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, true));
-
-    // TODO: low cone score (simply ejecting with left trigger isn't reliable enough?)
-
-    // cube is separate because possible different elevator heights and maybe reversed scoregamepiece
-    //mid cube score
-    buttonBoard.button(4).and(inConeMode.negate())
-      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.21));
-    buttonBoard.button(4).and(buttonBoard.button(2))
-      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, false));
-
-    //high cube score
-    buttonBoard.button(5).and(inConeMode.negate())
-      .onTrue(new ExtendElevatorToPosition(elevatorGrabber, 1.7));
-    buttonBoard.button(5).and(buttonBoard.button(2))
-      .onTrue(new ScoreGamePiece(elevatorGrabber, indexer, false));
-  }
-
   private void driverConfirmBindings() {
     //mid cone score
     buttonBoard.button(4).and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, true)));
 
     //high cone score
     buttonBoard.button(5).and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, true)));
 
     //mid cube score
     buttonBoard.button(4).and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, false)));
 
     //high cube score
     buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, false)));
   
     //BACKUP CONTROLLER
     midScoreJoystick.and(inConeMode).and(controller.leftBumper())
-    .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+    .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, true)));
 
     //high cone score
     highScoreJoystick.and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, true)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.69)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, true)));
 
     //mid cube score
     midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.21)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, false)));
 
     //high cube score
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevatorGrabber, pivot, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, pivot, indexer, false)));
 
   }
 
@@ -263,7 +218,7 @@ public class RobotContainer {
     //return new InstantCommand(drivetrain::setGyroscope180)
     //  .andThen(new AutoRoutine("gigachad auto wire guard", drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
 
-     return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, indexer, intake, hatHack)
+     return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, elevatorGrabber, pivot, indexer, intake, hatHack)
        .andThen(new InstantCommand(drivetrain::setGyroscope180));  
   }
 

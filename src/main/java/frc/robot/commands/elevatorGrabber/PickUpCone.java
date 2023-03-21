@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,18 +19,18 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCone extends SequentialCommandGroup {
   /** Creates a new PickUpCone. */
-  public PickUpCone(ElevatorGrabber elevatorGrabber, Intake intake, Indexer indexer) {
+  public PickUpCone(ElevatorGrabber elevatorGrabber, Pivot pivot, Intake intake, Indexer indexer) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addRequirements(intake);
-
+    
     double grabbingVolts = 6;
     double pickupPosition = 0.135;
     double grabbingAmpLimit = 26;
     addCommands(
       // move all subsystems into the grabbing position
       new InstantCommand(indexer::closeIndexerWalls),
-      new InstantCommand(elevatorGrabber::retractElevator),
+      new InstantCommand(pivot::retractElevator, pivot),
       new MoveElevatorToPosition(elevatorGrabber, pickupPosition),
 
       // start spinning the grabber wheel, while the belts push the cone

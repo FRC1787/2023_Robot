@@ -14,20 +14,21 @@ import frc.robot.subsystems.CubeHatHack;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.elevator.Pivot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCube extends SequentialCommandGroup {
   /** Creates a new PickUpCube. */
-  public PickUpCube(Intake intake, ElevatorGrabber elevatorGrabber, Indexer indexer, CubeHatHack hatHack) {
+  public PickUpCube(Intake intake, ElevatorGrabber elevatorGrabber, Pivot pivot, Indexer indexer, CubeHatHack hatHack) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addRequirements(hatHack);
 
     addCommands(
       // move subsystems into the pickup position
-      new InstantCommand(elevatorGrabber::retractElevator),
+      new InstantCommand(pivot::retractElevator, pivot),
       new InstantCommand(indexer::closeIndexerWalls),
       new MoveElevatorToPosition(elevatorGrabber, 0.0),
 

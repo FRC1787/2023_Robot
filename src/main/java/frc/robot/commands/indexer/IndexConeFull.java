@@ -16,6 +16,7 @@ import frc.robot.commands.intake.PulseConveyor;
 import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.elevator.Pivot;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -23,7 +24,7 @@ import frc.robot.subsystems.Intake;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IndexConeFull extends SequentialCommandGroup {
   /** Creates a new IndexConeFull. */
-  public IndexConeFull(Intake intake, Indexer indexer, ElevatorGrabber elevatorGrabber) {
+  public IndexConeFull(Intake intake, Indexer indexer, ElevatorGrabber elevatorGrabber, Pivot pivot) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     /*
@@ -33,7 +34,7 @@ public class IndexConeFull extends SequentialCommandGroup {
     
     addCommands(
       //agitation/alignment procedure
-      new InstantCommand(elevatorGrabber::retractElevator),
+      new InstantCommand(pivot::retractElevator, pivot),
       new MoveClawBack(indexer, -3),
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevatorGrabber, 0.4),
