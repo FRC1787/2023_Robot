@@ -74,7 +74,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(0, 0, 0), // 15: TODO: CHANGE THESE LOW AND SEE WHAT HAPPENS (default value is 5 for linear, 0.5 for angular)
+      new PIDConstants(0, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
       new PIDConstants(0, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
       drivetrain::setModuleStatesClosedLoop,
       eventMap,

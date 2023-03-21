@@ -58,7 +58,7 @@ public class RobotContainer {
   final ElevatorGrabber elevatorGrabber = new ElevatorGrabber();
   final CubeHatHack hatHack = new CubeHatHack();
 
-  public final Trigger inConeMode = new Trigger(indexer::inConeMode); // TODO: do we need this?
+  public final Trigger inConeMode = new Trigger(indexer::inConeMode);
   //public static final GenericHID simpleButtonBoard = new GenericHID(2); // alternate LED sync method?
 
   // BACKUP JOYSTICK
@@ -99,7 +99,7 @@ public class RobotContainer {
     // controller.rightBumper().whileTrue(new JoystickDrive(drivetrain, false));
     // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
-    // stuff we're testing TODO: (maybe delete for competition?)
+    // stuff we're testing
     //controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
     //controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
     // controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
@@ -252,7 +252,7 @@ public class RobotContainer {
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevatorGrabber, 1.7)).andThen(new ScoreGamePiece(elevatorGrabber, indexer, false)));
 
-    }
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
