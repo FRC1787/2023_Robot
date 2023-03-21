@@ -5,14 +5,14 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.elevator.Pivot;
 
 public class IntakeGamePieces extends CommandBase {
   private Intake intake;
   private Indexer indexer;
-  private ElevatorGrabber elevatorGrabber;
+  private Pivot pivot;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
   private double sideBeltVoltage;
@@ -24,11 +24,11 @@ public class IntakeGamePieces extends CommandBase {
    * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this negative to intake a piece.
    * @param sideBeltVoltage - Voltage to send to the side belt motors. Make this negative to intake a piece.
    */
-  public IntakeGamePieces(Intake intake, Indexer indexer, ElevatorGrabber elevatorGrabber, double intakeMotorVoltage, double conveyorMotorVoltage, double sideBeltVoltage) {
-    addRequirements(intake);
+  public IntakeGamePieces(Intake intake, Indexer indexer, Pivot pivot, double intakeMotorVoltage, double conveyorMotorVoltage, double sideBeltVoltage) {
+    addRequirements(intake, pivot);
     this.intake = intake;
     this.indexer = indexer;
-    this.elevatorGrabber = elevatorGrabber;
+    this.pivot = pivot;
     this.intakeMotorVoltage = intakeMotorVoltage;
     this.conveyorMotorVoltage = conveyorMotorVoltage;
     this.sideBeltVoltage = sideBeltVoltage;
@@ -46,7 +46,7 @@ public class IntakeGamePieces extends CommandBase {
     intake.extendIntake();
     intake.setIntakeMotorVolts(intakeMotorVoltage);
     intake.setConveyorMotorVolts(conveyorMotorVoltage);
-    elevatorGrabber.retractElevator();
+    pivot.retractElevator();
     indexer.openIndexerWalls();
     indexer.setIndexerMotors(sideBeltVoltage);
   }

@@ -5,23 +5,25 @@
 package frc.robot.commands.elevatorGrabber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ElevatorGrabber;
+import frc.robot.subsystems.elevator.GrabberPlacer;
 
 public class SetGrabberMotor extends CommandBase {
 
-  ElevatorGrabber elevatorGrabber;
+  GrabberPlacer grabberPlacer;
   double voltage;
   double ampLimit;
 
   /**
    * Sets the voltage of the elevator grabber motor, until the amp limit is reached.
-   * @param elevatorGrabber - The elevator grabber subsystem object.
+   * @param grabberPlacer - The grabber place subsystem object.
    * @param voltage - Make this positive to intake a cone,
    * while negative to outtake a cone/intake or outtake a cube
    * @param ampLimit - When this amp limit is reached, the command ends.
    */
-  public SetGrabberMotor(ElevatorGrabber elevatorGrabber, double voltage, double ampLimit) {
-    this.elevatorGrabber = elevatorGrabber;
+  public SetGrabberMotor(GrabberPlacer grabberPlacer, double voltage, double ampLimit) {
+    addRequirements(grabberPlacer);
+    
+    this.grabberPlacer = grabberPlacer;
     this.voltage = voltage;
     this.ampLimit = ampLimit;
   
@@ -32,7 +34,7 @@ public class SetGrabberMotor extends CommandBase {
   @Override
   public void initialize() {
     // voltage = SmartDashboard.getNumber("elevator grabber motor voltage", 0.0);
-    elevatorGrabber.setGrabMotorVolts(voltage);
+    grabberPlacer.setGrabMotorVolts(voltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,12 +44,12 @@ public class SetGrabberMotor extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevatorGrabber.setGrabMotorVolts(0.0);
+    grabberPlacer.setGrabMotorVolts(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevatorGrabber.getGrabOutputAmps() > ampLimit;
+    return grabberPlacer.getGrabOutputAmps() > ampLimit;
   }
 }

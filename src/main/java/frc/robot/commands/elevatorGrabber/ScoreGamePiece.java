@@ -8,15 +8,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.ElevatorGrabber;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.GrabberPlacer;
+import frc.robot.subsystems.elevator.Pivot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScoreGamePiece extends SequentialCommandGroup {
   /** Creates a new ScoreGamePiece. */
-  public ScoreGamePiece(ElevatorGrabber elevatorGrabber, Indexer indexer, boolean isCone) {
+  public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, Indexer indexer, boolean isCone) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     double ejectionVolts = 6;
@@ -25,17 +27,17 @@ public class ScoreGamePiece extends SequentialCommandGroup {
     }
     addCommands(
       // spit out the game piece
-      new SetGrabberMotor(elevatorGrabber, ejectionVolts, 100).withTimeout(0.5),
+      new SetGrabberMotor(grabberPlacer, ejectionVolts, 100).withTimeout(0.5),
 
       // move the cube hat (goober) out of the way
-      new SetGrabberMotor(elevatorGrabber, 2, 100).withTimeout(0.15), 
+      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.2), 
       new ParallelCommandGroup(
   
       // reset the elevator and indexer walls to prepare for getting the next game piece
-      new MoveElevatorToPosition(elevatorGrabber, 0),
+      new MoveElevatorToPosition(elevator, 0).asProxy(),
         new SequentialCommandGroup(
           new WaitCommand(0.06), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
-          new InstantCommand(elevatorGrabber::retractElevator)
+          new InstantCommand(pivot::retractElevator, pivot)
         )
       ),
       new InstantCommand(indexer::openIndexerWalls)
