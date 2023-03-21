@@ -21,7 +21,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class ElevatorGrabber extends SubsystemBase {
   /** Creates a new Drivetrain. */
   private CANSparkMax elevatorMotor;
-  private CANSparkMax grabberMotor;
 
   private RelativeEncoder encoder;
   
@@ -32,11 +31,7 @@ public class ElevatorGrabber extends SubsystemBase {
 
   private ElevatorFeedforward feedforward;
 
-  private LinearFilter ampFilter = LinearFilter.movingAverage(25);
-  private double averageAmps;
-
   public double desiredVelocity;
-  private double desiredGrabberVoltage;
 
   private boolean hasBeenHomed;
 
@@ -45,9 +40,7 @@ public class ElevatorGrabber extends SubsystemBase {
         Constants.ElevatorGrabber.elevatorMotorID,
         MotorType.kBrushless);
 
-    grabberMotor = new CANSparkMax(
-        Constants.ElevatorGrabber.grabberMotorID,
-        MotorType.kBrushless);
+
 
     // encoder = elevatorMotor.getAlternateEncoder(8192);
     // encoder.setPositionConversionFactor(1);
@@ -78,12 +71,10 @@ public class ElevatorGrabber extends SubsystemBase {
       Constants.ElevatorGrabber.kVVoltsPer_MeterPerSecond,
       Constants.ElevatorGrabber.kAVoltsPer_MeterPerSecondSquared);
 
-    averageAmps = 0;
     desiredVelocity = 0;
 
     hasBeenHomed = false;
 
-    this.desiredGrabberVoltage = 0;
   }
 
   private void configureMotors() {
@@ -95,11 +86,6 @@ public class ElevatorGrabber extends SubsystemBase {
     encoder.setPositionConversionFactor(Constants.ElevatorGrabber.grabberMetersPerRotation * Constants.ElevatorGrabber.elevatorReduction);
     encoder.setVelocityConversionFactor(Constants.ElevatorGrabber.grabberMetersPerSecondPerRPM * Constants.ElevatorGrabber.elevatorReduction);
     elevatorMotor.burnFlash();
-
-    grabberMotor.restoreFactoryDefaults();
-    grabberMotor.setSmartCurrentLimit(50);
-    grabberMotor.setInverted(false);
-    grabberMotor.burnFlash();
   }
 
 
@@ -148,34 +134,12 @@ public class ElevatorGrabber extends SubsystemBase {
     setElevatorMotorVolts(totalOutput);
   }
 
-  /**
-   * Sets voltage of the grab motor.
-   * @param voltage - make this positive to intake a cone/outtake a cube,
-   * while negative to outtake a cone/intake a cube 
-   */
-  public void setGrabMotorVolts(double voltage) {
-    grabberMotor.setVoltage(voltage);
-    this.desiredGrabberVoltage = voltage;
-  }
-
-  public void setGrabMotorAmpLimit(int ampLimit) {
-    grabberMotor.setSmartCurrentLimit(ampLimit);
-  }
-
   public double getElevatorPositionMeters() {
     return encoder.getPosition();
   }
 
   public void zeroEncoder() {
     encoder.setPosition(0);
-  }
-
-  /**
-   * Gets moving window average of amp readings for grabber motor
-   * @return average amps over 8 readings
-   */
-  public double getGrabOutputAmps() {
-    return averageAmps;
   }
 
   @Override
@@ -189,25 +153,16 @@ public class ElevatorGrabber extends SubsystemBase {
       setElevatorMotorMetersPerSecond(-0.2, 0);
     }
 
-    averageAmps = ampFilter.calculate(
-      MathUtil.clamp(grabberMotor.getOutputCurrent(),
-        0,
-        50));
+
     
     if (desiredVelocity == 0 && hasBeenHomed) {
       setElevatorMotorMetersPerSecond(0, 0);
     }
 
-    if (desiredGrabberVoltage == 0) {
-      setGrabMotorVolts(0.5);
-    }
-    
     SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
     SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
     SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());
     SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
-    SmartDashboard.putNumber("amp reading for grabber", getGrabOutputAmps());
-    SmartDashboard.putNumber("unfiltered amp limit", grabberMotor.getOutputCurrent());
 
     SmartDashboard.putNumber("relative encoder position", encoder.getPosition());
     SmartDashboard.putNumber("relative encoder velocity", encoder.getVelocity());
