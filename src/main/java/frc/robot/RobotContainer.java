@@ -171,7 +171,14 @@ public class RobotContainer {
       );
     
     //eject cone
-    controller.leftTrigger().and(inConeMode).whileTrue(new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, -6));
+    controller.leftTrigger().and(inConeMode).whileTrue(
+      new ParallelCommandGroup(
+        new MoveElevatorToPosition(elevator, .4).asProxy(),
+        new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, -6)
+      )
+    ).onFalse(
+      new MoveElevatorToPosition(elevator, 0).asProxy()
+    );
     //eject cube
     controller.leftTrigger().and(inConeMode.negate()).whileTrue(new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, 6));
     // hand off cone from indexer to grabber
