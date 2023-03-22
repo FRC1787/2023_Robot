@@ -6,10 +6,10 @@ package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 public class PulseSideBelts extends CommandBase {
-  private Indexer indexer;
+  private IndexerWalls indexerWalls;
   private Timer timer;
   private double timeBetweenPulsesBack;
   private double timeBetweenPulsesForward;
@@ -21,9 +21,10 @@ public class PulseSideBelts extends CommandBase {
    * @param time - time between each pulse
    * @param volts - should ALWAYS be positive, volts to apply to indexer motors
    */
-  public PulseSideBelts(Indexer indexer, double timeBack, double timeForward, double volts) {
+  public PulseSideBelts(IndexerWalls indexerWalls, double timeBack, double timeForward, double volts) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.indexer = indexer;
+    addRequirements(indexerWalls);
+    this.indexerWalls = indexerWalls;
     this.volts = volts;
     timer = new Timer();
     timeBetweenPulsesBack = timeBack;
@@ -35,24 +36,24 @@ public class PulseSideBelts extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    if(indexer.getIndexerDirection() < 0) {
-      indexer.setIndexerMotors(volts);
+    if(indexerWalls.getIndexerDirection() < 0) {
+      indexerWalls.setIndexerMotors(volts);
     }else {
-      indexer.setIndexerMotors(-volts);
+      indexerWalls.setIndexerMotors(-volts);
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(indexer.getIndexerDirection() < 0) {
+    if(indexerWalls.getIndexerDirection() < 0) {
       if(timer.get() >= timeBetweenPulsesBack) {
-        indexer.setIndexerMotors(volts);
+        indexerWalls.setIndexerMotors(volts);
         timer.reset();
       }
     }else {
       if(timer.get() >= timeBetweenPulsesForward) {
-        indexer.setIndexerMotors(-volts);
+        indexerWalls.setIndexerMotors(-volts);
         timer.reset();
       }
     }
@@ -61,7 +62,7 @@ public class PulseSideBelts extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.setIndexerMotors(0);
+    indexerWalls.setIndexerMotors(0);
   }
 
   // Returns true when the command should end.

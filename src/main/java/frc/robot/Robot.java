@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.indexer.openIndexerWalls();
+    m_robotContainer.indexerWalls.openIndexerWalls();
   }
 
   /** This function is called periodically during operator control. */

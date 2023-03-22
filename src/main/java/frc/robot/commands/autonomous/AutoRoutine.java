@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
@@ -34,13 +33,26 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
+import frc.robot.subsystems.intakeIndex.Claw;
+import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
-  public AutoRoutine(String path, Drivetrain drivetrain, Vision vision, GrabberPlacer grabberPlacer, Elevator elevator, Pivot pivot, Indexer indexer, Intake intake) {
+  public AutoRoutine(
+      String path, 
+      Drivetrain drivetrain, 
+      Vision vision, 
+      GrabberPlacer grabberPlacer, 
+      Elevator elevator, 
+      Pivot pivot, 
+      IndexerWalls indexerWalls, 
+      Claw claw,
+      Intake intake
+    ) {
+    
     double maxVelocityMetersPerSecond = 4.0;
     double accelerationMetersPerSecondSquared = 2.5;
     if (path.equals("1 cone + balance middle") || path.equals("1 cone middle")) {
@@ -54,20 +66,20 @@ public class AutoRoutine extends SequentialCommandGroup {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
     eventMap.put("autoBalance", new AutoBalance(drivetrain));
-    eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, indexer));
+    eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, indexerWalls, claw));
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
         new SetGrabberMotor(grabberPlacer, 6, 25).withTimeout(0.5),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
-        new ScoreGamePiece(elevator, pivot, grabberPlacer, indexer, true))
+        new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
-    eventMap.put("intakeOut", new IntakeGamePieces(intake, indexer, pivot, -4, -12, -6));
-    eventMap.put("indexCube", new PickUpCube(intake, elevator, pivot, grabberPlacer, indexer));
+    eventMap.put("intakeOut", new IntakeGamePieces(intake, indexerWalls, pivot, -4, -12, -6));
+    eventMap.put("indexCube", new PickUpCube(intake, elevator, pivot, grabberPlacer, indexerWalls));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
-    eventMap.put("indexCone", new IndexConeFull(intake, indexer, elevator, pivot));
+    eventMap.put("indexCone", new IndexConeFull(intake, indexerWalls, claw, elevator, pivot));
     eventMap.put("shootCube", new SequentialCommandGroup(
       new WaitCommand(0.75),
-      new EjectGamePiece(intake, indexer, grabberPlacer, 12, 8, 8, 6).withTimeout(1)
+      new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, 6).withTimeout(1)
     ));
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
