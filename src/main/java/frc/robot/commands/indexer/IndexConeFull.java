@@ -10,11 +10,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.intake.PulseConveyor;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Claw;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
+import frc.robot.subsystems.intakeIndex.Intake;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -22,13 +23,9 @@ import frc.robot.subsystems.intakeIndex.IndexerWalls;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IndexConeFull extends SequentialCommandGroup {
   /** Creates a new IndexConeFull. */
-  public IndexConeFull(Intake intake, IndexerWalls indexerWalls, Claw claw, Elevator elevator, Pivot pivot) {
+  public IndexConeFull(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw, Elevator elevator, Pivot pivot) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    /*
-     * TODO: hacky way to allow index cone full to be interrupted by pickupcone
-     */
-    addRequirements(intake);
     
     addCommands(
       //agitation/alignment procedure
@@ -36,8 +33,7 @@ public class IndexConeFull extends SequentialCommandGroup {
       new MoveClawBack(claw, -3),
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevator, 0.4).asProxy(), // https://www.chiefdelphi.com/t/sequential-command-group-default-command-issue/430845
-        new PulseConveyor(intake, 0.2, 0.05, 3),
-        // new PulseIndexerWalls(indexerWalls, 0.3),
+        new PulseConveyor(conveyor, 0.2, 0.05, 3),
         new PulseSideBelts(indexerWalls, 0.2, 0.05, 4),
         new SequentialCommandGroup(
           new InstantCommand(indexerWalls::closeIndexerWalls)
@@ -54,11 +50,10 @@ public class IndexConeFull extends SequentialCommandGroup {
 
       //uprighting procedure
 
-      new UprightCone(intake, indexerWalls, claw),
-      new UprightCone(intake, indexerWalls, claw),
-      new UprightCone(intake, indexerWalls, claw),
-      new UprightCone(intake, indexerWalls, claw),
-      new UprightCone(intake, indexerWalls, claw)
+      new UprightCone(intake, conveyor, indexerWalls, claw),
+      new UprightCone(intake, conveyor, indexerWalls, claw),
+      new UprightCone(intake, conveyor, indexerWalls, claw),
+      new UprightCone(intake, conveyor, indexerWalls, claw)
       // new MoveElevatorToPosition(elevatorGrabber, 0.13) <- We don't need this, because PickupCone does it already?
     );
   }

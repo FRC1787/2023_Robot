@@ -5,7 +5,7 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intakeIndex.Intake;
 
 public class MoveIntakeWheels extends CommandBase {
   /** Creates a new MoveIntakeWheels. */
@@ -14,6 +14,8 @@ public class MoveIntakeWheels extends CommandBase {
   double volts;
 
   public MoveIntakeWheels(Intake intake, double volts) {
+    addRequirements(intake);
+    
     this.intake = intake;
     this.volts = volts;
   }

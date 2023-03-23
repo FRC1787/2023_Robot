@@ -5,22 +5,22 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 
 public class MoveConveyor extends CommandBase {
 
-  Intake intake;
-  double conveyorVoltage;
+  private Conveyor conveyor;
+  private double conveyorVoltage;
 
   /**
    * Moves the conveyor at a given voltage
-   * @param intake - intake subsystem object
+   * @param conveyor - intake subsystem object
    * @param conveyorVoltage - make this positive to move an object on the conveyor towards the front of the robot
    */
-  public MoveConveyor(Intake intake, double conveyorVoltage) {
-    addRequirements(intake);
+  public MoveConveyor(Conveyor conveyor, double conveyorVoltage) {
+    addRequirements(conveyor);
 
-    this.intake = intake;
+    this.conveyor = conveyor;
     this.conveyorVoltage = conveyorVoltage;
 
     // SmartDashboard.putNumber("move conveyor motor voltage", 0.0);
@@ -32,7 +32,7 @@ public class MoveConveyor extends CommandBase {
 
     // conveyorVoltage = SmartDashboard.getNumber("move conveyor motor voltage", 0.0);
 
-    intake.setConveyorMotorVolts(conveyorVoltage);
+    conveyor.setConveyorMotorVolts(conveyorVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,7 +42,7 @@ public class MoveConveyor extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.setConveyorMotorVolts(0);
+    conveyor.setConveyorMotorVolts(0);
   }
 
   // Returns true when the command should end.

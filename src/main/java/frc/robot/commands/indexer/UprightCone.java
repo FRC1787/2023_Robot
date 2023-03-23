@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.commands.intake.MoveIntakeWheels;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Claw;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,18 +18,19 @@ import frc.robot.subsystems.intakeIndex.IndexerWalls;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class UprightCone extends SequentialCommandGroup {
   /** Creates a new UprightCone. */
-  public UprightCone(Intake intake, IndexerWalls indexerWalls, Claw claw) {
+  public UprightCone(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+
     addCommands(
       new ParallelRaceGroup(
-        new MoveConveyor(intake, -3),
+        new MoveConveyor(conveyor, -3),
         new MoveSideBelts(indexerWalls, -3.6),
         new MoveClawForward(claw, 3.6).withTimeout(1.0), // at 3.6 before
         new MoveIntakeWheels(intake, 2.0)
       ),
       new ParallelRaceGroup(
-        new MoveConveyor(intake, 3),
+        new MoveConveyor(conveyor, 3),
         new MoveSideBelts(indexerWalls, 3.6),
         new MoveClawBack(claw, 3.6).withTimeout(1.0),
         new MoveIntakeWheels(intake, 2.0)

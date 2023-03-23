@@ -11,17 +11,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
+import frc.robot.subsystems.intakeIndex.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCube extends SequentialCommandGroup {
   /** Creates a new PickUpCube. */
-  public PickUpCube(Intake intake, Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, IndexerWalls indexerWalls) {
+  public PickUpCube(Intake intake, Conveyor conveyor, Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, IndexerWalls indexerWalls) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -36,12 +37,12 @@ public class PickUpCube extends SequentialCommandGroup {
       // to pickup the cube.
       new ParallelCommandGroup(
         new MoveSideBelts(indexerWalls, -2.0),
-        new MoveConveyor(intake, -4)
+        new MoveConveyor(conveyor, -4)
       ).withTimeout(0.75),
       new ParallelRaceGroup(
         new SetGrabberMotor(grabberPlacer, -6, 14).withTimeout(1.50),
         new MoveSideBelts(indexerWalls, -2.0),
-        new MoveConveyor(intake, -4)  
+        new MoveConveyor(conveyor, -4)  
       ),
 
       // now that the cube is securly held by the grabber, we can open the indexer,

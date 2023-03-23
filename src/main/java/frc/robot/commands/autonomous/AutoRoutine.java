@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intakeIndex.Intake;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
@@ -50,7 +51,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       Pivot pivot, 
       IndexerWalls indexerWalls, 
       Claw claw,
-      Intake intake
+      Intake intake,
+      Conveyor conveyor
     ) {
     
     double maxVelocityMetersPerSecond = 4.0;
@@ -66,20 +68,20 @@ public class AutoRoutine extends SequentialCommandGroup {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
     eventMap.put("autoBalance", new AutoBalance(drivetrain));
-    eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, indexerWalls, claw));
+    eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
         new SetGrabberMotor(grabberPlacer, 6, 25).withTimeout(0.5),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
-    eventMap.put("intakeOut", new IntakeGamePieces(intake, indexerWalls, pivot, -4, -12, -6));
-    eventMap.put("indexCube", new PickUpCube(intake, elevator, pivot, grabberPlacer, indexerWalls));
-    eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotors).andThen(new InstantCommand(intake::retractIntake)));
-    eventMap.put("indexCone", new IndexConeFull(intake, indexerWalls, claw, elevator, pivot));
+    eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6));
+    eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
+    eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotor).andThen(new InstantCommand(intake::retractIntake)));
+    eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
     eventMap.put("shootCube", new SequentialCommandGroup(
       new WaitCommand(0.75),
-      new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, 6).withTimeout(1)
+      new EjectGamePiece(intake, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, 6).withTimeout(1)
     ));
     eventMap.put("waitOneSecond", new WaitCommand(1));
 

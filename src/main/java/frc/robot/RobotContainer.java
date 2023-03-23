@@ -20,7 +20,8 @@ import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intakeIndex.Intake;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.LEDs;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -57,6 +58,7 @@ public class RobotContainer {
   // SUBSYSTEMS 
   final Drivetrain drivetrain = new Drivetrain();
   final Intake intake = new Intake();
+  final Conveyor conveyor = new Conveyor();
   final IndexerWalls indexerWalls = new IndexerWalls();
   final Claw claw = new Claw();
   final Vision vision = new Vision();
@@ -92,7 +94,9 @@ public class RobotContainer {
     
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
     grabberPlacer.setDefaultCommand(new SetGrabberMotor(grabberPlacer, 0.5, 100));
+    // claw.setDefaultCommand(new MoveClawBack(claw, 1)); // makes sure the claw is homed
     elevator.setDefaultCommand(new ElevatorIdle(elevator));
+    // indexerWalls.setDefaultCommand(new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls));
 
     SmartDashboard.putData(autoChooser);
   }
@@ -118,7 +122,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     controller.back().whileTrue(new AutoBalance(drivetrain));
-    buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, indexerWalls, claw, elevator, pivot));
+    buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
 
     inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
 
@@ -142,7 +146,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(claw, 3.6),
-          new IntakeGamePieces(intake, indexerWalls, pivot, -4, -12, -6),
+          new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6),
           new MoveElevatorToPosition(elevator, 0).asProxy())
       );
 
@@ -151,7 +155,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(claw, 3.6),
-          new IntakeGamePieces(intake, indexerWalls, pivot, -3, -5, -6),
+          new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6),
           new MoveElevatorToPosition(elevator, 0).asProxy())
       );
 
@@ -159,30 +163,30 @@ public class RobotContainer {
     //index cone upon trigger release
     controller.rightTrigger().and(inConeMode)
       .onFalse(
-        new MoveConveyor(intake, -8).withTimeout(0.70)
-        .andThen(new IndexConeFull(intake, indexerWalls, claw, elevator, pivot))
+        new MoveConveyor(conveyor, -8).withTimeout(0.70)
+        .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
       );
 
     //get cube in grabber upon intake release
     controller.rightTrigger().and(inConeMode.negate())
       .onFalse(
         new WaitCommand(0.5).andThen(
-        new PickUpCube(intake, elevator, pivot, grabberPlacer, indexerWalls))
+        new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls))
       );
     
     //eject cone
     controller.leftTrigger().and(inConeMode).whileTrue(
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevator, .4).asProxy(),
-        new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, -6)
+        new EjectGamePiece(intake, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -6)
       )
     ).onFalse(
       new MoveElevatorToPosition(elevator, 0).asProxy()
     );
     //eject cube
-    controller.leftTrigger().and(inConeMode.negate()).whileTrue(new EjectGamePiece(intake, indexerWalls, grabberPlacer, 12, 8, 8, 6));
+    controller.leftTrigger().and(inConeMode.negate()).whileTrue(new EjectGamePiece(intake, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, 6));
     // hand off cone from indexer to grabber
-    controller.rightBumper().onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, indexerWalls, claw));
+    controller.rightBumper().onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
 
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
     //this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
@@ -234,7 +238,7 @@ public class RobotContainer {
     //return new InstantCommand(drivetrain::setGyroscope180)
     //  .andThen(new AutoRoutine("gigachad auto wire guard", drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
 
-     return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake)
+     return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
        .andThen(new InstantCommand(drivetrain::setGyroscope180));  
   }
 

@@ -21,6 +21,7 @@ public class ScoreGamePiece extends SequentialCommandGroup {
   public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, IndexerWalls indexerWalls, boolean isCone) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+
     double ejectionVolts = 6;
     if (isCone) {
       ejectionVolts = -1 * ejectionVolts;

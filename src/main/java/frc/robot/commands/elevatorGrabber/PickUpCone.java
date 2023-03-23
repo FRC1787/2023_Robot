@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Claw;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
-
+import frc.robot.subsystems.intakeIndex.Intake;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -23,10 +23,9 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCone extends SequentialCommandGroup {
   /** Creates a new PickUpCone. */
-  public PickUpCone(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, Intake intake, IndexerWalls indexerWalls, Claw claw) {
+  public PickUpCone(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addRequirements(intake); //TODO: intake
     
     double grabbingVolts = 6;
     double pickupPosition = 0.135;
@@ -44,8 +43,8 @@ public class PickUpCone extends SequentialCommandGroup {
       // into the grabber wheel, then reverse the belts to kick up the cone.
       new ParallelRaceGroup(
         new SequentialCommandGroup(
-          new MoveConveyor(intake, -10).withTimeout(0.35), // 0.525
-          new MoveConveyor(intake, 3.5)
+          new MoveConveyor(conveyor, -10).withTimeout(0.35), // 0.525
+          new MoveConveyor(conveyor, 3.5)
         ),
         new SetGrabberMotor(grabberPlacer, grabbingVolts, grabbingAmpLimit).withTimeout(2)
       )

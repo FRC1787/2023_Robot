@@ -21,8 +21,6 @@ public class Claw extends SubsystemBase {
   private DigitalInput clawLimitSwitch;
   private RelativeEncoder clawMotorEncoder;
 
-  private boolean hasBeenHomed;
-
   public Claw() {
     clawMotor = new CANSparkMax(
       Constants.IntakeIndexer.clawMotorID,
@@ -35,8 +33,6 @@ public class Claw extends SubsystemBase {
   
 
     clawLimitSwitch = new DigitalInput(Constants.IntakeIndexer.clawLimitSwitchID);
-
-    hasBeenHomed = false;
   }
 
   private void configureMotors() {
@@ -82,21 +78,6 @@ public class Claw extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    //TODO: GET RID OF THIS UGLINESS
-    if (!hasBeenHomed) {
-      if (!isClawBack()) {
-        this.setClawMotorVolts(-1.0);
-      }
-      else {
-        // once claw has been homed, this sends
-        // one more command to make sure we're not backdriving.
-        hasBeenHomed = true;
-        this.setClawMotorVolts(0);
-      }
-    }
-    
-
     if (isClawBack()) {
       zeroClawEncoder();
     }

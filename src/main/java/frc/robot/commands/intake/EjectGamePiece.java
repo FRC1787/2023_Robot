@@ -5,12 +5,14 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.elevator.GrabberPlacer;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
+import frc.robot.subsystems.intakeIndex.Intake;
 
 public class EjectGamePiece extends CommandBase {
   private Intake intake;
+  private Conveyor conveyor;
   private IndexerWalls indexerWalls;
   private GrabberPlacer grabberPlacer;
   private double intakeMotorVoltage;
@@ -29,9 +31,10 @@ public class EjectGamePiece extends CommandBase {
    * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this positive to eject a piece.
    * @param indexerMotorVoltage - Voltage to send to the side belts. Make this positive to eject a piece.
    */
-  public EjectGamePiece(Intake intake, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
-    addRequirements(intake, grabberPlacer);
+  public EjectGamePiece(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
+    addRequirements(intake, conveyor, indexerWalls, grabberPlacer);
     this.intake = intake;
+    this.conveyor = conveyor;
     this.indexerWalls = indexerWalls;
     this.grabberPlacer = grabberPlacer;
     this.intakeMotorVoltage = intakeMotorVoltage;
@@ -51,7 +54,7 @@ public class EjectGamePiece extends CommandBase {
 
     intake.extendIntake();
     intake.setIntakeMotorVolts(intakeMotorVoltage);
-    intake.setConveyorMotorVolts(conveyorMotorVoltage);
+    conveyor.setConveyorMotorVolts(conveyorMotorVoltage);
     indexerWalls.closeIndexerWalls();
     indexerWalls.setIndexerMotors(indexerMotorVoltage);
     grabberPlacer.setGrabMotorVolts(grabberPlacerVolts);
@@ -65,7 +68,8 @@ public class EjectGamePiece extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stopIntakeMotors();
+    intake.stopIntakeMotor();
+    conveyor.stopIntakeMotors();
     intake.retractIntake();
     indexerWalls.setIndexerMotors(0);
     indexerWalls.openIndexerWalls();

@@ -6,11 +6,11 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.intakeIndex.Conveyor;
 
 public class PulseConveyor extends CommandBase {
   /** Creates a new PulseConveyor. */
-  private Intake intake;
+  private Conveyor conveyor;
   private Timer timer;
   private double timeBetweenPulsesBack;
   private double timeBetweenPulsesForward;
@@ -18,13 +18,15 @@ public class PulseConveyor extends CommandBase {
   
   /**
    * Pulses conveyor forwards and backwards
-   * @param intake - intake subsystem
+   * @param conveyor - intake subsystem
    * @param time - time between each pulse of the conveyor
    * @param volts - should ALWAYS be positive, volts to apply to the conveyor motor
    */
-  public PulseConveyor(Intake intake, double timeBack, double timeForward, double volts) {
+  public PulseConveyor(Conveyor conveyor, double timeBack, double timeForward, double volts) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.intake = intake;
+    addRequirements(conveyor);
+
+    this.conveyor = conveyor;
     this.volts = volts;
     timer = new Timer();
     timeBetweenPulsesBack = timeBack;
@@ -36,24 +38,24 @@ public class PulseConveyor extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    if(intake.getConveyorMotorDirection() < 0) {
-      intake.setConveyorMotorVolts(volts);
+    if(conveyor.getConveyorMotorDirection() < 0) {
+      conveyor.setConveyorMotorVolts(volts);
     }else {
-      intake.setConveyorMotorVolts(-volts);
+      conveyor.setConveyorMotorVolts(-volts);
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(intake.getConveyorMotorDirection() < 0) {
+    if(conveyor.getConveyorMotorDirection() < 0) {
       if(timer.get() >= timeBetweenPulsesBack) {
-        intake.setConveyorMotorVolts(volts);
+        conveyor.setConveyorMotorVolts(volts);
         timer.reset();
       }
     }else {
       if(timer.get() >= timeBetweenPulsesForward) {
-        intake.setConveyorMotorVolts(-volts);
+        conveyor.setConveyorMotorVolts(-volts);
         timer.reset();
       }
     }
@@ -62,7 +64,7 @@ public class PulseConveyor extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.setConveyorMotorVolts(0);
+    conveyor.setConveyorMotorVolts(0);
   }
 
   // Returns true when the command should end.
