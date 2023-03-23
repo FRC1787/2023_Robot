@@ -23,7 +23,7 @@ public class AlignToTarget extends CommandBase {
   PIDController distancePID = new PIDController(1, 0, 0);
 
   public AlignToTarget(Drivetrain drivetrain, Vision vision, Constants.Vision.LimelightTarget target) {
-    addRequirements(drivetrain);
+    addRequirements(drivetrain, vision);
     this.drivetrain = drivetrain;
     this.vision = vision;
     this.target = target;

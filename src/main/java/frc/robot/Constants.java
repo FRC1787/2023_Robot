@@ -101,7 +101,7 @@ public final class Constants {
      */
     public static final double maxDesiredAngularVelocityRadiansPerSecond = 5.4;
 
-    public static final double maxDesiredDriverAccel = 18.0;
+    public static final double maxDesiredDriverAccel = 40;
 
     public static final int angleContinuousCurrentLimit = 0;
     public static final boolean angleInvert = true;

@@ -8,19 +8,20 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
+import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScoreGamePiece extends SequentialCommandGroup {
   /** Creates a new ScoreGamePiece. */
-  public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, Indexer indexer, boolean isCone) {
+  public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, IndexerWalls indexerWalls, boolean isCone) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+
     double ejectionVolts = 6;
     if (isCone) {
       ejectionVolts = -1 * ejectionVolts;
@@ -40,7 +41,7 @@ public class ScoreGamePiece extends SequentialCommandGroup {
           new InstantCommand(pivot::retractElevator, pivot)
         )
       ),
-      new InstantCommand(indexer::openIndexerWalls)
+      new InstantCommand(indexerWalls::openIndexerWalls)
     );
   }
 }

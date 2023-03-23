@@ -14,7 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,8 +33,8 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter chassisSpeedsXSlewLimiter;
   private SlewRateLimiter chassisSpeedsYSlewLimiter;
 
-  public Drivetrain() {
-    gyro = new AHRS(SPI.Port.kMXP);
+  public Drivetrain() { 
+    gyro = new AHRS(Port.kUSB);
     desiredChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
     mSwerveMods = new SwerveModule[] {

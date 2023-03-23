@@ -5,22 +5,21 @@
 package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.intakeIndex.Claw;
 
 public class MoveClawForward extends CommandBase {
   /**
    * Moves claw towards back of robot.
    * @param percentage - percentage/speed of claw motor, the sign does not matter.
    */
-  private Indexer indexer;
+  private Claw claw;
   private double clawMotorVoltage;
 
-  public MoveClawForward(Indexer indexer, double clawMotorVoltage) {
-    this.indexer = indexer;
-    this.clawMotorVoltage = Math.abs(clawMotorVoltage);
+  public MoveClawForward(Claw claw, double clawMotorVoltage) {
+    addRequirements(claw);
 
-    
-    // SmartDashboard.putNumber("indexer claw forward voltage", 0.0);
+    this.claw = claw;
+    this.clawMotorVoltage = Math.abs(clawMotorVoltage);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +28,7 @@ public class MoveClawForward extends CommandBase {
     
 
     // clawMotorVoltage = SmartDashboard.getNumber("indexer claw forward voltage", 0.0);
-    indexer.setClawMotorVolts(clawMotorVoltage);
+    claw.setClawMotorVolts(clawMotorVoltage);
 
   }
 
@@ -40,12 +39,12 @@ public class MoveClawForward extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.setClawMotorVolts(0.0);
+    claw.setClawMotorVolts(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return indexer.isClawForward();
+    return claw.isClawForward();
   }
 }

@@ -5,13 +5,15 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.elevator.GrabberPlacer;
+import frc.robot.subsystems.intakeIndex.Conveyor;
+import frc.robot.subsystems.intakeIndex.IndexerWalls;
+import frc.robot.subsystems.intakeIndex.Intake;
 
 public class EjectGamePiece extends CommandBase {
   private Intake intake;
-  private Indexer indexer;
+  private Conveyor conveyor;
+  private IndexerWalls indexerWalls;
   private GrabberPlacer grabberPlacer;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
@@ -29,10 +31,11 @@ public class EjectGamePiece extends CommandBase {
    * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this positive to eject a piece.
    * @param indexerMotorVoltage - Voltage to send to the side belts. Make this positive to eject a piece.
    */
-  public EjectGamePiece(Intake intake, Indexer indexer, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
-    addRequirements(intake, grabberPlacer);
+  public EjectGamePiece(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
+    addRequirements(intake, conveyor, indexerWalls, grabberPlacer);
     this.intake = intake;
-    this.indexer = indexer;
+    this.conveyor = conveyor;
+    this.indexerWalls = indexerWalls;
     this.grabberPlacer = grabberPlacer;
     this.intakeMotorVoltage = intakeMotorVoltage;
     this.conveyorMotorVoltage = conveyorMotorVoltage;
@@ -51,9 +54,9 @@ public class EjectGamePiece extends CommandBase {
 
     intake.extendIntake();
     intake.setIntakeMotorVolts(intakeMotorVoltage);
-    intake.setConveyorMotorVolts(conveyorMotorVoltage);
-    indexer.closeIndexerWalls();
-    indexer.setIndexerMotors(indexerMotorVoltage);
+    conveyor.setConveyorMotorVolts(conveyorMotorVoltage);
+    indexerWalls.closeIndexerWalls();
+    indexerWalls.setIndexerMotors(indexerMotorVoltage);
     grabberPlacer.setGrabMotorVolts(grabberPlacerVolts);
     
   }
@@ -65,10 +68,11 @@ public class EjectGamePiece extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stopIntakeMotors();
+    intake.stopIntakeMotor();
+    conveyor.stopIntakeMotors();
     intake.retractIntake();
-    indexer.setIndexerMotors(0);
-    indexer.openIndexerWalls();
+    indexerWalls.setIndexerMotors(0);
+    indexerWalls.openIndexerWalls();
     grabberPlacer.setGrabMotorVolts(0);
   }
 

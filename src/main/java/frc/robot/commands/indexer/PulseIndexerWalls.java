@@ -6,18 +6,18 @@ package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 public class PulseIndexerWalls extends CommandBase {
-  private Indexer indexer;
+  private IndexerWalls indexerWalls;
   double time;
   Timer timer;
   /** Creates a new PulseIndexerWalls. */
-  public PulseIndexerWalls(Indexer indexer, double time) {
+  public PulseIndexerWalls(IndexerWalls indexerWalls, double time) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(indexer);
+    addRequirements(indexerWalls);
 
-    this.indexer = indexer;
+    this.indexerWalls = indexerWalls;
     this.time = time;
     timer = new Timer();
   }
@@ -28,10 +28,10 @@ public class PulseIndexerWalls extends CommandBase {
     timer.reset();
     timer.start();
 
-    if(indexer.isIndexerWallsOpen()) {
-      indexer.closeIndexerWalls();
+    if(indexerWalls.isIndexerWallsOpen()) {
+      indexerWalls.closeIndexerWalls();
     } else {
-      indexer.openIndexerWalls();
+      indexerWalls.openIndexerWalls();
     }
   }
 
@@ -39,10 +39,10 @@ public class PulseIndexerWalls extends CommandBase {
   @Override
   public void execute() {
     if(timer.get() >= time) {
-      if(indexer.isIndexerWallsOpen()) {
-        indexer.closeIndexerWalls();
+      if(indexerWalls.isIndexerWallsOpen()) {
+        indexerWalls.closeIndexerWalls();
       } else {
-        indexer.openIndexerWalls();
+        indexerWalls.openIndexerWalls();
       }
       timer.reset();
     }

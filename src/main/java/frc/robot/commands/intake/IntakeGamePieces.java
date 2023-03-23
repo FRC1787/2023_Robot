@@ -5,13 +5,15 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.elevator.Pivot;
+import frc.robot.subsystems.intakeIndex.Conveyor;
+import frc.robot.subsystems.intakeIndex.IndexerWalls;
+import frc.robot.subsystems.intakeIndex.Intake;
 
 public class IntakeGamePieces extends CommandBase {
   private Intake intake;
-  private Indexer indexer;
+  private Conveyor conveyor;
+  private IndexerWalls indexerWalls;
   private Pivot pivot;
   private double intakeMotorVoltage;
   private double conveyorMotorVoltage;
@@ -24,10 +26,11 @@ public class IntakeGamePieces extends CommandBase {
    * @param conveyorMotorVoltage - Voltage to send to the conveyor (lower) motor. Make this negative to intake a piece.
    * @param sideBeltVoltage - Voltage to send to the side belt motors. Make this negative to intake a piece.
    */
-  public IntakeGamePieces(Intake intake, Indexer indexer, Pivot pivot, double intakeMotorVoltage, double conveyorMotorVoltage, double sideBeltVoltage) {
-    addRequirements(intake, pivot);
+  public IntakeGamePieces(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Pivot pivot, double intakeMotorVoltage, double conveyorMotorVoltage, double sideBeltVoltage) {
+    addRequirements(intake, conveyor, indexerWalls, pivot);
     this.intake = intake;
-    this.indexer = indexer;
+    this.conveyor = conveyor;
+    this.indexerWalls = indexerWalls;
     this.pivot = pivot;
     this.intakeMotorVoltage = intakeMotorVoltage;
     this.conveyorMotorVoltage = conveyorMotorVoltage;
@@ -45,10 +48,10 @@ public class IntakeGamePieces extends CommandBase {
 
     intake.extendIntake();
     intake.setIntakeMotorVolts(intakeMotorVoltage);
-    intake.setConveyorMotorVolts(conveyorMotorVoltage);
+    conveyor.setConveyorMotorVolts(conveyorMotorVoltage);
     pivot.retractElevator();
-    indexer.openIndexerWalls();
-    indexer.setIndexerMotors(sideBeltVoltage);
+    indexerWalls.openIndexerWalls();
+    indexerWalls.setIndexerMotors(sideBeltVoltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,9 +61,10 @@ public class IntakeGamePieces extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stopIntakeMotors();
+    intake.stopIntakeMotor();
     intake.retractIntake();
-    indexer.setIndexerMotors(0);
+    conveyor.stopIntakeMotors();
+    indexerWalls.setIndexerMotors(0);
   }
 
   // Returns true when the command should end.

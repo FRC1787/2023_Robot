@@ -2,8 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.intakeIndex;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -11,17 +12,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-
   private final DoubleSolenoid intakeSolenoid;
 
   private CANSparkMax intakeMotor;
-  private CANSparkMax conveyorMotor;
-  
-  /** Creates a new IntakeIndex. */
+
+  /** Creates a new Intake. */
   public Intake() {
     intakeSolenoid = new DoubleSolenoid(
       PneumaticsModuleType.REVPH,
@@ -34,34 +32,17 @@ public class Intake extends SubsystemBase {
       Constants.IntakeIndexer.intakeMotorID, 
       MotorType.kBrushless
     );
-
-    conveyorMotor = new CANSparkMax(
-      Constants.IntakeIndexer.conveyorMotorID,
-      MotorType.kBrushless
-    );
-
-    configureMotors();
   }
 
-  private void configureMotors() {
-    
-    conveyorMotor.restoreFactoryDefaults();
-    conveyorMotor.setInverted(true);
-    conveyorMotor.setSmartCurrentLimit(40);
-    conveyorMotor.burnFlash();
-
+  public void configureMotors() {
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setInverted(false);
     //this leaves the motor spinning in order to further pull the cone in and ensure it doesn't get stuck on the intake
     intakeMotor.setIdleMode(IdleMode.kCoast);
     intakeMotor.burnFlash();
-  
   }
 
-
-
-  /* INTAKE/CONVEYOR STUFF */////////////////////////////
-
+  
   /**
   * Extends the intake outwards to intake a game piece.
   */
@@ -94,29 +75,12 @@ public class Intake extends SubsystemBase {
     intakeMotor.setVoltage(voltage);
   }
 
-  /**
-   * Sets the voltage of the conveyor motor.
-   * @param voltage - A positive value moves an object on the conveyor towards the front of the robot.
-   */
-  public void setConveyorMotorVolts(double voltage) {
-    conveyorMotor.setVoltage(voltage);
-  }
-
-  /**
-   * Get the direction of the conveyor
-   * @return - A positive value means the conveyor is moving towards the front of the robot
-   */
-  public double getConveyorMotorDirection() {
-    return Math.signum(conveyorMotor.get());
-  }
-
-  /** Stops all motors in this subsystem */
-  public void stopIntakeMotors() {
+  public void stopIntakeMotor() {
     setIntakeMotorVolts(0);
-    setConveyorMotorVolts(0);
   }
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
   }
 }
