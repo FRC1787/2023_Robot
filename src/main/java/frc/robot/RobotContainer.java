@@ -94,9 +94,9 @@ public class RobotContainer {
     
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
     grabberPlacer.setDefaultCommand(new SetGrabberMotor(grabberPlacer, 0.5, 100));
-    // claw.setDefaultCommand(new MoveClawBack(claw, 1)); // makes sure the claw is homed
+    claw.setDefaultCommand(new MoveClawBack(claw, 1)); // makes sure the claw is homed
     elevator.setDefaultCommand(new ElevatorIdle(elevator));
-    // indexerWalls.setDefaultCommand(new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls));
+    indexerWalls.setDefaultCommand(new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls));
 
     SmartDashboard.putData(autoChooser);
   }
