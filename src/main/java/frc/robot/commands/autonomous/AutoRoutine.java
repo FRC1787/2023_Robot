@@ -27,7 +27,7 @@ import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
-import frc.robot.commands.intake.EjectGamePiece;
+import frc.robot.commands.intake.BowlCube;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -75,13 +75,13 @@ public class AutoRoutine extends SequentialCommandGroup {
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
-    eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6));
+    eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
     eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotor).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
     eventMap.put("shootCube", new SequentialCommandGroup(
-      new WaitCommand(0.75),
-      new EjectGamePiece(intake, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, 6).withTimeout(1)
+      new WaitCommand(2),
+      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 7, 3, 3, 0).withTimeout(3)
     ));
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
@@ -90,7 +90,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
       new PIDConstants(0, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
-      new PIDConstants(0, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
+      new PIDConstants(0.5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,

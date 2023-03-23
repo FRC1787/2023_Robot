@@ -51,16 +51,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.5,
+        "x": 6.6,
         "y": 3.841122682245365
       },
       "prevControl": {
-        "x": 6.5,
-        "y": 5.051991334578586
+        "x": 6.6,
+        "y": 4.423273486068232
       },
       "nextControl": {
-        "x": 6.5,
-        "y": 2.672002507158145
+        "x": 6.6,
+        "y": 3.258971878422498
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -135,8 +135,7 @@
     {
       "position": 2.399999999999998,
       "names": [
-        "intakeIn",
-        "indexCube"
+        "intakeIn"
       ]
     }
   ]

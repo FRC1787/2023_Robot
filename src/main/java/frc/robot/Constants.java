@@ -52,7 +52,7 @@ public final class Constants {
 
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
     // pid for drive motor
-    public static final double drivekPVoltsPerMeterPerSecond = 0.27; //sysid says this should 0.27
+    public static final double drivekPVoltsPerMeterPerSecond = 0.81027; //sysid says this should 0.27
     public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
     public static final double drivekDVoltsPerMeter = 0.00;
 
@@ -61,9 +61,9 @@ public final class Constants {
     public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk 
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
 
-    public static final double drivekSVolts = 0.146;
-    public static final double drivekVVoltsSecondsPerMeter = 2.703; // .8679
-    public static final double drivekAVoltsSecondsSquaredPerMeter = 0;
+    public static final double drivekSVolts = 0.1301;
+    public static final double drivekVVoltsSecondsPerMeter = 2.6931; // .8679
+    public static final double drivekAVoltsSecondsSquaredPerMeter = 0.43963;
 
     /**
      * The maximum possible velocity of the robot in meters per second.
@@ -101,7 +101,7 @@ public final class Constants {
      */
     public static final double maxDesiredAngularVelocityRadiansPerSecond = 5.4;
 
-    public static final double maxDesiredDriverAccel = 40;
+    public static final double maxDesiredDriverAccel = 27.27;
 
     public static final int angleContinuousCurrentLimit = 0;
     public static final boolean angleInvert = true;

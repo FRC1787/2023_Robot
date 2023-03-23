@@ -5,13 +5,16 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 import frc.robot.subsystems.intakeIndex.Intake;
+import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 
-public class EjectGamePiece extends SequentialCommandGroup {
+public class BowlCube extends SequentialCommandGroup {
   /**
    * Extends the intake, closes indexer walls, and ejects a game piece.
    * @param intake - intake subsystem object
@@ -23,10 +26,15 @@ public class EjectGamePiece extends SequentialCommandGroup {
    * @param indexerMotorVoltage - Voltage to send to the side belts. Make this positive to eject a piece.
    * @param grabberPlacerVolts - Voltage to send to grabber place. Make this positive to eject a piece.
    */
-  public EjectGamePiece(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
+  public BowlCube(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
     addCommands(
-      new InstantCommand(intake::extendIntake),
-      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, intakeMotorVoltage, conveyorMotorVoltage, indexerMotorVoltage, grabberPlacerVolts)
+      new InstantCommand(indexerWalls::closeIndexerWalls),
+      new ParallelCommandGroup(
+        new MoveConveyor(conveyor, conveyorMotorVoltage),
+        new MoveSideBelts(indexerWalls, indexerMotorVoltage),
+        new SetGrabberMotor(grabberPlacer, grabberPlacerVolts, 100),
+        new MoveIntakeWheels(intake, intakeMotorVoltage)
+      )
     );
   }
 }

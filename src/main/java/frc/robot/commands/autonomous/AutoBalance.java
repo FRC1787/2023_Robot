@@ -34,7 +34,7 @@ public class AutoBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 35) {
+    if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 35 || Math.abs(drivetrain.getRobotPitchDegrees()) < 5) {
       tiltController.setP(0.17/10);
     }
     
