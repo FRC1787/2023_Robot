@@ -34,7 +34,7 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter chassisSpeedsYSlewLimiter;
 
   public Drivetrain() { 
-    gyro = new AHRS(Port.kUSB);
+    gyro = new AHRS(Port.kUSB); //new AHRS(Port.kUSB, AHRS.SerialDataType.kRawData, (byte)200); Using the USB Port prevents reading of "raw" data, including pitch and roll velocity :(
     desiredChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
     mSwerveMods = new SwerveModule[] {
@@ -65,6 +65,9 @@ public class Drivetrain extends SubsystemBase {
     };
 
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
+    gyro.zeroYaw();
+    swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), new Pose2d(0, 0, new Rotation2d(0)));
+    System.out.println("Pose init to 0 confirmed!");
     field = new Field2d();
 
     chassisSpeedsXSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);
@@ -267,10 +270,10 @@ public class Drivetrain extends SubsystemBase {
 
     // SmartDashboard.putNumber("front right cancoder")
     
-    SmartDashboard.putNumber("front left distance velocity", mSwerveMods[0].getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("front right distance velocity", mSwerveMods[1].getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("back left distance velocity", mSwerveMods[2].getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("back right distance velocity", mSwerveMods[3].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("front left velocity", mSwerveMods[0].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("front right velocity", mSwerveMods[1].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("back left velocity", mSwerveMods[2].getState().speedMetersPerSecond);
+    SmartDashboard.putNumber("back right velocity", mSwerveMods[3].getState().speedMetersPerSecond);
 
 
     SmartDashboard.putBoolean("gyro is calibrating", gyro.isCalibrating());

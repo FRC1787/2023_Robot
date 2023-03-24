@@ -242,8 +242,10 @@ public class RobotContainer {
     //return new InstantCommand(drivetrain::setGyroscope180)
     //  .andThen(new AutoRoutine("gigachad auto wire guard", drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
 
-    return new AutoRoutine("gigachad auto barrier", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
-    .andThen(new InstantCommand(drivetrain::setGyroscope180));  
+    //return new AutoRoutine("gigachad auto barrier", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
+    //.andThen(new InstantCommand(drivetrain::setGyroscope180));
+
+    return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
 
     //  return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
       //  .andThen(new InstantCommand(drivetrain::setGyroscope180));  

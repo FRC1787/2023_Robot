@@ -55,8 +55,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       Conveyor conveyor
     ) {
     
-    double maxVelocityMetersPerSecond = 4.0;
-    double accelerationMetersPerSecondSquared = 2.5;
+    double maxVelocityMetersPerSecond = 1.0; // 4.0;
+    double accelerationMetersPerSecondSquared = 0.5; //2.5;
     if (path.equals("1 cone + balance middle") || path.equals("1 cone middle")) {
       maxVelocityMetersPerSecond = 4.0;
       accelerationMetersPerSecondSquared = 2.0;
@@ -89,7 +89,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(0, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
+      new PIDConstants(5, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
       new PIDConstants(0.5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
