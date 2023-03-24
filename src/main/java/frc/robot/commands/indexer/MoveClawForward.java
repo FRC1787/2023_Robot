@@ -8,18 +8,22 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.intakeIndex.Claw;
 
 public class MoveClawForward extends CommandBase {
-  /**
-   * Moves claw towards back of robot.
-   * @param percentage - percentage/speed of claw motor, the sign does not matter.
-   */
+
   private Claw claw;
   private double clawMotorVoltage;
+  private double motorRotations;
 
-  public MoveClawForward(Claw claw, double clawMotorVoltage) {
+    /**
+   * Moves claw towards back of robot.
+   * @param percentage - percentage/speed of claw motor, the sign does not matter.
+   * @param motorRotations - how many rotations of the motor to do (max should be 22, but this can be less if you want shorter travel)
+   */
+  public MoveClawForward(Claw claw, double clawMotorVoltage, double motorRotations) {
     addRequirements(claw);
 
     this.claw = claw;
     this.clawMotorVoltage = Math.abs(clawMotorVoltage);
+    this.motorRotations = motorRotations;
   }
 
   // Called when the command is initially scheduled.
@@ -45,6 +49,7 @@ public class MoveClawForward extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return claw.isClawForward();
+    //return claw.isClawForward();
+    return claw.getPosition() >= motorRotations;
   }
 }

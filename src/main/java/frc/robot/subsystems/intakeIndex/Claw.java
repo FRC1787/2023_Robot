@@ -76,6 +76,13 @@ public class Claw extends SubsystemBase {
     return clawMotorEncoder.getPosition() > 22;
   }
 
+  /**
+   * @return The posiiton of the claw (measured in units of motor rotations)
+   */
+  public double getPosition() {
+    return clawMotorEncoder.getPosition();
+  }
+
   @Override
   public void periodic() {
     if (isClawBack()) {

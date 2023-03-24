@@ -211,6 +211,13 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  public void setModuleStatesClosedLoopNoOptimize(SwerveModuleState[] desiredStates) {
+    for (SwerveModule mod : mSwerveMods) {
+      mod.setDesiredStateNoOptimize(desiredStates[mod.moduleNumber], true);
+    }
+  }
+
+
   //useful for debugging
   public void setModuleStatesOpenLoop(SwerveModuleState[] desiredStates) {
     for (SwerveModule mod : mSwerveMods) {

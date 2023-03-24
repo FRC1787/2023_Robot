@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
+import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.commands.intake.PulseConveyor;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.Pivot;
@@ -40,20 +41,22 @@ public class IndexConeFull extends SequentialCommandGroup {
             .andThen(new WaitCommand(.3)),
           new InstantCommand(indexerWalls::openIndexerWalls)
             .andThen(new WaitCommand(.3))
-        ).repeatedly()
+        )
       ).withTimeout(0.6),
       new InstantCommand(indexerWalls::closeIndexerWalls),
-      // new ParallelCommandGroup(
-      //   new MoveSideBelts(indexerWalls, -5),
-      //   new MoveConveyor(intake, -5)
-      // ).withTimeout(0.5),
+
+      // Moves the cone onto the back ramp when the base is towards the back of the robot.
+      new ParallelCommandGroup(
+       new MoveSideBelts(indexerWalls, -9), // was 5
+        new MoveConveyor(conveyor, -9)
+      ).withTimeout(0.4), // was 0.5
 
       //uprighting procedure
 
-      new UprightCone(intake, conveyor, indexerWalls, claw),
-      new UprightCone(intake, conveyor, indexerWalls, claw),
-      new UprightCone(intake, conveyor, indexerWalls, claw),
-      new UprightCone(intake, conveyor, indexerWalls, claw)
+      new UprightCone(intake, conveyor, indexerWalls, claw, 11),
+      new UprightCone(intake, conveyor, indexerWalls, claw, 22),
+      new UprightCone(intake, conveyor, indexerWalls, claw, 11),
+      new UprightCone(intake, conveyor, indexerWalls, claw, 22)
       // new MoveElevatorToPosition(elevatorGrabber, 0.13) <- We don't need this, because PickupCone does it already?
     );
   }

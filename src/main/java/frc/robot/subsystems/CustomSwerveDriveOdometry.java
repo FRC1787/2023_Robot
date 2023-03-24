@@ -150,8 +150,9 @@ public class CustomSwerveDriveOdometry {
     m_previousAngle = angle;
 
     // System.out.println("angle of new pose:" + twist.dtheta);
-    SmartDashboard.putNumber("angle of dtheta", twist.dtheta);
-    SmartDashboard.putNumber("previous angle", m_previousAngle.getDegrees());
+    SmartDashboard.putNumber("angle of dtheta", twist.dtheta);  
+    SmartDashboard.putNumber("module deltas distance meters", moduleDeltas[0].distanceMeters);
+    SmartDashboard.putNumber("module deltas angle degrees", moduleDeltas[0].angle.getDegrees());
 
 
     m_poseMeters = new Pose2d(newPose.getTranslation(), angle);

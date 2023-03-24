@@ -55,8 +55,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       Conveyor conveyor
     ) {
     
-    double maxVelocityMetersPerSecond = 1.0; // 4.0;
-    double accelerationMetersPerSecondSquared = 0.5; //2.5;
+    double maxVelocityMetersPerSecond = 4.0; // 4.0;
+    double accelerationMetersPerSecondSquared = 2.5; //2.5;
     if (path.equals("1 cone + balance middle") || path.equals("1 cone middle")) {
       maxVelocityMetersPerSecond = 4.0;
       accelerationMetersPerSecondSquared = 2.0;
@@ -80,8 +80,8 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotor).andThen(new InstantCommand(intake::retractIntake)));
     eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
     eventMap.put("shootCube", new SequentialCommandGroup(
-      new WaitCommand(2),
-      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 7, 3, 3, 0).withTimeout(3)
+      new WaitCommand(2.5),
+      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 8, 3, 3, 0).withTimeout(3)
     ));
     eventMap.put("waitOneSecond", new WaitCommand(1));
 

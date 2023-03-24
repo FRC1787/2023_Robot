@@ -18,7 +18,7 @@ import frc.robot.subsystems.intakeIndex.IndexerWalls;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class UprightCone extends SequentialCommandGroup {
   /** Creates a new UprightCone. */
-  public UprightCone(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw) {
+  public UprightCone(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw, double clawDistance) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -26,7 +26,7 @@ public class UprightCone extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new MoveConveyor(conveyor, -3),
         new MoveSideBelts(indexerWalls, -3.6),
-        new MoveClawForward(claw, 3.6).withTimeout(1.0), // at 3.6 before
+        new MoveClawForward(claw, 3.6, clawDistance).withTimeout(1.0), // volts was at 3.6 before
         new MoveIntakeWheels(intake, 2.0)
       ),
       new ParallelRaceGroup(

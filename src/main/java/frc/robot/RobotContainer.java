@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.AutoRoutine;
+import frc.robot.commands.drivetrain.AlignWheelsToZero;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.ElevatorIdle;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
@@ -92,6 +93,8 @@ public class RobotContainer {
     autoChooser.addOption("1 cone barrier", "1 cone barrier");
     autoChooser.addOption("1 cone middle", "1 cone middle");
     autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
+    autoChooser.addOption("gigachad auto barrier", "gigachad auto barrier");
+    autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
 
     
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
@@ -124,6 +127,7 @@ public class RobotContainer {
     // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6, 4, 4, 0).withTimeout(3));
+    controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
     controller.back().whileTrue(new AutoBalance(drivetrain));
     buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
 
@@ -245,10 +249,10 @@ public class RobotContainer {
     //return new AutoRoutine("gigachad auto barrier", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
     //.andThen(new InstantCommand(drivetrain::setGyroscope180));
 
-    return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
+    // return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
 
-    //  return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
-      //  .andThen(new InstantCommand(drivetrain::setGyroscope180));  
+     return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
+       .andThen(new InstantCommand(drivetrain::setGyroscope180));  
   }
 
 // maybe sync button board LEDs?

@@ -90,6 +90,29 @@ public class SwerveModule {
     mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngleDegrees, targetWheelAngleDegrees));
   }
 
+  public void setDesiredStateNoOptimize(SwerveModuleState desiredState, boolean closedLoop) {
+    if (closedLoop) {
+      //conversion factor is already set below to convert rpm of motor to m/s of wheel
+      double wheelMetersPerSecond = mDriveEncoder.getVelocity();
+
+      double feedforward = mDriveFeedforward.calculate(desiredState.speedMetersPerSecond);
+      double pidCorrection = mDrivePID.calculate(wheelMetersPerSecond, desiredState.speedMetersPerSecond);
+      double outputVolts = MathUtil.clamp(feedforward + pidCorrection, -12, 12);
+
+      mDriveMotor.setVoltage(outputVolts);
+    }
+    else {
+      mDriveMotor.setVoltage(mDriveFeedforward.calculate(desiredState.speedMetersPerSecond));
+    }
+    
+    //if angle motors are messed up then check commit from 2/28 for changes
+    double targetWheelAngleDegrees = desiredState.angle.getDegrees();
+    double currentEncoderAngleDegrees = absoluteEncoder.getAbsolutePosition();
+
+    mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngleDegrees, targetWheelAngleDegrees));
+  }
+
+
   public SwerveModuleState getState() {
     //conversion factor is already set below to convert rpm of motor to m/s of wheel
     double velocityMetersPerSecond = mDriveEncoder.getVelocity();
