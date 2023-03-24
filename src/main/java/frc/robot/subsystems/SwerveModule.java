@@ -67,7 +67,7 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
-    desiredState = CTREModuleState.optimize(desiredState, Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition()));
+    desiredState = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition()));
 
     if (closedLoop) {
       //conversion factor is already set below to convert rpm of motor to m/s of wheel
