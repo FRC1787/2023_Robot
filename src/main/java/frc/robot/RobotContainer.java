@@ -95,6 +95,7 @@ public class RobotContainer {
     autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
     autoChooser.addOption("gigachad auto barrier", "gigachad auto barrier");
     autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
+    autoChooser.addOption("goober", "goober");
 
     
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));

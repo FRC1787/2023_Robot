@@ -46,12 +46,12 @@ public class IndexerWalls extends SubsystemBase {
   private void configureMotors() {
     leftIndexerMotor.restoreFactoryDefaults();
     leftIndexerMotor.setInverted(true);
-    leftIndexerMotor.setSmartCurrentLimit(50); // TODO: double check this, if it's a neo550, this should be 20-40 amps.
+    leftIndexerMotor.setSmartCurrentLimit(20); // TODO: double check this, if it's a neo550, this should be 20-40 amps.
     leftIndexerMotor.burnFlash();
     
     rightIndexerMotor.restoreFactoryDefaults();
     rightIndexerMotor.setInverted(false);
-    rightIndexerMotor.setSmartCurrentLimit(50); // TODO: double check this, if it's a neo550, this should be 20-40 amps.
+    rightIndexerMotor.setSmartCurrentLimit(20); // TODO: double check this, if it's a neo550, this should be 20-40 amps.
     rightIndexerMotor.burnFlash();
 
 
@@ -82,6 +82,11 @@ public class IndexerWalls extends SubsystemBase {
   public void setIndexerMotors(double voltage) {
     leftIndexerMotor.setVoltage(voltage);
     rightIndexerMotor.setVoltage(voltage);
+  }
+
+  public void stopIndexerMotors() {
+    leftIndexerMotor.setVoltage(0);
+    rightIndexerMotor.setVoltage(0);
   }
 
   public double getIndexerDirection() {

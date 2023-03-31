@@ -17,11 +17,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
+import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
@@ -56,7 +58,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     ) {
     
     double maxVelocityMetersPerSecond = 4.0; // 4.0;
-    double accelerationMetersPerSecondSquared = 2.5; //2.5;
+    double accelerationMetersPerSecondSquared = 3.5; //2.5;
     if (path.equals("1 cone + balance middle") || path.equals("1 cone middle")) {
       maxVelocityMetersPerSecond = 4.0;
       accelerationMetersPerSecondSquared = 2.0;
@@ -71,17 +73,46 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
-        new SetGrabberMotor(grabberPlacer, 6, 25).withTimeout(0.5),
+        new SetGrabberMotor(grabberPlacer, 6, 27).withTimeout(1),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
+
+    eventMap.put("placeConeHigh", 
+    new SequentialCommandGroup(
+      new SetGrabberMotor(grabberPlacer, 6, 32).withTimeout(2),
+      new ExtendElevatorToPosition(elevator, pivot, 1.69),
+      new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(.5)
+      )
+    );
+    eventMap.put("retractElevator",
+      new ParallelCommandGroup(
+      
+        // reset the elevator and indexer walls to prepare for getting the next game piece
+        new MoveElevatorToPosition(elevator, 0).asProxy(),
+        new SequentialCommandGroup(
+          new WaitCommand(0.06), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
+          new InstantCommand(pivot::retractElevator, pivot)
+        )
+      ).andThen(
+        new InstantCommand(indexerWalls::openIndexerWalls)
+      )
+    );
+
     eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
     eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
-    eventMap.put("intakeIn", new InstantCommand(intake::stopIntakeMotor).andThen(new InstantCommand(intake::retractIntake)));
+    eventMap.put("intakeIn",
+      new InstantCommand(intake::stopIntakeMotor, intake).andThen(
+        new InstantCommand(indexerWalls::stopIndexerMotors, indexerWalls).andThen(
+          new InstantCommand(intake::retractIntake, intake)
+        )
+      ).andThen(new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls))
+    );
     eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
     eventMap.put("shootCube", new SequentialCommandGroup(
-      new WaitCommand(2.5),
-      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 8, 3, 3, 0).withTimeout(3)
+      //TODO: add bowl with wait for gigachad
+      // new WaitCommand(2.5),
+      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
     ));
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
