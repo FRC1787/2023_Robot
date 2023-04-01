@@ -59,7 +59,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     
     double maxVelocityMetersPerSecond = 4.0; // 4.0;
     double accelerationMetersPerSecondSquared = 3.5; //2.5;
-    if (path.equals("1 cone + balance middle") || path.equals("1 cone middle")) {
+    if (path.equals("1 cone + balance middle") || path.equals("1 cone middle") || path.equals("gigachad auto middle")) {
       maxVelocityMetersPerSecond = 4.0;
       accelerationMetersPerSecondSquared = 2.0;
     }
@@ -73,7 +73,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
-        new SetGrabberMotor(grabberPlacer, 6, 27).withTimeout(1),
+        new SetGrabberMotor(grabberPlacer, 6, 32).withTimeout(2),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
@@ -102,18 +102,23 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
     eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
     eventMap.put("intakeIn",
-      new InstantCommand(intake::stopIntakeMotor, intake).andThen(
-        new InstantCommand(indexerWalls::stopIndexerMotors, indexerWalls).andThen(
-          new InstantCommand(intake::retractIntake, intake)
-        )
-      ).andThen(new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls))
+      new SequentialCommandGroup(
+        new InstantCommand(intake::stopIntakeMotor, intake),
+        new InstantCommand(indexerWalls::stopIndexerMotors, indexerWalls),
+        new InstantCommand(intake::retractIntake, intake),
+        new WaitCommand(0.7),
+        new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls)
+      )
     );
     eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
     eventMap.put("shootCube", new SequentialCommandGroup(
-      //TODO: add bowl with wait for gigachad
-      // new WaitCommand(2.5),
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
     ));
+    eventMap.put("shootCubeChargeStation", new SequentialCommandGroup(
+      new WaitCommand(1.25),
+      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
+    ));
+
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(

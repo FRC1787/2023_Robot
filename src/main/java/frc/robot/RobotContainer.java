@@ -94,8 +94,11 @@ public class RobotContainer {
     autoChooser.addOption("1 cone middle", "1 cone middle");
     autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
     autoChooser.addOption("gigachad auto barrier", "gigachad auto barrier");
+    autoChooser.addOption("gigachad auto middle", "gigachad auto middle");
     autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
     autoChooser.addOption("goober", "goober");
+    autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
+
 
     
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
@@ -171,8 +174,8 @@ public class RobotContainer {
     //index cone upon trigger release
     controller.rightTrigger().and(inConeMode)
       .onFalse(
-        new MoveConveyor(conveyor, -8).withTimeout(0.70)
-        .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
+        // new MoveConveyor(conveyor, -8).withTimeout(0.70) <- if something breaks with the intake to index sequence then this is why
+        (new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
       );
 
     //get cube in grabber upon intake release
@@ -247,8 +250,8 @@ public class RobotContainer {
     //return new InstantCommand(drivetrain::setGyroscope180)
     //  .andThen(new AutoRoutine("gigachad auto wire guard", drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
 
-    //return new AutoRoutine("gigachad auto barrier", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
-    //.andThen(new InstantCommand(drivetrain::setGyroscope180));
+    // return new AutoRoutine("gigachad auto barrier temp", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
+    // .andThen(new InstantCommand(drivetrain::setGyroscope180));
 
     // return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
 
