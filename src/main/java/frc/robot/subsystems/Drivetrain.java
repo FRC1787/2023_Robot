@@ -92,6 +92,7 @@ public class Drivetrain extends SubsystemBase {
    * In other words, if the robot is facing towards the grid, calling this method will field orient it.
    */
   public void setGyroscope180() {
+    gyro.zeroYaw();
     gyro.setAngleAdjustment(180);
 
     swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), getPoseMeters());

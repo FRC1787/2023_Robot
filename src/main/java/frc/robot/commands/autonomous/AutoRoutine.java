@@ -62,6 +62,9 @@ public class AutoRoutine extends SequentialCommandGroup {
     if (path.equals("1 cone + balance middle") || path.equals("1 cone middle") || path.equals("gigachad auto middle")) {
       maxVelocityMetersPerSecond = 4.0;
       accelerationMetersPerSecondSquared = 2.0;
+    } else if (path.equals("One Bumper Length Forward") || path.equals("One Bumper Length Backward") || path.equals("One Bumper Length Backward Plus Flip")) {
+      maxVelocityMetersPerSecond = 0.5;
+      accelerationMetersPerSecondSquared = 0.5;
     }
 
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
