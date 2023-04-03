@@ -198,8 +198,9 @@ public class RobotContainer {
       new InstantCommand(intake::retractIntake).andThen(
       new MoveElevatorToPosition(elevator, 0).asProxy())
     );
+    
     //eject cube
-    controller.leftTrigger().and(inConeMode.negate()).whileTrue(new EjectGamePiece(intake, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, 6)).onFalse(new InstantCommand(intake::retractIntake));
+    controller.leftTrigger().and(inConeMode.negate()).whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0));
     // hand off cone from indexer to grabber
     controller.rightBumper().onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
 

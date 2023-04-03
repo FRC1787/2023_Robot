@@ -63,10 +63,8 @@ public class Drivetrain extends SubsystemBase {
             Constants.Swerve.BackRightSwerveModule.steerOffset)
     };
 
-    swerveOdometry = new CustomSwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
     gyro.zeroYaw();
-    swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), new Pose2d(0, 0, new Rotation2d(0)));
-    System.out.println("Pose init to 0 confirmed!");
+    swerveOdometry = new CustomSwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
     field = new Field2d();
 
     chassisSpeedsXSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);

@@ -29,7 +29,7 @@ public class PickUpCone extends SequentialCommandGroup {
     
     double grabbingVolts = 6;
     double pickupPosition = 0.135;
-    double grabbingAmpLimit = 26;
+    double grabbingAmpLimit = 32; //26;
     addCommands(
       // move all subsystems into the grabbing position
       new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls),
