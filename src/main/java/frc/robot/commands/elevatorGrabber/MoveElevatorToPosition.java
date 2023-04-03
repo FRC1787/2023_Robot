@@ -88,6 +88,6 @@ public class MoveElevatorToPosition extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return profile.isFinished(timer.get());
+        return profile.isFinished(timer.get()) && (Math.abs(elevator.getElevatorPositionMeters() - targetPositionMeters) <= 0.005);
     }
 }

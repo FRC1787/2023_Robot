@@ -182,12 +182,11 @@ public class RobotContainer {
       );
 
     //get cube in grabber upon intake release
-    // controller.rightTrigger().and(inConeMode.negate())
-    //   .onFalse(
-    //     new WaitCommand(0.5).andThen(
-    //     )
-    //     // new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls))
-    //   );
+    controller.rightTrigger().and(inConeMode.negate())
+      .onFalse(
+        new WaitCommand(0.5).andThen(
+        new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls))
+      );
     
     //eject cone
     controller.leftTrigger().and(inConeMode).whileTrue(
@@ -201,7 +200,9 @@ public class RobotContainer {
     );
 
     //eject cube
-    controller.leftTrigger().and(inConeMode.negate()).whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0));
+    controller.leftTrigger().and(inConeMode.negate()).whileTrue(
+      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 4)
+    );
     // hand off cone from indexer to grabber
     controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
@@ -222,11 +223,11 @@ public class RobotContainer {
 
     //mid cube score
     buttonBoard.button(4).and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+      .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.21).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
 
     //high cube score
     buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
-    .onTrue((new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(new ExtendElevatorToPosition(elevator, pivot, 1.7)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+    .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.7).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
   
       //TODO: backup cube goober
     //BACKUP CONTROLLER

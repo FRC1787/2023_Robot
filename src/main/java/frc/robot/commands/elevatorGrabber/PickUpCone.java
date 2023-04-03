@@ -28,8 +28,8 @@ public class PickUpCone extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     
     double grabbingVolts = 6;
-    double pickupPosition = 0.135;
-    double grabbingAmpLimit = 32; //26;
+    double pickupPosition = 0.14;
+    double grabbingAmpLimit = 24; //26;
     addCommands(
       // move all subsystems into the grabbing position
       new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls),
@@ -41,13 +41,14 @@ public class PickUpCone extends SequentialCommandGroup {
 
       // start spinning the grabber wheel, while the belts push the cone
       // into the grabber wheel, then reverse the belts to kick up the cone.
-      new ParallelRaceGroup(
         new SequentialCommandGroup(
-          new MoveConveyor(conveyor, -12).withTimeout(0.25),
-          new MoveConveyor(conveyor, 3).withTimeout(0.5)
-        ),
-        new SetGrabberMotor(grabberPlacer, grabbingVolts, grabbingAmpLimit)
-      ).repeatedly().until(() -> {return grabberPlacer.getGrabOutputAmps() >= grabbingAmpLimit;})
+          new MoveElevatorToPosition(elevator, pickupPosition).asProxy(),
+          new MoveConveyor(conveyor, -12).withTimeout(.35),
+          new ParallelRaceGroup(
+            new MoveConveyor(conveyor, 3).withTimeout(1),
+            new SetGrabberMotor(grabberPlacer, grabbingVolts, grabbingAmpLimit)
+          )
+        ).repeatedly().until(() -> {return grabberPlacer.getGrabOutputAmps() >= grabbingAmpLimit;})
 /*
       new MoveConveyor(conveyor, 12).withTimeout(0.25),
       new ParallelRaceGroup(
