@@ -53,8 +53,8 @@ public final class Constants {
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
     // pid for drive motor
     public static final double drivekPVoltsPerMeterPerSecond = 0.81027; //sysid says this should 0.27
-    public static final double drivekIVoltsPerMeterPerSecondSquared = 0.;
-    public static final double drivekDVoltsPerMeter = 0.00;
+    public static final double drivekIVoltsPerMeter = 0.;
+    public static final double drivekDVoltsPerMeterPerSecondSquared = 0.00;
 
     // pid for angle motor
     public static final double anglekPVoltsPerDegree = 0.08;//0.065;
@@ -103,7 +103,7 @@ public final class Constants {
 
     public static final double maxDesiredDriverAccel = 27.27;
 
-    public static final int angleContinuousCurrentLimit = 0;
+    public static final int angleContinuousCurrentLimit = 50;
     public static final boolean angleInvert = true;
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
     public static final int driveContinuousCurrentLimit = 60;

@@ -125,8 +125,8 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-      drivetrain::getPoseMeters,
-      drivetrain::setPoseMeters,
+      drivetrain::getHomeGrownPose,
+      drivetrain::setHomeGrownPose,
       Constants.Swerve.swerveKinematics,
       new PIDConstants(0, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
       new PIDConstants(0.5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???

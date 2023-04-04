@@ -32,8 +32,8 @@ public class SwerveModule {
   public SwerveModule(int moduleNumber, int driveMotorID, int angleMotorID, int cancoderID, double angleOffset) {
     mDrivePID = new PIDController(
       Constants.Swerve.drivekPVoltsPerMeterPerSecond, 
-      Constants.Swerve.drivekIVoltsPerMeterPerSecondSquared, 
-      Constants.Swerve.drivekDVoltsPerMeter);
+      Constants.Swerve.drivekIVoltsPerMeter, 
+      Constants.Swerve.drivekDVoltsPerMeterPerSecondSquared);
 
     mAnglePID = new PIDController(
       Constants.Swerve.anglekPVoltsPerDegree, Constants.Swerve.anglekIVoltsPerDegreeSeconds, Constants.Swerve.anglekDVoltsPerDegreePerSecond);
@@ -66,28 +66,24 @@ public class SwerveModule {
     mAnglePID.enableContinuousInput(-180, 180);
   }
 
+  private SwerveModuleState constrainState(SwerveModuleState toConstrain) {
+    double originalDegrees = toConstrain.angle.getDegrees();
+    double constrainedDegrees = originalDegrees; // start by assuming there is no need to constrain
+    if (originalDegrees < -180 || originalDegrees > 180) {
+      // constrain angle if necessary
+      constrainedDegrees = MathUtil.inputModulus(originalDegrees, -180, 180);
+    }
+    return new SwerveModuleState(toConstrain.speedMetersPerSecond, Rotation2d.fromDegrees(constrainedDegrees));
+  }
+
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
+    // make sure the desired state's angle is in the range [-180, 180], so it can be appropriately
+    // compared to the current angle from the CANCoder:
+    desiredState = constrainState(desiredState);
     desiredState = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition()));
+    desiredState = constrainState(desiredState); // constrain one more time after optimization just to be safe, because I'm unsure if optimization can ever pull the angle out of [-180, 180]
 
-    if (closedLoop) {
-      //conversion factor is already set below to convert rpm of motor to m/s of wheel
-      double wheelMetersPerSecond = mDriveEncoder.getVelocity();
-
-      double feedforward = mDriveFeedforward.calculate(desiredState.speedMetersPerSecond);
-      double pidCorrection = mDrivePID.calculate(wheelMetersPerSecond, desiredState.speedMetersPerSecond);
-      double outputVolts = MathUtil.clamp(feedforward + pidCorrection, -12, 12);
-
-      mDriveMotor.setVoltage(outputVolts);
-    }
-    else {
-      mDriveMotor.setVoltage(mDriveFeedforward.calculate(desiredState.speedMetersPerSecond));
-    }
-    
-    //if angle motors are messed up then check commit from 2/28 for changes
-    double targetWheelAngleDegrees = desiredState.angle.getDegrees();
-    double currentEncoderAngleDegrees = absoluteEncoder.getAbsolutePosition();
-
-    mAngleMotor.setVoltage(mAnglePID.calculate(currentEncoderAngleDegrees, targetWheelAngleDegrees));
+    setDesiredStateNoOptimize(desiredState, closedLoop);
   }
 
   public void setDesiredStateNoOptimize(SwerveModuleState desiredState, boolean closedLoop) {
@@ -119,7 +115,7 @@ public class SwerveModule {
     
     Rotation2d angle =
         Rotation2d.fromDegrees(
-          mAngleEncoder.getPosition());
+          mAngleEncoder.getPosition()); // TODO: Maybe try CANCoder here? or would that mess with callers expecting continuous angle measurements?
             
     return new SwerveModuleState(velocityMetersPerSecond, angle);
   }
@@ -129,6 +125,7 @@ public class SwerveModule {
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
       mDriveEncoder.getPosition(), Rotation2d.fromDegrees(mAngleEncoder.getPosition())
+      // TODO: Maybe try CANCoder here? or would that mess with callers expecting continuous angle measurements?
     );
   }
 
@@ -173,5 +170,9 @@ public class SwerveModule {
     );
 
     mDriveMotor.burnFlash();
+  }
+
+  public void zeroDriveEncoder() {
+    mDriveEncoder.setPosition(0);
   }
 }
