@@ -101,6 +101,9 @@ public class RobotContainer {
     autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
     autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
     autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
+    autoChooser.addOption("testing this", "temp cone + cube high barrier");
+    autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
+    autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
 
 
     
@@ -263,8 +266,8 @@ public class RobotContainer {
     // return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
 
     // we always start facing towards the alliance station, so our inital angle should always be 180
-     return new InstantCommand(drivetrain::setGyroscope180).andThen(
-      new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor));
+    //  return new InstantCommand(drivetrain::setGyroscope180).andThen(
+    return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
   }
 
 // maybe sync button board LEDs?

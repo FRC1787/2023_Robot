@@ -115,8 +115,9 @@ public class SwerveModule {
     
     Rotation2d angle =
         Rotation2d.fromDegrees(
-          mAngleEncoder.getPosition()); // TODO: Maybe try CANCoder here? or would that mess with callers expecting continuous angle measurements?
-            
+          absoluteEncoder.getAbsolutePosition()); 
+          //absolute encode use this
+
     return new SwerveModuleState(velocityMetersPerSecond, angle);
   }
 
@@ -124,9 +125,9 @@ public class SwerveModule {
 
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-      mDriveEncoder.getPosition(), Rotation2d.fromDegrees(mAngleEncoder.getPosition())
-      // TODO: Maybe try CANCoder here? or would that mess with callers expecting continuous angle measurements?
+      mDriveEncoder.getPosition(), Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition())
     );
+    //use absolute encoder for this
   }
 
   public Rotation2d getCanCoder() {

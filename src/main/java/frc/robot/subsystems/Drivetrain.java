@@ -312,7 +312,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Home Grown Pose X", homeGrownPoseX);
     SmartDashboard.putNumber("Home Grown Pose Y", homeGrownPoseY);
     SmartDashboard.putNumber("Home Grown Pose Degrees", homeGrownPoseTheta.getDegrees());
-    field.setRobotPose(getHomeGrownPose());
+    field.setRobotPose(swerveOdometry.getPoseMeters());
   }
 
   private void updateHomeGrownPose() {

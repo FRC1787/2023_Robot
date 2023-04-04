@@ -58,13 +58,16 @@ public class AutoRoutine extends SequentialCommandGroup {
     ) {
     
     double maxVelocityMetersPerSecond = 4.0; // 4.0;
-    double accelerationMetersPerSecondSquared = 3.5; //2.5;
+    double accelerationMetersPerSecondSquared = 3.; //2.5;
     if (path.equals("1 cone + balance middle") || path.equals("1 cone middle") || path.equals("gigachad auto middle")) {
       maxVelocityMetersPerSecond = 4.0;
       accelerationMetersPerSecondSquared = 2.0;
     } else if (path.equals("One Bumper Length Forward") || path.equals("One Bumper Length Backward") || path.equals("One Bumper Length Backward Plus Flip")) {
       maxVelocityMetersPerSecond = 0.5;
       accelerationMetersPerSecondSquared = 0.5;
+    } else if (path.equals("Maybe 3 Piece Barrier")) {
+      maxVelocityMetersPerSecond = 4.0;
+      accelerationMetersPerSecondSquared = 3.0;
     }
 
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
@@ -76,14 +79,14 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
-        new SetGrabberMotor(grabberPlacer, 6, 32).withTimeout(2),
+        new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
 
     eventMap.put("placeConeHigh", 
     new SequentialCommandGroup(
-      new SetGrabberMotor(grabberPlacer, 6, 32).withTimeout(2),
+      new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2),
       new ExtendElevatorToPosition(elevator, pivot, 1.69),
       new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(.5)
       )
@@ -125,11 +128,11 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-      drivetrain::getHomeGrownPose,
-      drivetrain::setHomeGrownPose,
+      drivetrain::getPoseMeters,
+      drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(0, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
-      new PIDConstants(0.5, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
+      new PIDConstants(5, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
+      new PIDConstants(1.0, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,
