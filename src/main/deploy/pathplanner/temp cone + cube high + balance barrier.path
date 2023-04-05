@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeHigh"
+          "placeConeHigh"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -105,12 +105,15 @@
         "y": 4.423255560796836
       },
       "prevControl": {
-        "x": 2.801828803657607,
-        "y": 4.323052360390435
+        "x": 2.807378571753927,
+        "y": 4.423255560796836
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 2.807378571753927,
+        "y": 4.423255560796836
+      },
       "holonomicAngle": 180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -122,11 +125,60 @@
         "waitBehavior": "none",
         "waitTime": 0
       }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.425069850139701,
+        "y": 3.3
+      },
+      "prevControl": {
+        "x": 2.143546572807432,
+        "y": 3.535741500054429
+      },
+      "nextControl": {
+        "x": 2.608079952328475,
+        "y": 3.1467513009086767
+      },
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.15,
+        "y": 3.192187670089626
+      },
+      "prevControl": {
+        "x": 4.628700098202077,
+        "y": 3.192187670089626
+      },
+      "nextControl": null,
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "autoBalance"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     }
   ],
   "markers": [
     {
-      "position": 0.6272727272727273,
+      "position": 0.63,
       "names": [
         "intakeOut"
       ]
@@ -138,9 +190,27 @@
       ]
     },
     {
-      "position": 2.5454545454545445,
+      "position": 2.1,
       "names": [
         "indexCube"
+      ]
+    },
+    {
+      "position": 0.05,
+      "names": [
+        "retractElevator"
+      ]
+    },
+    {
+      "position": 2.95,
+      "names": [
+        "scoreCubeHigh"
+      ]
+    },
+    {
+      "position": 4.4,
+      "names": [
+        "retractElevator"
       ]
     }
   ]

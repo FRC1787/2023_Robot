@@ -7,6 +7,7 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.elevator.GrabberPlacer;
+import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 import frc.robot.subsystems.intakeIndex.Intake;
@@ -23,8 +24,9 @@ public class EjectGamePiece extends SequentialCommandGroup {
    * @param indexerMotorVoltage - Voltage to send to the side belts. Make this positive to eject a piece.
    * @param grabberPlacerVolts - Voltage to send to grabber place. Make this positive to eject a piece.
    */
-  public EjectGamePiece(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
+  public EjectGamePiece(Intake intake, Pivot pivot, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
     addCommands(
+      new InstantCommand(pivot::retractElevator),
       new InstantCommand(intake::extendIntake),
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, intakeMotorVoltage, conveyorMotorVoltage, indexerMotorVoltage, grabberPlacerVolts)
     );

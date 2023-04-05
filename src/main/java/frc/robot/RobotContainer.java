@@ -104,6 +104,7 @@ public class RobotContainer {
     autoChooser.addOption("testing this", "temp cone + cube high barrier");
     autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
     autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
+    autoChooser.addOption("temp cone + cube high + balance barrier", "temp cone + cube high + balance barrier");
 
 
     
@@ -195,7 +196,7 @@ public class RobotContainer {
     controller.leftTrigger().and(inConeMode).whileTrue(
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevator, .4).asProxy(),
-        new EjectGamePiece(intake, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)
+        new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)
       )
     ).onFalse(
       new InstantCommand(intake::retractIntake).andThen(
@@ -266,8 +267,8 @@ public class RobotContainer {
     // return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
 
     // we always start facing towards the alliance station, so our inital angle should always be 180
-    //  return new InstantCommand(drivetrain::setGyroscope180).andThen(
-    return new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
+    return new InstantCommand(drivetrain::setGyroscope180).andThen(
+    new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor));
   }
 
 // maybe sync button board LEDs?

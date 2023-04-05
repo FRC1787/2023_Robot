@@ -36,9 +36,9 @@ public class PickUpCube extends SequentialCommandGroup {
       // then spin the grabber wheels while the cube is being pushed into them
       // to pickup the cube.
       new ParallelCommandGroup(
-        new MoveSideBelts(indexerWalls, -2.0),
-        new MoveConveyor(conveyor, -4)
-      ).withTimeout(0.75),
+        new MoveSideBelts(indexerWalls, -2.5),
+        new MoveConveyor(conveyor, -4.25)
+      ).withTimeout(0.5),
       new ParallelRaceGroup(
         new SetGrabberMotor(grabberPlacer, -6, 14).withTimeout(1.50),
         new MoveSideBelts(indexerWalls, -2.0),

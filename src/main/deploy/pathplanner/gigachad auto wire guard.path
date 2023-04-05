@@ -26,18 +26,43 @@
     },
     {
       "anchorPoint": {
-        "x": 4.818812970959276,
-        "y": 0.7236897807128956
+        "x": 4.0533718567437145,
+        "y": 0.7097726695453402
       },
       "prevControl": {
-        "x": 3.6497756328846,
-        "y": 0.5984357802048957
+        "x": 2.91714179069576,
+        "y": 0.40758382219216116
       },
       "nextControl": {
-        "x": 6.163370945459207,
-        "y": 0.8677495636950298
+        "x": 5.361580306493948,
+        "y": 1.0577004487342316
       },
       "holonomicAngle": 179.9,
+      "isReversal": false,
+      "velOverride": 0.05,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.932181864363729,
+        "y": 0.8767780035560083
+      },
+      "prevControl": {
+        "x": 5.653839641012616,
+        "y": 0.8906951147235637
+      },
+      "nextControl": {
+        "x": 6.2101768109441124,
+        "y": 0.8628782562269894
+      },
+      "holonomicAngle": -45.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -51,19 +76,19 @@
     },
     {
       "anchorPoint": {
-        "x": 7.268224536449073,
-        "y": 1.5308822284311252
+        "x": 7.0,
+        "y": 0.9
       },
       "prevControl": {
-        "x": 7.262985515970714,
-        "y": 1.0855654877705783
+        "x": 6.711540089746847,
+        "y": 0.8767780035560083
       },
       "nextControl": {
-        "x": 7.282141647616627,
-        "y": 2.7138366776733562
+        "x": 6.711540089746847,
+        "y": 0.8767780035560083
       },
-      "holonomicAngle": -0.01,
-      "isReversal": false,
+      "holonomicAngle": -45.0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -133,7 +158,7 @@
       ]
     },
     {
-      "position": 2.436363636363641,
+      "position": 3.2727272727272716,
       "names": [
         "intakeIn"
       ]

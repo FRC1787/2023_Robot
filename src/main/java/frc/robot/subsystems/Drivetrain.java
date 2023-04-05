@@ -230,6 +230,7 @@ public class Drivetrain extends SubsystemBase {
 
   /* Used by SwerveControllerCommand in Auto */
   public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxAchievableVelocityMetersPerSecond);
     for (SwerveModule mod : mSwerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], true);
     }
@@ -323,6 +324,7 @@ public class Drivetrain extends SubsystemBase {
     // moduleAngleRelativeToRobot + robotAngleRelativeToField = moduleAngleRelativeToField
     //
     // Maybe Re-Do calculations with ChassisSpeeds object?
+    /*
     SwerveModule frontLeft = mSwerveMods[0];
     SwerveModule frontRight = mSwerveMods[1];
     SwerveModule backLeft = mSwerveMods[2];
@@ -367,5 +369,6 @@ public class Drivetrain extends SubsystemBase {
     homeGrownPoseX += robotVX * 0.02;
     homeGrownPoseY += robotVY * 0.02;
     homeGrownPoseTheta = robotAngle;
+    */
   }
 }
