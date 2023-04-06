@@ -6,6 +6,7 @@ package frc.robot.commands.autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -23,12 +24,18 @@ public class AutoBalance extends CommandBase {
     tiltController.setTolerance(1.0, 15);
 
     addRequirements(drivetrain);
+
+
+    
+    
+    SmartDashboard.putBoolean("balance 2nd stage activated", false);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     tiltController.setP(0.5/10);
+    SmartDashboard.putBoolean("balance 2nd stage activated", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +43,7 @@ public class AutoBalance extends CommandBase {
   public void execute() {
     if (Math.abs(drivetrain.getRobotPitchDegreesPerSecond()) > 35 || Math.abs(drivetrain.getRobotPitchDegrees()) < 5) {
       tiltController.setP(0.17/10);
+      SmartDashboard.putBoolean("balance 2nd stage activated", true);
     }
     
     double desiredVxMetersPerSecond = -tiltController.calculate(drivetrain.getRobotPitchDegrees());
