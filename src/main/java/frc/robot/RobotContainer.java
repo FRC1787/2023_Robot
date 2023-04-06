@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -54,7 +53,7 @@ public class RobotContainer {
   // CONTROLLERS
   public static final CommandXboxController controller = new CommandXboxController(0);
   public static final CommandXboxController backupController = new CommandXboxController(1);
-  public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
+  // public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
   public static final Joystick joystick = new Joystick(3);
 
   // SUBSYSTEMS 
@@ -141,15 +140,15 @@ public class RobotContainer {
     controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6, 4, 4, 0).withTimeout(3));
     controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
     controller.back().whileTrue(new AutoBalance(drivetrain));
-    buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
+    // buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
 
     inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
 
     // cube mode and cone mode toggles
     controller.a().onTrue(new InstantCommand(leds::setConeMode));
     controller.b().onTrue(new InstantCommand(leds::setCubeMode));
-    buttonBoard.button(1).onTrue(new InstantCommand(leds::setConeMode));
-    buttonBoard.button(2).onTrue(new InstantCommand(leds::setCubeMode));
+    // buttonBoard.button(1).onTrue(new InstantCommand(leds::setConeMode));
+    // buttonBoard.button(2).onTrue(new InstantCommand(leds::setCubeMode));
 
     coneModeJoystick.onTrue(new InstantCommand(leds::setConeMode));
     cubeModeJoystick.onTrue(new InstantCommand(leds::setCubeMode));
@@ -219,22 +218,21 @@ public class RobotContainer {
 
   private void driverConfirmBindings() {
     //mid cone score
-    buttonBoard.button(4).and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
+    // buttonBoard.button(4).and(inConeMode).and(controller.leftBumper())
+      // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
 
     //high cone score
-    buttonBoard.button(5).and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
+    // buttonBoard.button(5).and(inConeMode).and(controller.leftBumper())
+      // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
 
     //mid cube score
-    buttonBoard.button(4).and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.21).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+    // buttonBoard.button(4).and(inConeMode.negate()).and(controller.leftBumper())
+      // .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.21).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
 
     //high cube score
-    buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
-    .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.7).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+    // buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
+    // .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.7).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
   
-      //TODO: backup cube goober
     //BACKUP CONTROLLER
     midScoreJoystick.and(inConeMode).and(controller.leftBumper())
     .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
