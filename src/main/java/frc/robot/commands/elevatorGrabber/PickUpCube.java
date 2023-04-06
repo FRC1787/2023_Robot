@@ -52,7 +52,6 @@ public class PickUpCube extends SequentialCommandGroup {
         new SetGrabberMotor(grabberPlacer, -6, 14).withTimeout(1.5)
       ),
       new SetGrabberMotor(grabberPlacer, -0.5, 100)
-      // new WaitCommand(999)
     );
   }
 }

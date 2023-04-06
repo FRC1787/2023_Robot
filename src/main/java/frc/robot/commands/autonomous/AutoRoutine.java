@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
@@ -121,9 +122,11 @@ public class AutoRoutine extends SequentialCommandGroup {
       )
     );
     eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
+    
     eventMap.put("shootCube", new SequentialCommandGroup(
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
     ));
+
     eventMap.put("shootCubeChargeStation", new SequentialCommandGroup(
       new WaitCommand(1.25),
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
@@ -132,7 +135,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
     eventMap.put("scoreCubeHigh", 
-      new ParallelCommandGroup(
+      new ParallelRaceGroup(
         new SetGrabberMotor(grabberPlacer, -0.5, 100), // apply small holding torque to keep cube in grabber on the way up
         new ExtendElevatorToPosition(elevator, pivot, 1.7)
       ).andThen(

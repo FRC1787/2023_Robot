@@ -20,7 +20,6 @@ import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.intake.BowlCube;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
-import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
@@ -87,24 +86,26 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
+    //for competition
     autoChooser.setDefaultOption("1 cone + balance wire guard", "1 cone + balance wire guard");
     autoChooser.addOption("1 cone + balance middle", "1 cone + balance middle");
     autoChooser.addOption("1 cone + balance barrier", "1 cone + balance barrier");
     autoChooser.addOption("1 cone barrier", "1 cone barrier");
     autoChooser.addOption("1 cone middle", "1 cone middle");
     autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
-    autoChooser.addOption("gigachad auto barrier", "gigachad auto barrier");
     autoChooser.addOption("gigachad auto middle", "gigachad auto middle");
     autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
-    autoChooser.addOption("goober", "goober");
-    autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
-    autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
-    autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
-    autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
-    autoChooser.addOption("testing this", "temp cone + cube high barrier");
-    autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
-    autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
-    autoChooser.addOption("temp cone + cube high + balance barrier", "temp cone + cube high + balance barrier");
+    autoChooser.addOption("cone + cube high barrier", "cone + cube high barrier");
+    autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
+
+    //dont use in game
+    // autoChooser.addOption("goober", "goober");
+    // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
+    // autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
+    // autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
+    // autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
+    // autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
+    // autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
 
 
     
