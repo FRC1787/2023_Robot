@@ -79,38 +79,33 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
-        new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0),
+        new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0), // initial cone suck into back stop
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
     );
 
     eventMap.put("placeConeHigh", 
     new SequentialCommandGroup(
-      new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0),
+      new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0), // initial cone suck into back stop
       new ExtendElevatorToPosition(elevator, pivot, 1.69),
-      new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(.5)
+      new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(0.15), // placement onto peg
+      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15) // move cube hat out of the way
       )
     );
 
     eventMap.put("placeCubeHigh", 
     new SequentialCommandGroup(
-
       new ExtendElevatorToPosition(elevator, pivot, 1.69),
-      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(.5)
+      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(.15)
       )
     );
 
     eventMap.put("retractElevator",
       new ParallelCommandGroup(
-      
         // reset the elevator and indexer walls to prepare for getting the next game piece
         new MoveElevatorToPosition(elevator, 0).asProxy(),
-        new SequentialCommandGroup(
-          new WaitCommand(0.06), // not sure if we need this WaitCommand, consider using "RetractAndHomeElevator" here?
-          new InstantCommand(pivot::retractElevator, pivot)
-        )
-      ).andThen(
-        new InstantCommand(indexerWalls::openIndexerWalls)
+        new InstantCommand(pivot::retractElevator, pivot),
+        new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
       )
     );
 
@@ -136,7 +131,14 @@ public class AutoRoutine extends SequentialCommandGroup {
 
     eventMap.put("waitOneSecond", new WaitCommand(1));
 
-    eventMap.put("scoreCubeHigh", new ExtendElevatorToPosition(elevator, pivot, 1.7).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+    eventMap.put("scoreCubeHigh", 
+      new ParallelCommandGroup(
+        new SetGrabberMotor(grabberPlacer, -0.5, 100), // apply small holding torque to keep cube in grabber on the way up
+        new ExtendElevatorToPosition(elevator, pivot, 1.7)
+      ).andThen(
+        new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)
+      )
+    );
 
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(

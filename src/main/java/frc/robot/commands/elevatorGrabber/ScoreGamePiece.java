@@ -32,14 +32,11 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       // move the cube hat (goober) out of the way
       new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15), 
       new ParallelCommandGroup(
-  
-      // reset the elevator and indexer walls to prepare for getting the next game piece
-      new MoveElevatorToPosition(elevator, 0).asProxy(),
-        new SequentialCommandGroup(
-          new InstantCommand(pivot::retractElevator, pivot)
-        )
-      ),
-      new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
+        // reset the elevator and indexer walls to prepare for getting the next game piece
+        new MoveElevatorToPosition(elevator, 0).asProxy(),
+        new InstantCommand(pivot::retractElevator, pivot),
+        new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
+      )
     );
   }
 }
