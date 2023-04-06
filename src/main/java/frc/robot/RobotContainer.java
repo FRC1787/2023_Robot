@@ -96,6 +96,7 @@ public class RobotContainer {
     autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
     autoChooser.addOption("cone + cube high barrier", "cone + cube high barrier");
     autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
+    autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
 
     //dont use in game
     // autoChooser.addOption("goober", "goober");
