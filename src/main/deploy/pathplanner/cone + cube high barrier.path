@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreConeHigh"
+          "placeConeHigh"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -26,16 +26,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.25,
-        "y": 4.5
+        "x": 5.932181864363729,
+        "y": 4.425641351282703
       },
       "prevControl": {
-        "x": 4.514248880456165,
-        "y": 4.5
+        "x": 4.855877071034059,
+        "y": 4.461518177727026
       },
       "nextControl": {
-        "x": 6.6796808002694235,
-        "y": 4.5
+        "x": 6.361624151819732,
+        "y": 4.411326608367503
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -51,16 +51,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.18,
-        "y": 4.5
+        "x": 7.184721869443739,
+        "y": 4.397807128947592
       },
       "prevControl": {
-        "x": 6.034015645375779,
-        "y": 4.5
+        "x": 6.03954243622773,
+        "y": 4.440751357693193
       },
       "nextControl": {
-        "x": 6.034015645375779,
-        "y": 4.5
+        "x": 6.03954243622773,
+        "y": 4.440751357693193
       },
       "holonomicAngle": 0.0,
       "isReversal": true,
@@ -126,7 +126,7 @@
   ],
   "markers": [
     {
-      "position": 0.6272727272727273,
+      "position": 0.63,
       "names": [
         "intakeOut"
       ]
@@ -141,6 +141,18 @@
       "position": 2.1,
       "names": [
         "indexCube"
+      ]
+    },
+    {
+      "position": 0.05,
+      "names": [
+        "retractElevator"
+      ]
+    },
+    {
+      "position": 2.95,
+      "names": [
+        "scoreCubeHigh"
       ]
     }
   ]

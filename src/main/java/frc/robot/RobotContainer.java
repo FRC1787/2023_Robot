@@ -20,6 +20,7 @@ import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.intake.BowlCube;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
+import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
@@ -182,8 +183,8 @@ public class RobotContainer {
     //index cone upon trigger release
     controller.rightTrigger().and(inConeMode)
       .onFalse(
-        // new MoveConveyor(conveyor, -8).withTimeout(0.70) <- if something breaks with the intake to index sequence then this is why
-        (new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
+        new MoveConveyor(conveyor, -9).withTimeout(0.50) // <- if something breaks with the intake to index sequence then this is why
+        .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
       );
 
     //get cube in grabber upon intake release
@@ -244,7 +245,7 @@ public class RobotContainer {
 
     //mid cube score
     midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
 
     //high cube score
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())

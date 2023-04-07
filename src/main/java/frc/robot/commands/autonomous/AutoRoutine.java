@@ -148,8 +148,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(5, 0, 0), // 15: TODO: TUNE THESE AFTER ODOMETRY GHOST BUSTED
-      new PIDConstants(2.0, 0, 0), //5 RADIANS DOESN'T MAKE SENSE MAYHAPS???
+      new PIDConstants(5, 0, 0),
+      new PIDConstants(2.1787, 0, 0),
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,
