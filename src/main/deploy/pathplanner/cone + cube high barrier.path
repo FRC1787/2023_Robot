@@ -154,6 +154,12 @@
       "names": [
         "scoreCubeHigh"
       ]
+    },
+    {
+      "position": 3.8,
+      "names": [
+        "backUpScore"
+      ]
     }
   ]
 }

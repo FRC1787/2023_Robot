@@ -94,7 +94,7 @@ public class RobotContainer {
     autoChooser.addOption("1 cone middle", "1 cone middle");
     autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
     autoChooser.addOption("gigachad auto middle", "gigachad auto middle");
-    autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
+    // autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
     autoChooser.addOption("cone + cube high barrier", "cone + cube high barrier");
     autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
     autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
@@ -208,7 +208,10 @@ public class RobotContainer {
     //eject cube
     controller.leftTrigger().and(inConeMode.negate()).whileTrue(
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 4)
+    ).onFalse(
+      new MoveElevatorToPosition(elevator, 0).asProxy()
     );
+    
     // hand off cone from indexer to grabber
     controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));

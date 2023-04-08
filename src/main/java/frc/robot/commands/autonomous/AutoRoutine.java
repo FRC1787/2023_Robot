@@ -78,9 +78,44 @@ public class AutoRoutine extends SequentialCommandGroup {
       path, new PathConstraints(maxVelocityMetersPerSecond, accelerationMetersPerSecondSquared)); //3, 1.5 is previous but it is not fast enough with square paths
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("align", new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.midTape));
-    eventMap.put("autoBalance", new AutoBalance(drivetrain));
+
+
+
+  // INTAKING //////////////////////////////////
+    eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
+    //this command will interrupt intakeOut, which will in turn run the end()
+    //method of IntakeGamePieces, which retracts the intake
+    eventMap.put("intakeIn",
+      new ParallelCommandGroup(
+        new MoveIntakeWheels(intake, -3),
+        new MoveConveyor(conveyor, -5),
+        new MoveSideBelts(indexerWalls, -6)
+      ).withTimeout(0.7)
+    );
+
+  // INDEXING //////////////////////////////////////
+    eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
+    eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
     eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
+
+
+  // HIGH/MID SCORING ////////////////////////
+    eventMap.put("scoreCubeHigh", 
+      new ParallelRaceGroup(
+        new SetGrabberMotor(grabberPlacer, -0.5, 100), // apply small holding torque to keep cube in grabber on the way up
+        new ExtendElevatorToPosition(elevator, pivot, 1.7).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
+      ).andThen(
+        new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
+      )
+    );
+
+    eventMap.put("placeCubeHigh", 
+    new SequentialCommandGroup(
+      new ExtendElevatorToPosition(elevator, pivot, 1.69),
+      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(.15)
+      )
+    );
+
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
         new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0), // initial cone suck into back stop
@@ -97,13 +132,6 @@ public class AutoRoutine extends SequentialCommandGroup {
       )
     );
 
-    eventMap.put("placeCubeHigh", 
-    new SequentialCommandGroup(
-      new ExtendElevatorToPosition(elevator, pivot, 1.69),
-      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(.15)
-      )
-    );
-
     eventMap.put("retractElevator",
       new ParallelCommandGroup(
         // reset the elevator and indexer walls to prepare for getting the next game piece
@@ -113,19 +141,19 @@ public class AutoRoutine extends SequentialCommandGroup {
       )
     );
 
-    eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
-    eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
-    eventMap.put("intakeIn",
-      new SequentialCommandGroup(
-        new InstantCommand(intake::stopIntakeMotor, intake),
-        new InstantCommand(indexerWalls::stopIndexerMotors, indexerWalls),
-        new InstantCommand(intake::retractIntake, intake),
-        new WaitCommand(0.7),
-        new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls)
+    //spit out cube from intake in case cube doesnt get in grabber
+    eventMap.put("backUpScore",
+      new InstantCommand(indexerWalls::closeIndexerWalls).andThen(
+        new ParallelCommandGroup(
+          new MoveConveyor(conveyor, 2.5),
+          new MoveSideBelts(indexerWalls, 2.5),
+          new MoveIntakeWheels(intake, 6.75)
+        ).withTimeout(3)
       )
     );
-    eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
-    
+
+
+  // LOW SCORING ////////////////////////////////////////////
     eventMap.put("shootCube", new SequentialCommandGroup(
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
     ));
@@ -135,27 +163,11 @@ public class AutoRoutine extends SequentialCommandGroup {
       new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 0).withTimeout(3)
     ));
 
+
+  // BALANCE ////////////////
     eventMap.put("waitOneSecond", new WaitCommand(1));
-
-    eventMap.put("scoreCubeHigh", 
-      new ParallelRaceGroup(
-        new SetGrabberMotor(grabberPlacer, -0.5, 100), // apply small holding torque to keep cube in grabber on the way up
-        new ExtendElevatorToPosition(elevator, pivot, 1.7)
-      ).andThen(
-        new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
-      )
-    );
-
-    // whopper whopper whopper whopper junior double triple whopper.
-    eventMap.put("backUpScore",
-      new InstantCommand(indexerWalls::closeIndexerWalls).andThen(
-        new ParallelCommandGroup(
-          new MoveConveyor(conveyor, 2.5),
-          new MoveSideBelts(indexerWalls, 2.5),
-          new MoveIntakeWheels(intake, 6.75)
-        )
-      )
-    );
+    
+    eventMap.put("autoBalance", new AutoBalance(drivetrain));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       drivetrain::getPoseMeters,
@@ -163,6 +175,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       Constants.Swerve.swerveKinematics,
       new PIDConstants(5, 0, 0),
       new PIDConstants(2.1787, 0, 0),
+      //new PIDConstants(0, 0, 0),
+      //new PIDConstants(0, 0, 0),
       drivetrain::setModuleStatesClosedLoop,
       eventMap,
       true,

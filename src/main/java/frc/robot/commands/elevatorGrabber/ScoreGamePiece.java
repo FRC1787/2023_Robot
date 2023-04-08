@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
-import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -35,8 +34,6 @@ public class ScoreGamePiece extends SequentialCommandGroup {
         // reset the elevator and indexer walls to prepare for getting the next game piece
         new MoveElevatorToPosition(elevator, 0).asProxy(),
         new InstantCommand(pivot::retractElevator, pivot)
-        // TODO: make sure this isnt necessary :D
-        // new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
       )
     );
   }
