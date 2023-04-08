@@ -237,19 +237,19 @@ public class RobotContainer {
   
     //BACKUP CONTROLLER
     midScoreJoystick.and(inConeMode).and(controller.leftBumper())
-    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
+    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
 
     //high cone score
     highScoreJoystick.and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
 
     //mid cube score
     midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
     //high cube score
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.7)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.7)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
   }
 

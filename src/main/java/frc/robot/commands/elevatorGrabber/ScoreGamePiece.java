@@ -17,7 +17,7 @@ import frc.robot.subsystems.intakeIndex.IndexerWalls;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScoreGamePiece extends SequentialCommandGroup {
   /** Creates a new ScoreGamePiece. */
-  public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, IndexerWalls indexerWalls, boolean isCone) {
+  public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, boolean isCone) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -34,8 +34,9 @@ public class ScoreGamePiece extends SequentialCommandGroup {
       new ParallelCommandGroup(
         // reset the elevator and indexer walls to prepare for getting the next game piece
         new MoveElevatorToPosition(elevator, 0).asProxy(),
-        new InstantCommand(pivot::retractElevator, pivot),
-        new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
+        new InstantCommand(pivot::retractElevator, pivot)
+        // TODO: make sure this isnt necessary :D
+        // new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
       )
     );
   }

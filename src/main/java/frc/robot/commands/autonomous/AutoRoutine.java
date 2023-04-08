@@ -30,8 +30,11 @@ import frc.robot.commands.elevatorGrabber.PickUpCube;
 import frc.robot.commands.elevatorGrabber.ScoreGamePiece;
 import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
+import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.commands.intake.BowlCube;
 import frc.robot.commands.intake.IntakeGamePieces;
+import frc.robot.commands.intake.MoveConveyor;
+import frc.robot.commands.intake.MoveIntakeWheels;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.elevator.Elevator;
@@ -82,7 +85,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       new SequentialCommandGroup(
         new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0), // initial cone suck into back stop
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
-        new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true))
+        new ScoreGamePiece(elevator, pivot, grabberPlacer, true))
     );
 
     eventMap.put("placeConeHigh", 
@@ -139,10 +142,20 @@ public class AutoRoutine extends SequentialCommandGroup {
         new SetGrabberMotor(grabberPlacer, -0.5, 100), // apply small holding torque to keep cube in grabber on the way up
         new ExtendElevatorToPosition(elevator, pivot, 1.7)
       ).andThen(
-        new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)
+        new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
       )
     );
 
+    // whopper whopper whopper whopper junior double triple whopper.
+    eventMap.put("backUpScore",
+      new InstantCommand(indexerWalls::closeIndexerWalls).andThen(
+        new ParallelCommandGroup(
+          new MoveConveyor(conveyor, 2.5),
+          new MoveSideBelts(indexerWalls, 2.5),
+          new MoveIntakeWheels(intake, 6.75)
+        )
+      )
+    );
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       drivetrain::getPoseMeters,

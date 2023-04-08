@@ -212,6 +212,12 @@
       "names": [
         "retractElevator"
       ]
+    },
+    {
+      "position": 4.0,
+      "names": [
+        "backUpScore"
+      ]
     }
   ]
 }
