@@ -26,6 +26,10 @@ import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.LEDs;
 
+import java.util.List;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +54,8 @@ import frc.robot.subsystems.intakeIndex.IndexerWalls;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  public List<PathPlannerTrajectory> pathGroup;
 
   // CONTROLLERS
   public static final CommandXboxController controller = new CommandXboxController(0);
@@ -79,7 +85,7 @@ public class RobotContainer {
   private final Trigger cubeModeJoystick = new JoystickButton(joystick, 12);
 
   // AUTO
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  public final SendableChooser<String> autoChooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -102,7 +108,7 @@ public class RobotContainer {
     //dont use in game
     // autoChooser.addOption("goober", "goober");
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
-    // autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
+    autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
     // autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
     // autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
     // autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
@@ -216,28 +222,10 @@ public class RobotContainer {
     controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
-    //this.originalScoringBindings(); // operator moves the elevator and scores with a single button press
-    //this.operatorConfirmBindings(); //operator moves elevator with one button, then confirms with another button
     this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
   }
 
-  private void driverConfirmBindings() {
-    //mid cone score
-    // buttonBoard.button(4).and(inConeMode).and(controller.leftBumper())
-      // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
-
-    //high cone score
-    // buttonBoard.button(5).and(inConeMode).and(controller.leftBumper())
-      // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, true)));
-
-    //mid cube score
-    // buttonBoard.button(4).and(inConeMode.negate()).and(controller.leftBumper())
-      // .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.21).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
-
-    //high cube score
-    // buttonBoard.button(5).and(inConeMode.negate()).and(controller.leftBumper())
-    // .onTrue(/*(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls).withTimeout(1.6)).andThen(*/new ExtendElevatorToPosition(elevator, pivot, 1.7).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, indexerWalls, false)));
-  
+  private void driverConfirmBindings() {  
     //BACKUP CONTROLLER
     midScoreJoystick.and(inConeMode).and(controller.leftBumper())
     .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
@@ -262,29 +250,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return new InstantCommand(drivetrain::setGyroscope180)
-    //  .andThen(new AutoRoutine("gigachad auto wire guard", drivetrain, vision, elevatorGrabber, indexer, intake, hatHack));
-
-    // return new AutoRoutine("gigachad auto barrier temp", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor)
-    // .andThen(new InstantCommand(drivetrain::setGyroscope180));
-
-    // return new AutoRoutine("One Bumper Length Forward", drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor);
-
     // we always start facing towards the alliance station, so our inital angle should always be 180
     return new InstantCommand(drivetrain::setGyroscope180).andThen(
-    new AutoRoutine(autoChooser.getSelected(), drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor));
+    new AutoRoutine(pathGroup, drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor));
   }
-
-// maybe sync button board LEDs?
-/*
-  public void syncCone() {
-    simpleButtonBoard.setOutput(1, true);
-    System.out.println("sync cone");
-  }
-
-  public void syncCube() {
-    simpleButtonBoard.setOutput(2, true);
-    System.out.println("sync cube");
-  }
-*/
 }

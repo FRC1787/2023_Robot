@@ -7,8 +7,6 @@ package frc.robot.commands.autonomous;
 import java.util.HashMap;
 import java.util.List;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
@@ -22,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
-import frc.robot.commands.drivetrain.AlignToTarget;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
@@ -49,7 +46,7 @@ import frc.robot.subsystems.intakeIndex.IndexerWalls;
 public class AutoRoutine extends SequentialCommandGroup {
   /** Creates a new AutoRoutine. */
   public AutoRoutine(
-      String path, 
+      List<PathPlannerTrajectory> pathGroup, 
       Drivetrain drivetrain, 
       Vision vision, 
       GrabberPlacer grabberPlacer, 
@@ -60,22 +57,6 @@ public class AutoRoutine extends SequentialCommandGroup {
       Intake intake,
       Conveyor conveyor
     ) {
-    
-    double maxVelocityMetersPerSecond = 4.0; // 4.0;
-    double accelerationMetersPerSecondSquared = 3.0; //2.5;
-    if (path.equals("1 cone + balance middle") || path.equals("1 cone middle") || path.equals("gigachad auto middle")) {
-      maxVelocityMetersPerSecond = 4.0;
-      accelerationMetersPerSecondSquared = 2.0;
-    } else if (path.equals("One Bumper Length Forward") || path.equals("One Bumper Length Backward") || path.equals("One Bumper Length Backward Plus Flip")) {
-      maxVelocityMetersPerSecond = 0.5;
-      accelerationMetersPerSecondSquared = 0.5;
-    } else if (path.equals("Maybe 3 Piece Barrier")) {
-      maxVelocityMetersPerSecond = 4.0;
-      accelerationMetersPerSecondSquared = 3.0;
-    }
-
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
-      path, new PathConstraints(maxVelocityMetersPerSecond, accelerationMetersPerSecondSquared)); //3, 1.5 is previous but it is not fast enough with square paths
 
     HashMap<String, Command> eventMap = new HashMap<>();
 
