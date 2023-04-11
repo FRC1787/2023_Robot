@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SerialPort.Port;
@@ -22,7 +23,7 @@ import frc.robot.Constants;
 public class Drivetrain extends SubsystemBase {
 
   private final AHRS gyro; // NavX connected over MXP
-  private CustomSwerveDriveOdometry swerveOdometry;
+  private SwerveDriveOdometry swerveOdometry;
   private SwerveModule[] mSwerveMods;
 
   private Field2d field;
@@ -68,7 +69,7 @@ public class Drivetrain extends SubsystemBase {
     };
 
     gyro.zeroYaw();
-    swerveOdometry = new CustomSwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
     field = new Field2d();
 
     chassisSpeedsXSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);
