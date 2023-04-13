@@ -101,18 +101,18 @@
     },
     {
       "anchorPoint": {
-        "x": 6.595431619434668,
-        "y": 4.5520882470336375
+        "x": 6.4367511713746834,
+        "y": 5.486302887499392
       },
       "prevControl": {
-        "x": 5.829763909587482,
-        "y": 4.294411613911988
+        "x": 5.650856023458667,
+        "y": 5.299184995138437
       },
       "nextControl": {
-        "x": 8.084164882615479,
-        "y": 5.053104249065641
+        "x": 7.4814228351860965,
+        "y": 5.7350342360259186
       },
-      "holonomicAngle": -92.60256220249967,
+      "holonomicAngle": -144.5829447235326,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -126,16 +126,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.153706593127472,
-        "y": 3.5071120142240284
+        "x": 7.374823685817585,
+        "y": 3.567518198866186
       },
       "prevControl": {
-        "x": 7.583148880583477,
-        "y": 3.793406872528031
+        "x": 7.900712822702242,
+        "y": 4.008128016256033
       },
       "nextControl": {
-        "x": 6.403245149094479,
-        "y": 3.0068043848687
+        "x": 6.6834663591007955,
+        "y": 2.9882728710764437
       },
       "holonomicAngle": -143.4269690214807,
       "isReversal": false,
@@ -165,7 +165,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "autoBalance",
+          "shootCube"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -177,15 +180,39 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 1.0,
+      "position": 0.05454545454545454,
+      "names": [
+        "retractElevator"
+      ]
+    },
+    {
+      "position": 1.6,
       "names": [
         "intakeOut"
       ]
     },
     {
-      "position": 0.05454545454545454,
+      "position": 2.427272727272725,
       "names": [
-        "retractElevator"
+        "intakeIn"
+      ]
+    },
+    {
+      "position": 2.95,
+      "names": [
+        "shootCube"
+      ]
+    },
+    {
+      "position": 4.4,
+      "names": [
+        "intakeOut"
+      ]
+    },
+    {
+      "position": 5.35,
+      "names": [
+        "intakeIn"
       ]
     }
   ]
