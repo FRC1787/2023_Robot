@@ -106,7 +106,7 @@ public class RobotContainer {
     autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
 
     //dont use in game
-    // autoChooser.addOption("goober", "goober");
+    autoChooser.addOption("goober", "goober");
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
     autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
     // autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
