@@ -81,15 +81,19 @@ public class AutoRoutine extends SequentialCommandGroup {
 
 
   // HIGH/MID SCORING ////////////////////////
-    eventMap.put("scoreCubeHigh", 
-      new ParallelRaceGroup(
-        new SetGrabberMotor(grabberPlacer, -0.5, 100), // apply small holding torque to keep cube in grabber on the way up
-        new ExtendElevatorToPosition(elevator, pivot, 1.7).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
-      ).andThen(
-        new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
+    eventMap.put("scoreCubeHigh",
+      // This can inturrupt index cube, so we want the indexer walls to be open when we score.
+      new InstantCommand(indexerWalls::openIndexerWalls).andThen(
+        new ParallelRaceGroup(
+          new SetGrabberMotor(grabberPlacer, -0.75, 100), // apply small holding torque to keep cube in grabber on the way up
+          new ExtendElevatorToPosition(elevator, pivot, 1.7).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
+        ).andThen(
+          new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
+        )
       )
     );
 
+    
     eventMap.put("placeCubeHigh", 
     new SequentialCommandGroup(
       new ExtendElevatorToPosition(elevator, pivot, 1.69),

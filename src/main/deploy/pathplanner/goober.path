@@ -26,16 +26,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.440001451431474,
-        "y": 5.024474763235241
+        "x": 7.454316194346674,
+        "y": 5.1389927065568415
       },
       "prevControl": {
-        "x": 7.769240538481077,
-        "y": 6.12670996770565
+        "x": 7.783555281396277,
+        "y": 6.212598425196851
       },
       "nextControl": {
-        "x": 6.995636419175962,
-        "y": 3.536817916118962
+        "x": 6.999107916786251,
+        "y": 3.654617888425024
       },
       "holonomicAngle": -90.0,
       "isReversal": false,
@@ -62,7 +62,7 @@
         "x": 4.934921441271454,
         "y": 5.010160020320041
       },
-      "holonomicAngle": -180.0,
+      "holonomicAngle": -172.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -101,16 +101,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.374823685817585,
-        "y": 3.567518198866186
+        "x": 7.368427736855473,
+        "y": 3.62162995754563
       },
       "prevControl": {
-        "x": 7.953525277026795,
-        "y": 4.3918675474804845
+        "x": 7.939461374584736,
+        "y": 4.451309392514688
       },
       "nextControl": {
-        "x": 6.91035596356907,
-        "y": 2.905892811785624
+        "x": 6.775127328370157,
+        "y": 2.759598169652266
       },
       "holonomicAngle": -90.0,
       "isReversal": false,
@@ -151,12 +151,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9145106861642298,
+        "x": 1.98,
         "y": 3.993813273340833
       },
       "prevControl": {
-        "x": 4.605682354221841,
-        "y": 4.036757502086431
+        "x": 3.640510178163213,
+        "y": 4.365996589136035
       },
       "nextControl": null,
       "holonomicAngle": -180.0,
@@ -165,7 +165,9 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "scoreCubeHigh"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -189,13 +191,13 @@
       ]
     },
     {
-      "position": 1.1,
+      "position": 1.3,
       "names": [
         "intakeIn"
       ]
     },
     {
-      "position": 1.95,
+      "position": 1.92,
       "names": [
         "shootCube"
       ]
@@ -207,19 +209,19 @@
       ]
     },
     {
-      "position": 4.15,
+      "position": 4.25,
       "names": [
         "intakeIn"
       ]
     },
     {
-      "position": 4.8,
+      "position": 4.65,
       "names": [
         "indexCube"
       ]
     },
     {
-      "position": 5.7,
+      "position": 5.2,
       "names": [
         "scoreCubeHigh"
       ]
