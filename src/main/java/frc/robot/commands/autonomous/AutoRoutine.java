@@ -63,15 +63,27 @@ public class AutoRoutine extends SequentialCommandGroup {
 
 
   // INTAKING //////////////////////////////////
-    eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
-    //this command will interrupt intakeOut, which will in turn run the end()
-    //method of IntakeGamePieces, which retracts the intake
-    eventMap.put("intakeIn",
+    // eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
+    eventMap.put("intakeOut", new SequentialCommandGroup(
+      new InstantCommand(intake::extendIntake, intake),
+      new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls),
       new ParallelCommandGroup(
         new MoveIntakeWheels(intake, -3),
         new MoveConveyor(conveyor, -5),
         new MoveSideBelts(indexerWalls, -6)
-      ).withTimeout(0.7)
+      )
+    ));
+    //this command will interrupt intakeOut, which will in turn run the end()
+    //method of IntakeGamePieces, which retracts the intake
+    eventMap.put("intakeIn",
+      new SequentialCommandGroup(
+        new InstantCommand(intake::retractIntake),
+        new ParallelCommandGroup(
+          new MoveIntakeWheels(intake, -3),
+          new MoveConveyor(conveyor, -5),
+          new MoveSideBelts(indexerWalls, -6)
+        ).withTimeout(0.7)
+      )
     );
 
   // INDEXING //////////////////////////////////////

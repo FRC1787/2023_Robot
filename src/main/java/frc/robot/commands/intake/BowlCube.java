@@ -33,7 +33,7 @@ public class BowlCube extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new MoveConveyor(conveyor, conveyorMotorVoltage),
         new MoveSideBelts(indexerWalls, indexerMotorVoltage),
-        new SetGrabberMotor(grabberPlacer, grabberPlacerVolts, 100),
+        // new SetGrabberMotor(grabberPlacer, grabberPlacerVolts, 100),
         new MoveIntakeWheels(intake, intakeMotorVoltage)
       )
     );
