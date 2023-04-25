@@ -19,11 +19,9 @@ public class ScoreGamePiece extends SequentialCommandGroup {
   public ScoreGamePiece(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, boolean isCone) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-
-    double ejectionVolts = 6;
-    if (isCone) {
-      ejectionVolts = -1 * ejectionVolts;
-    }
+    double ejectionVolts = 1;
+    if (isCone) { ejectionVolts = -6; }
+    
     addCommands(
       // spit out the game piece
       new SetGrabberMotor(grabberPlacer, ejectionVolts, 100).withTimeout(0.15),
