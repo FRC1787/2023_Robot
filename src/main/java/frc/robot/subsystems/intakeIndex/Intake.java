@@ -9,9 +9,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
@@ -19,6 +24,7 @@ public class Intake extends SubsystemBase {
   private final DoubleSolenoid intakeSolenoid;
 
   private CANSparkMax intakeMotor;
+
 
   /** Creates a new Intake. */
   public Intake() {
@@ -80,10 +86,10 @@ public class Intake extends SubsystemBase {
     setIntakeMotorVolts(0);
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
     // testing to see if querrying a value from the motor will prompt CAN errors to appear when the motor is unplugged from the CAN network
     SmartDashboard.putNumber("intakeNormalizedOutput", intakeMotor.getAppliedOutput());
   }

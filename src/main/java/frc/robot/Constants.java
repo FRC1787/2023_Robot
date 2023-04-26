@@ -214,6 +214,9 @@ public final class Constants {
   }
 
   public static class IntakeIndexer {
+    public static double voltsPerRPMIntakeMotor = 0.00210764;
+    public static double intakeWheelCircumference = Units.inchesToMeters(2.25*Math.PI);
+
     // for the intake, not for the actual pneumatics
     public static int intakeExtendPneumaticsChannel = 5;
     public static int intakeRetractPneumaticsChannel = 4;

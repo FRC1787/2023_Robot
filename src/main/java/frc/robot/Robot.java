@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     Timer.delay(10); // Ghost Busters! Make sure everything has time to power up before initializing
     m_robotContainer = new RobotContainer();
+
+    PathPlannerServer.startServer(5811);
 
     //m_robotContainer.drivetrain.zeroYaw();
   }

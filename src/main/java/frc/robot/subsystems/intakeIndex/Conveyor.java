@@ -7,6 +7,10 @@ package frc.robot.subsystems.intakeIndex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -14,9 +18,14 @@ public class Conveyor extends SubsystemBase {
 
   private CANSparkMax conveyorMotor;
   
-  /** Creates a new IntakeIndex. */
+  ShuffleboardTab tab;
+  GenericEntry inputVolts;
   public Conveyor() {
 
+    tab = Shuffleboard.getTab("rpmvolts");
+    inputVolts = Shuffleboard.getTab("rpmvolts")
+      .add("input volts", 1)
+      .getEntry();
 
     conveyorMotor = new CANSparkMax(
       Constants.IntakeIndexer.conveyorMotorID,
@@ -59,7 +68,12 @@ public class Conveyor extends SubsystemBase {
     setConveyorMotorVolts(0);
   }
 
+  public double getInputVolts() {
+    return inputVolts.getDouble(0);
+  }
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("conveyor velocity", conveyorMotor.getEncoder().getVelocity());
   }
 }

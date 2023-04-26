@@ -21,6 +21,7 @@ import frc.robot.commands.intake.BowlCube;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
+import frc.robot.commands.intake.ShuffleboardRunWheelsAtVolt;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
@@ -110,7 +111,7 @@ public class RobotContainer {
     autoChooser.addOption("not goober", "not goober");
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
     autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
-    // autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
+    autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
     // autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
     // autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
     // autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
@@ -219,6 +220,8 @@ public class RobotContainer {
       new MoveElevatorToPosition(elevator, 0).asProxy()
     );
     
+    controller.x().whileTrue(new InstantCommand(intake::extendIntake, intake)
+      .andThen(new ShuffleboardRunWheelsAtVolt(conveyor)));
     // hand off cone from indexer to grabber
     controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
