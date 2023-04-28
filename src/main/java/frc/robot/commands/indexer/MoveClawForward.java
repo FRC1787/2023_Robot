@@ -49,7 +49,6 @@ public class MoveClawForward extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return claw.isClawForward();
     return claw.getPosition() >= motorRotations;
   }
 }

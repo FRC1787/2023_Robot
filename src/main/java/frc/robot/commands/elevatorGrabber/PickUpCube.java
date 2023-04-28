@@ -27,7 +27,7 @@ public class PickUpCube extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
 
     addCommands(
-      // move subsystems into the pickup position
+      // Moves subsystems into the pickup position.
       new InstantCommand(pivot::retractElevator, pivot),
       new InstantCommand(indexerWalls::closeIndexerWalls),
       new MoveElevatorToPosition(elevator, 0.0).asProxy(),
@@ -36,18 +36,16 @@ public class PickUpCube extends SequentialCommandGroup {
       // then spin the grabber wheels while the cube is being pushed into them
       // to pickup the cube.
 
-      // TODO: speed up this
-      // new ParallelCommandGroup(
-      //   new MoveSideBelts(indexerWalls, -6), //-2.5
-      //   new MoveConveyor(conveyor, -6) //-4.25
-      // ).withTimeout(0.15), //0.5
+      // Pushes the cube towards the Grabber Placer wheels which will pick up the cube on contact with it's spinning wheels.
       new ParallelRaceGroup(
         new SetGrabberMotor(grabberPlacer, -6, 14).withTimeout(1.50),
         new MoveSideBelts(indexerWalls, -2.0),
         new MoveConveyor(conveyor, -4)  
       ),
 
-      // now that the cube is securly held by the grabber, we can open the indexer,
+      // TODO: i dont even know whats going on here lol
+      
+      // Now that the cube is securly held by the Grabber Placer, we can open the indexer,
       // and also have the grabber apply a small torque to hold onto the cube.
       new InstantCommand(indexerWalls::openIndexerWalls),
       new ParallelCommandGroup(

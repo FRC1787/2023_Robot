@@ -61,7 +61,6 @@ public class RobotContainer {
   // CONTROLLERS
   public static final CommandXboxController controller = new CommandXboxController(0);
   public static final CommandXboxController backupController = new CommandXboxController(1);
-  // public static final CommandGenericHID buttonBoard = new CommandGenericHID(2);
   public static final Joystick joystick = new Joystick(3);
 
   // SUBSYSTEMS 
@@ -77,7 +76,6 @@ public class RobotContainer {
   final LEDs leds = new LEDs();
 
   public final Trigger inConeMode = new Trigger(leds::inConeMode);
-  //public static final GenericHID simpleButtonBoard = new GenericHID(2); // alternate LED sync method?
 
   // BACKUP JOYSTICK
   private final Trigger highScoreJoystick = new JoystickButton(joystick, 7);
@@ -93,7 +91,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    //for competition
+    // For competition use.
     autoChooser.setDefaultOption("1 cone + balance wire guard", "1 cone + balance wire guard");
     autoChooser.addOption("1 cone + balance middle", "1 cone + balance middle");
     autoChooser.addOption("1 cone + balance barrier", "1 cone + balance barrier");
@@ -106,7 +104,7 @@ public class RobotContainer {
     autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
     autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
 
-    //dont use in game
+    // Testing autos. Don't use in-game.
     autoChooser.addOption("goober", "goober");
     autoChooser.addOption("not goober", "not goober");
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
@@ -120,7 +118,8 @@ public class RobotContainer {
     
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
     grabberPlacer.setDefaultCommand(new SetGrabberMotor(grabberPlacer, 0.5, 100));
-    claw.setDefaultCommand(new MoveClawBack(claw, 1)); // makes sure the claw is homed
+    // Makes sure the claw is homed.
+    claw.setDefaultCommand(new MoveClawBack(claw, 1));
     elevator.setDefaultCommand(new ElevatorIdle(elevator));
     indexerWalls.setDefaultCommand(new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls));
 
@@ -154,7 +153,7 @@ public class RobotContainer {
 
     inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
 
-    // cube mode and cone mode toggles
+    // Driver mode switch.
     controller.a().onTrue(new InstantCommand(leds::setConeMode));
     controller.b().onTrue(new InstantCommand(leds::setCubeMode));
     // buttonBoard.button(1).onTrue(new InstantCommand(leds::setConeMode));

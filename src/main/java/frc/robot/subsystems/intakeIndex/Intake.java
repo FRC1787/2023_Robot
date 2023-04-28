@@ -9,14 +9,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
@@ -35,7 +30,7 @@ public class Intake extends SubsystemBase {
     );
 
     intakeMotor = new CANSparkMax(
-      // CAN ID of the Spark MAX
+      // CAN ID of the SPARK MAX.
       Constants.IntakeIndexer.intakeMotorID, 
       MotorType.kBrushless
     );
@@ -44,7 +39,7 @@ public class Intake extends SubsystemBase {
   public void configureMotors() {
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.setInverted(false);
-    //this leaves the motor spinning in order to further pull the cone in and ensure it doesn't get stuck on the intake
+    // This leaves the motor spinning in order to further pull the cone in and ensure it doesn't get stuck on the intake.
     intakeMotor.setIdleMode(IdleMode.kBrake);
     intakeMotor.burnFlash();
   }
@@ -90,7 +85,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // testing to see if querrying a value from the motor will prompt CAN errors to appear when the motor is unplugged from the CAN network
+    // An error is not thrown when a SPARK MAX disconnected from the CAN network unless you are querrying values from it.
     SmartDashboard.putNumber("intakeNormalizedOutput", intakeMotor.getAppliedOutput());
   }
 }

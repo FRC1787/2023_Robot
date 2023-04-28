@@ -15,7 +15,7 @@ import edu.wpi.first.math.util.Units;
  * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <br>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
@@ -27,13 +27,11 @@ public final class Constants {
   public static final class Swerve {
     // KINEMATICS CONSTANTS
     /**
-     * distance between the center point of the left wheels and the center point of
-     * the right wheels
+     * Distance between the center point of the left wheels and the center point of the right wheels.
      */
     public static final double trackwidthMeters = Units.inchesToMeters(22.75);
     /**
-     * distance between the center point of the front wheels and the center point of
-     * the back wheels
+     * Distance between the center point of the front wheels and the center point of the back wheels.
      */
     public static final double wheelbaseMeters = Units.inchesToMeters(22.75);
     
@@ -51,12 +49,13 @@ public final class Constants {
 
 
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
-    // pid for drive motor
+    
+    // PID for drive motors.
     public static final double drivekPVoltsPerMeterPerSecond = 0.81027; //sysid says this should 0.27
     public static final double drivekIVoltsPerMeter = 0.;
     public static final double drivekDVoltsPerMeterPerSecondSquared = 0.00;
 
-    // pid for angle motor
+    // PID for angle motors.
     public static final double anglekPVoltsPerDegree = 0.08;//0.065;
     public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk 
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
@@ -67,9 +66,8 @@ public final class Constants {
 
     /**
      * The maximum possible velocity of the robot in meters per second.
-     * <p>
-     * This is a measure of how fast the robot will be able to drive in a straight
-     * line, based off of the empirical free speed of the drive NEOs.
+     * <br>
+     * This is a measure of how fast the robot will be able to drive in a straight line, based off of the empirical free speed of the drive NEOs.
      */
     public static final double maxAchievableVelocityMetersPerSecond = 5880.0 / 60.0 *
         driveReduction *
@@ -77,16 +75,16 @@ public final class Constants {
 
     /**
      * This is the max desired speed that will be achievable in teleop.
-     * <p>
+     * <br>
      * If the controller joystick is maxed in one direction, it will drive at this speed.
-     * <p>
+     * <br>
      * This value will be less than or equal to the maxAchievableVelocityMetersPerSecond, depending on driver preference.
      */
     public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.3;
 
     /**
      * The maximum achievable angular velocity of the robot in radians per second.
-     * <p>
+     * <br>
      * This is a measure of how fast the robot can rotate in place, based off of maxAchievableVelocityMetersPerSecond.
      */
     public static final double maxAchievableAngularVelocityRadiansPerSecond = maxAchievableVelocityMetersPerSecond /
@@ -94,9 +92,9 @@ public final class Constants {
 
     /**
      * This is the max desired angular velocity that will be achievable in teleop.
-     * <p>
+     * <br>
      * If the controller rotation joystick is maxed in one direction, it will rotate at this speed.
-     * <p>
+     * <br>
      * This value will be tuned based off of driver preference.
      */
     public static final double maxDesiredAngularVelocityRadiansPerSecond = 5.4;
@@ -112,15 +110,17 @@ public final class Constants {
 
     /**
      * Offset for the angle CANCoder encoder.
+     * <br>
      * This offsets the angle encoder so that it reads as 0 when pointing forwards.
+     * <br>
      * All values are relative to the front left corner configuration.
      */
     public static final class CANCoderOffsets {
       public static final double one = -61.1719;
-      public static final double two = 108.896;//-45.527 + 90;
+      public static final double two = 108.896;
       public static final double three = 17.23 - 90; 
       public static final double four = 117.33 - 180;
-      public static final double five = 105.08; // 253.92
+      public static final double five = 105.08;
       public static final double six = 85.43;
       public static final double seven = 99.492;
       public static final double eight = 0;
@@ -195,8 +195,6 @@ public final class Constants {
       public static final double steerOffset = Constants.Swerve.getOffset(
           CANCoderOffsets.three,
           SwerveModuleCorners.BACK_LEFT);
-
-      // public static final double steerOffset = 0;
     }
 
     public static final class BackRightSwerveModule {

@@ -33,7 +33,6 @@ public class SetGrabberMotor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // voltage = SmartDashboard.getNumber("elevator grabber motor voltage", 0.0);
     grabberPlacer.setGrabMotorVolts(voltage);
   }
 
