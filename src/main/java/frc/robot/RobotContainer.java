@@ -114,6 +114,8 @@ public class RobotContainer {
     autoChooser.addOption("Mini Pickup", "Mini Pickup");
     // autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
     // autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
+    autoChooser.addOption("Simon 3 Piece Barrier + Balance", "Simon 3 Piece Barrier + Balance");
+    autoChooser.addOption("Simon 3 Piece Barrier", "Simon 3 Piece Barrier");
 
 
     
