@@ -173,7 +173,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(16.0, 0, 0),
+      new PIDConstants(12.0, 0, 0),
       new PIDConstants(0.25, 0, 0),
       //new PIDConstants(0, 0, 0),
       //new PIDConstants(0, 0, 0),

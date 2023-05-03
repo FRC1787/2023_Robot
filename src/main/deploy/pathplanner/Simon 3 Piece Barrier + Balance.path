@@ -127,15 +127,15 @@
     {
       "anchorPoint": {
         "x": 6.57,
-        "y": 3.93
+        "y": 3.63
       },
       "prevControl": {
         "x": 5.95330648630419,
-        "y": 4.5466935136958195
+        "y": 4.246693513695819
       },
       "nextControl": {
         "x": 6.748267743685131,
-        "y": 3.7517322563148676
+        "y": 3.4517322563148674
       },
       "holonomicAngle": -45.0,
       "isReversal": false,
@@ -152,15 +152,15 @@
     {
       "anchorPoint": {
         "x": 7.2,
-        "y": 3.3
+        "y": 3.0
       },
       "prevControl": {
         "x": 7.022457973775772,
-        "y": 3.4775420262241954
+        "y": 3.1775420262241956
       },
       "nextControl": {
         "x": 7.022457973775772,
-        "y": 3.4775420262241954
+        "y": 3.1775420262241956
       },
       "holonomicAngle": -45.0,
       "isReversal": true,
@@ -201,11 +201,11 @@
     },
     {
       "anchorPoint": {
-        "x": 2.25,
+        "x": 1.85,
         "y": 3.9
       },
       "prevControl": {
-        "x": 2.5014576696030297,
+        "x": 2.10145766960303,
         "y": 3.9000438876430956
       },
       "nextControl": null,
@@ -225,7 +225,7 @@
     }
   ],
   "maxVelocity": 2.5,
-  "maxAcceleration": 5.0,
+  "maxAcceleration": 2.0,
   "isReversed": null,
   "markers": [
     {
@@ -241,7 +241,7 @@
       ]
     },
     {
-      "position": 3.0,
+      "position": 2.75,
       "names": [
         "intakeIn"
       ]
@@ -259,7 +259,7 @@
       ]
     },
     {
-      "position": 6.0,
+      "position": 5.75,
       "names": [
         "intakeIn"
       ]
@@ -268,6 +268,12 @@
       "position": 6.17,
       "names": [
         "indexCube"
+      ]
+    },
+    {
+      "position": 6.85,
+      "names": [
+        "scoreCubeHigh"
       ]
     }
   ]
