@@ -25,9 +25,6 @@ public class MoveClawBack extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    // clawMotorVoltage = SmartDashboard.getNumber("indexer claw back voltage", 0.0);
-
     claw.setClawMotorVolts(-clawMotorVoltage);
   }
 

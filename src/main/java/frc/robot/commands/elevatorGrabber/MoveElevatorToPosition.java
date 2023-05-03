@@ -56,22 +56,22 @@ public class MoveElevatorToPosition extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // save info from the prev iteration before calculating for this iteration:
+        // Saves info from the previous iteration before calculating for this iteration.
         prevTimestamp = currTimestamp;
         double prevVelocityCommand = profile.calculate(prevTimestamp).velocity;
 
-        // get current commands for velocity and acceleration
-        // from the motion profile
+        // Gets current commands for velocity and acceleration from the motion profile.
         currTimestamp = timer.get();
         double currVelocityCommand = profile.calculate(currTimestamp).velocity;
         double currAccelerationCommand = (currVelocityCommand - prevVelocityCommand) / (currTimestamp - prevTimestamp);
         currAccelerationCommand = 0; // Temporarily disable this!
 
-        // incorporate position feedback!
+        // Incorporate position feedback!
         double measuredPosition = elevator.getElevatorPositionMeters();
         double desiredPosition = profile.calculate(currTimestamp).position;
         double positionError = desiredPosition - measuredPosition;
-        double extraVelocityPerMeter = 8;  //analagous to I term of velocity controller
+        // Analagous to I term of velocity controller.
+        double extraVelocityPerMeter = 8;
 
         currVelocityCommand += positionError * extraVelocityPerMeter;
 

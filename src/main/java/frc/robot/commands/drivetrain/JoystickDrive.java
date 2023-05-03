@@ -60,8 +60,8 @@ public class JoystickDrive extends CommandBase {
     double controllerY = modifyAxis(-RobotContainer.controller.getLeftY());
     double controllerR = modifyAxis(-RobotContainer.controller.getRightX());
 
-    //raw controller values after modifyAxis will be between -1 and 1
-    //coefficient = maximum speed in meters or radians per second
+    // Raw controller values after modifyAxis will be between -1 and 1.
+    // Coefficient = maximum speed in meters or radians per second.
 
     ChassisSpeeds outputChassisSpeeds = new ChassisSpeeds(
       controllerY*Constants.Swerve.maxDesiredTeleopVelocityMetersPerSecond,

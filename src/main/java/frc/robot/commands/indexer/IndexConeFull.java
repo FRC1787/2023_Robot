@@ -29,7 +29,7 @@ public class IndexConeFull extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     
     addCommands(
-      //agitation/alignment procedure
+      // Agitates the cone so it will be aligned facing either forwards or backwards in the indexer.
       new InstantCommand(pivot::retractElevator, pivot),
       new MoveClawBack(claw, -3),
       new ParallelCommandGroup(
@@ -51,8 +51,12 @@ public class IndexConeFull extends SequentialCommandGroup {
         new MoveConveyor(conveyor, -9)
       ).withTimeout(0.4), // was 0.5
 
-      //uprighting procedure
-
+      // Uprights the cone to then be sent to the elevator
+      // The clawDistance parameter jumps between 11 and 22 because we determined that at the end of the agitation stage,
+      // the top of the cone tends to be facing towards the front of the robot. In this scenario, the claw would only need
+      // to come out half the distance than if it were facing the other direction so we decided to optimize for the more
+      // common scenario of the cone top facing the front of the robot. Of course if the top of the cone is facing towards
+      // the back of the robot, the next call to the UprightCone command should upright it.
       new UprightCone(intake, conveyor, indexerWalls, claw, 11),
       new UprightCone(intake, conveyor, indexerWalls, claw, 22),
       new UprightCone(intake, conveyor, indexerWalls, claw, 11),

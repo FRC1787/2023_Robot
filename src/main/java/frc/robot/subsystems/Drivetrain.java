@@ -38,7 +38,8 @@ public class Drivetrain extends SubsystemBase {
   private Rotation2d homeGrownPoseTheta = Rotation2d.fromDegrees(0);
 
   public Drivetrain() { 
-    gyro = new AHRS(Port.kUSB); //new AHRS(Port.kUSB, AHRS.SerialDataType.kRawData, (byte)200); Using the USB Port prevents reading of "raw" data, including pitch and roll velocity :(
+    // Using the USB Port prevents reading of "raw" data, including pitch and roll velocity :(
+    gyro = new AHRS(Port.kUSB);
     desiredChassisSpeeds = new ChassisSpeeds(0, 0, 0);
 
     mSwerveMods = new SwerveModule[] {
@@ -78,10 +79,12 @@ public class Drivetrain extends SubsystemBase {
 
   // GYROSCOPE
 
+  // The navX comments are bad don't trust them.
+
   /**
-   * Sets the gyroscope angle to zero. This can be used to set the direction the
-   * robot is currently facing to the
-   * 'forwards' direction.
+   * Sets the gyroscope angle to zero.
+   * <br>
+   * This can be used to set the direction the robot is currently facing to the 'forwards' direction.
    */
   public void zeroYaw() {
     gyro.zeroYaw(); //this is the exact same thing as saying gyro.reset();
@@ -92,6 +95,7 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * Sets the gyroscope angle adjustment to be 180.
+   * <br>
    * In other words, if the robot is facing towards the grid, calling this method will field orient it.
    */
   public void setGyroscope180() {
@@ -111,12 +115,13 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * Returns the current pitch value (in degrees, from -180 to 180) of the robot, based off of the NavX.
+   * <br>
    * Pitch is a measure of angle between the robot-oriented X-axis and the horizontal.
    * @return The current pitch value in degrees (-180 to 180). This value will be positive if the front of the robot is raised.
    */
   public double getRobotPitchDegrees() {
-    return gyro.getRoll(); //since navx is mounted silly and also axis convention this is correct
-    //also the navx comments are bad don't trust them
+    // Since navx is mounted silly and also axis convention this is correct.
+    return gyro.getRoll(); 
   }
 
   /**
@@ -125,8 +130,8 @@ public class Drivetrain extends SubsystemBase {
    * @return The current roll value in degrees (-180 to 180). This value will be positive if the left of the robot (positive Y) is raised.
    */
   public double getRobotRollDegrees() {
-    return gyro.getPitch(); //since navx is mounted silly and also axis convention this is correct
-    //also the navx comments are bad don't trust them
+    // Since navx is mounted silly and also axis convention this is correct.
+    return gyro.getPitch();
   }
 
   /**
@@ -184,7 +189,7 @@ public class Drivetrain extends SubsystemBase {
     homeGrownPoseX = freshPose.getX();
     homeGrownPoseY = freshPose.getY();
 
-    // keep gyro in sync with desired pose
+    // Keeps gyro in sync with desired pose
     gyro.zeroYaw();
     gyro.setAngleAdjustment(freshPose.getRotation().getDegrees());
 

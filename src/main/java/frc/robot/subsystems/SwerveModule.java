@@ -56,7 +56,7 @@ public class SwerveModule {
     mAngleEncoder = mAngleMotor.getEncoder();
     configAngleMotor();
 
-    //this encoder will always have units of degrees of the wheel
+    // This encoder will always have units of degrees of the wheel.
     mAngleEncoder.setPosition(absoluteEncoder.getAbsolutePosition());
 
     /* Drive Motor Config */
@@ -69,17 +69,18 @@ public class SwerveModule {
 
   private SwerveModuleState constrainState(SwerveModuleState toConstrain) {
     double originalDegrees = toConstrain.angle.getDegrees();
-    double constrainedDegrees = originalDegrees; // start by assuming there is no need to constrain
+    // Start by assuming there is no need to constrain.
+    double constrainedDegrees = originalDegrees;
     if (originalDegrees < -180 || originalDegrees > 180) {
-      // constrain angle if necessary
+      // Constrain angle if necessary.
       constrainedDegrees = MathUtil.inputModulus(originalDegrees, -180, 180);
     }
     return new SwerveModuleState(toConstrain.speedMetersPerSecond, Rotation2d.fromDegrees(constrainedDegrees));
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean closedLoop) {
-    // make sure the desired state's angle is in the range [-180, 180], so it can be appropriately
-    // compared to the current angle from the CANCoder:
+    // Make sure the desired state's angle is in the range [-180, 180], so it can be appropriately
+    // compared to the current angle from the CANCoder.
     desiredState = constrainState(desiredState);
     desiredState = SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition()));
     desiredState = constrainState(desiredState); // constrain one more time after optimization just to be safe, because I'm unsure if optimization can ever pull the angle out of [-180, 180]
@@ -89,7 +90,7 @@ public class SwerveModule {
 
   public void setDesiredStateNoOptimize(SwerveModuleState desiredState, boolean closedLoop) {
     if (closedLoop) {
-      //conversion factor is already set below to convert rpm of motor to m/s of wheel
+      // Conversion factor is already set below to convert rpm of motor to m/s of wheel.
       double wheelMetersPerSecond = mDriveEncoder.getVelocity();
 
       double feedforward = mDriveFeedforward.calculate(desiredState.speedMetersPerSecond);
@@ -102,7 +103,7 @@ public class SwerveModule {
       mDriveMotor.setVoltage(mDriveFeedforward.calculate(desiredState.speedMetersPerSecond));
     }
     
-    //if angle motors are messed up then check commit from 2/28 for changes
+    // If angle motors are messed up then check commit from 2/28 for changes.
     double targetWheelAngleDegrees = desiredState.angle.getDegrees();
     double currentEncoderAngleDegrees = absoluteEncoder.getAbsolutePosition();
 
@@ -111,14 +112,13 @@ public class SwerveModule {
 
 
   public SwerveModuleState getState() {
-    //conversion factor is already set below to convert rpm of motor to m/s of wheel
+    // Conversion factor is already set below to convert rpm of motor to m/s of wheel.
     double velocityMetersPerSecond = mDriveEncoder.getVelocity();
     
     Rotation2d angle =
         Rotation2d.fromDegrees(
           absoluteEncoder.getAbsolutePosition()); 
-          //absolute encode use this
-
+          // Absolute encode use this.
     return new SwerveModuleState(velocityMetersPerSecond, angle);
   }
 
@@ -128,7 +128,7 @@ public class SwerveModule {
     return new SwerveModulePosition(
       mDriveEncoder.getPosition(), Rotation2d.fromDegrees(absoluteEncoder.getAbsolutePosition())
     );
-    //use absolute encoder for this
+    // Use absolute encoder for this.
   }
 
   public Rotation2d getCanCoder() {
@@ -159,13 +159,13 @@ public class SwerveModule {
     
     mDriveEncoder.setPosition(0.0);
 
-    //converts rotations of motor to meters traveled of wheel
+    // Converts rotations of motor to meters traveled of wheel.
     mDriveEncoder.setPositionConversionFactor(
       Constants.Swerve.driveReduction
       * Constants.Swerve.wheelCircumferenceMeters
     );
 
-    //converts rpm of motor to m/s of wheel
+    // Converts rpm of motor to m/s of wheel.
     mDriveEncoder.setVelocityConversionFactor(
       1./60. * Constants.Swerve.driveReduction
       * Constants.Swerve.wheelCircumferenceMeters

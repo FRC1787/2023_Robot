@@ -23,13 +23,13 @@ public class ScoreGamePiece extends SequentialCommandGroup {
     if (isCone) { ejectionVolts = -6; }
     
     addCommands(
-      // spit out the game piece
+      // Spits out the game piece.
       new SetGrabberMotor(grabberPlacer, ejectionVolts, 100).withTimeout(0.15),
 
-      // move the cube hat (goober) out of the way
+      // Moves the cube hat (goober) out of the way so the game piece doesn't get pulled out.
       new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15), 
       new ParallelCommandGroup(
-        // reset the elevator and indexer walls to prepare for getting the next game piece
+        // Resets the elevator and indexer walls to prepare for getting the next game piece.
         new MoveElevatorToPosition(elevator, 0).asProxy(),
         new InstantCommand(pivot::retractElevator, pivot)
       )

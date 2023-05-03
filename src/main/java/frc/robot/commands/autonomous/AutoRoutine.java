@@ -29,7 +29,6 @@ import frc.robot.commands.elevatorGrabber.SetGrabberMotor;
 import frc.robot.commands.indexer.IndexConeFull;
 import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.commands.intake.BowlCube;
-import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.commands.intake.MoveIntakeWheels;
 import frc.robot.subsystems.Drivetrain;
@@ -62,8 +61,7 @@ public class AutoRoutine extends SequentialCommandGroup {
 
 
 
-  // INTAKING //////////////////////////////////
-    // eventMap.put("intakeOut", new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6));
+    // INTAKING //////////////////////////////////
     eventMap.put("intakeOut", new SequentialCommandGroup(
       new InstantCommand(intake::extendIntake, intake),
       new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls),
@@ -73,8 +71,9 @@ public class AutoRoutine extends SequentialCommandGroup {
         new MoveSideBelts(indexerWalls, -6)
       )
     ));
-    //this command will interrupt intakeOut, which will in turn run the end()
-    //method of IntakeGamePieces, which retracts the intake
+
+    // This command will interrupt intakeOut, which will in turn run the end()
+    // method of IntakeGamePieces, which retracts the intake.
     eventMap.put("intakeIn",
       new SequentialCommandGroup(
         new InstantCommand(intake::retractIntake),
@@ -115,30 +114,34 @@ public class AutoRoutine extends SequentialCommandGroup {
 
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
-        new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0), // initial cone suck into back stop
+        // Sucks the cone into the backstop
+        new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, true))
     );
 
     eventMap.put("placeConeHigh", 
     new SequentialCommandGroup(
-      new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0), // initial cone suck into back stop
+      // Sucks the cone into the backstop
+      new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0),
       new ExtendElevatorToPosition(elevator, pivot, 1.69),
-      new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(0.15), // placement onto peg
-      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15) // move cube hat out of the way
+      // Places cone onto peg.
+      new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(0.15),
+      // Moves cube hat out of the way so the cone doesn't get pulled back out.
+      new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15)
       )
     );
 
     eventMap.put("retractElevator",
       new ParallelCommandGroup(
-        // reset the elevator and indexer walls to prepare for getting the next game piece
+        // Resets the elevator and indexer walls to prepare for getting the next game piece.
         new MoveElevatorToPosition(elevator, 0).asProxy(),
         new InstantCommand(pivot::retractElevator, pivot),
         new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
       )
     );
 
-    //spit out cube from intake in case cube doesnt get in grabber
+    // Spits out cube from the intake in case cube doesnt get in Grabber Placer.
     eventMap.put("backUpScore",
       new InstantCommand(indexerWalls::closeIndexerWalls).andThen(
         new ParallelCommandGroup(

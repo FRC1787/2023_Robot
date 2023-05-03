@@ -49,7 +49,7 @@ public class AlignToTarget extends CommandBase {
     double distanceOffsetMeters = vision.getTargetDistanceMeters(target);
 
     double lateralVel;
-    //sometimes limelight messes up and gives bs distance measurements so this mitigates the robot from shooting away
+    // Sometimes the Limelight messes up and gives bs distance measurements so this mitigates the robot from shooting away.
     if (Math.abs(lateralOffsetMeters) > 1.5)
       lateralVel = 0;
     else {
@@ -62,7 +62,7 @@ public class AlignToTarget extends CommandBase {
 
     
     double distanceVel;
-    //see above comment
+    // See above comment.
     if (Math.abs(distanceOffsetMeters) > 2.5)
       distanceVel = 0;
     else {
