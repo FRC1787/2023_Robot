@@ -46,6 +46,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.setInverted(false);
     //this leaves the motor spinning in order to further pull the cone in and ensure it doesn't get stuck on the intake
     intakeMotor.setIdleMode(IdleMode.kBrake);
+    intakeMotor.setSmartCurrentLimit(60);
     intakeMotor.burnFlash();
   }
 

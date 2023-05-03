@@ -20,6 +20,7 @@ public class Conveyor extends SubsystemBase {
   
   ShuffleboardTab tab;
   GenericEntry inputVolts;
+
   public Conveyor() {
 
     tab = Shuffleboard.getTab("rpmvolts");
@@ -39,7 +40,7 @@ public class Conveyor extends SubsystemBase {
     
     conveyorMotor.restoreFactoryDefaults();
     conveyorMotor.setInverted(true);
-    conveyorMotor.setSmartCurrentLimit(40);
+    conveyorMotor.setSmartCurrentLimit(60);
     conveyorMotor.burnFlash();
   }
 
@@ -75,5 +76,6 @@ public class Conveyor extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("conveyor velocity", conveyorMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Conveyor Amps", conveyorMotor.getOutputCurrent());
   }
 }

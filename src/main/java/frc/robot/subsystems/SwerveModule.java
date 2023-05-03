@@ -4,6 +4,7 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
@@ -169,6 +170,16 @@ public class SwerveModule {
       1./60. * Constants.Swerve.driveReduction
       * Constants.Swerve.wheelCircumferenceMeters
     );
+
+    REVLibError err = mDriveEncoder.setMeasurementPeriod(10);
+    if (err == REVLibError.kOk) {
+      System.out.println("successfully set drive encoder measurement period");
+    }
+    
+    err = mDriveEncoder.setAverageDepth(2);
+    if (err == REVLibError.kOk) {
+      System.out.println("successfully set drive encoder window size");
+    }
 
     mDriveMotor.burnFlash();
   }

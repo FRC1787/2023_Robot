@@ -112,7 +112,8 @@ public class RobotContainer {
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
     autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
     autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
-    // autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
+    autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
+    autoChooser.addOption("Mini Pickup", "Mini Pickup");
     // autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
     // autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
 
@@ -147,16 +148,18 @@ public class RobotContainer {
     // controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
-    controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6, 4, 4, 0).withTimeout(3));
-    controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
+    //controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6, 4, 4, 0).withTimeout(3));
+    //controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
     controller.back().whileTrue(new AutoBalance(drivetrain));
     // buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
 
     inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
 
     // cube mode and cone mode toggles
-    controller.a().onTrue(new InstantCommand(leds::setConeMode));
-    controller.b().onTrue(new InstantCommand(leds::setCubeMode));
+    //controller.a().onTrue(new InstantCommand(leds::setConeMode));
+    //controller.b().onTrue(new InstantCommand(leds::setCubeMode));
+    controller.povLeft().onTrue(new InstantCommand(leds::setConeMode));
+    controller.povRight().onTrue(new InstantCommand(leds::setCubeMode));
     // buttonBoard.button(1).onTrue(new InstantCommand(leds::setConeMode));
     // buttonBoard.button(2).onTrue(new InstantCommand(leds::setCubeMode));
 
@@ -244,8 +247,23 @@ public class RobotContainer {
 
     //high cube score
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.7)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
+    //BACKUP CONTROLLER
+    controller.a().and(inConeMode).and(controller.leftBumper())
+    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+
+    //high cone score
+    controller.b().and(inConeMode).and(controller.leftBumper())
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+
+    //mid cube score
+    controller.a().and(inConeMode.negate()).and(controller.leftBumper())
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+
+    //high cube score
+    controller.b().and(inConeMode.negate()).and(controller.leftBumper())
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
   }
 
   /**

@@ -98,7 +98,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       new InstantCommand(indexerWalls::openIndexerWalls).andThen(
         new ParallelRaceGroup(
           new SetGrabberMotor(grabberPlacer, -0.75, 100), // apply small holding torque to keep cube in grabber on the way up
-          new ExtendElevatorToPosition(elevator, pivot, 1.7).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
+          new ExtendElevatorToPosition(elevator, pivot, 1.6).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
         ).andThen(
           new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
         )
@@ -108,7 +108,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     
     eventMap.put("placeCubeHigh", 
     new SequentialCommandGroup(
-      new ExtendElevatorToPosition(elevator, pivot, 1.69),
+      new ExtendElevatorToPosition(elevator, pivot, 1.6),
       new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(.15)
       )
     );
@@ -170,8 +170,8 @@ public class AutoRoutine extends SequentialCommandGroup {
       drivetrain::getPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
-      new PIDConstants(5, 0, 0),
-      new PIDConstants(0.75, 0, 0),
+      new PIDConstants(16.0, 0, 0),
+      new PIDConstants(0.25, 0, 0),
       //new PIDConstants(0, 0, 0),
       //new PIDConstants(0, 0, 0),
       drivetrain::setModuleStatesClosedLoop,
