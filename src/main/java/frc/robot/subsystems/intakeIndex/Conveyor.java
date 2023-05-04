@@ -40,6 +40,9 @@ public class Conveyor extends SubsystemBase {
     
     conveyorMotor.restoreFactoryDefaults();
     conveyorMotor.setInverted(true);
+    if (conveyorMotor.getInverted() == false) {
+      conveyorMotor.setInverted(true);
+    }
     conveyorMotor.setSmartCurrentLimit(60);
     conveyorMotor.burnFlash();
   }

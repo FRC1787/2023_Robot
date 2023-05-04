@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.AutoRoutine;
-import frc.robot.commands.drivetrain.AlignWheelsToZero;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.elevatorGrabber.ElevatorIdle;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
@@ -116,6 +115,7 @@ public class RobotContainer {
     // autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
     autoChooser.addOption("Simon 3 Piece Barrier + Balance", "Simon 3 Piece Barrier + Balance");
     autoChooser.addOption("Simon 3 Piece Barrier", "Simon 3 Piece Barrier");
+    autoChooser.addOption("2 Piece + Balance", "2 Piece + Balance");
 
 
     
