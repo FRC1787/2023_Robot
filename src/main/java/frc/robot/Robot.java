@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     Timer.delay(10); // Ghost Busters! Make sure everything has time to power up before initializing
     m_robotContainer = new RobotContainer();
 
-    PathPlannerServer.startServer(5811);
+    //PathPlannerServer.startServer(5811); // <- removed for competition
 
     //m_robotContainer.drivetrain.zeroYaw();
   }

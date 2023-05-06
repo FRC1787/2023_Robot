@@ -98,24 +98,22 @@ public class RobotContainer {
     autoChooser.addOption("1 cone middle", "1 cone middle");
     autoChooser.addOption("1 cone wire guard", "1 cone wire guard");
     autoChooser.addOption("gigachad auto middle", "gigachad auto middle");
+    autoChooser.addOption("3 Piece Barrier", "3 Piece Barrier");
+    autoChooser.addOption("2 Piece + Balance Barrier", "2 Piece + Balance Barrier");
+    autoChooser.addOption("3 Piece Wire Guard Side", "3 Piece Wire Guard Side");
+
     // autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
-    autoChooser.addOption("cone + cube high barrier", "cone + cube high barrier");
-    autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
-    autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
+    //autoChooser.addOption("cone + cube high barrier", "cone + cube high barrier");
+    //autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
+    //autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
 
     // Testing autos. Don't use in-game.
-    autoChooser.addOption("goober", "goober");
-    autoChooser.addOption("not goober", "not goober");
+    //autoChooser.addOption("goober", "goober");
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
-    autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
-    autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
-    autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
-    autoChooser.addOption("Mini Pickup", "Mini Pickup");
-    // autoChooser.addOption("Maybe 3 Piece Barrier", "Maybe 3 Piece Barrier");
-    // autoChooser.addOption("Maybe 3 Piece Gigachad", "Maybe 3 Piece Gigachad");
-    autoChooser.addOption("Simon 3 Piece Barrier + Balance", "Simon 3 Piece Barrier + Balance");
-    autoChooser.addOption("Simon 3 Piece Barrier", "Simon 3 Piece Barrier");
-    autoChooser.addOption("2 Piece + Balance", "2 Piece + Balance");
+    //autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
+    //autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
+    //autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
+    //autoChooser.addOption("Mini Pickup", "Mini Pickup");
 
 
     
