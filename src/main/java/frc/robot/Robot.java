@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;

@@ -242,7 +242,7 @@ public class RobotContainer {
 
     //mid cube score
     midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.08)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
     //high cube score
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
@@ -258,7 +258,7 @@ public class RobotContainer {
 
     //mid cube score
     controller.a().and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.08)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
     //high cube score
     controller.b().and(inConeMode.negate()).and(controller.leftBumper())
