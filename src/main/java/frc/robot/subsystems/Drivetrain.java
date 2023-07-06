@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,12 +28,15 @@ public class Drivetrain extends SubsystemBase {
   private SwerveDriveOdometry swerveOdometry;
   private SwerveModule[] mSwerveMods;
 
-  private Field2d field;
+  private Field2d odometryField;
+  private Field2d estimatorField;
 
   private ChassisSpeeds desiredChassisSpeeds;
 
   private SlewRateLimiter chassisSpeedsXSlewLimiter;
   private SlewRateLimiter chassisSpeedsYSlewLimiter;
+
+  private SwerveDrivePoseEstimator poseEstimator;
 
   private double homeGrownPoseX = 0;
   private double homeGrownPoseY = 0;
@@ -71,7 +76,15 @@ public class Drivetrain extends SubsystemBase {
 
     gyro.zeroYaw();
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
-    field = new Field2d();
+    poseEstimator = new SwerveDrivePoseEstimator(
+      Constants.Swerve.swerveKinematics,
+      getRobotRotation2d(),
+      getModulePositions(),
+      new Pose2d(0, 0, new Rotation2d(0))
+    );
+    
+    odometryField = new Field2d();
+    estimatorField = new Field2d();
 
     chassisSpeedsXSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);
     chassisSpeedsYSlewLimiter = new SlewRateLimiter(Constants.Swerve.maxDesiredDriverAccel);
@@ -90,7 +103,12 @@ public class Drivetrain extends SubsystemBase {
     gyro.zeroYaw(); //this is the exact same thing as saying gyro.reset();
     gyro.setAngleAdjustment(0);
 
-    swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), getPoseMeters());
+    setPoseMeters(
+      new Pose2d(
+        getPoseMeters().getTranslation(),
+        Rotation2d.fromDegrees(0)
+      )
+    );
   }
 
   /**
@@ -102,7 +120,14 @@ public class Drivetrain extends SubsystemBase {
     gyro.zeroYaw();
     gyro.setAngleAdjustment(180);
 
-    swerveOdometry.resetPosition(getRobotRotation2d(), getModulePositions(), getPoseMeters());
+    setPoseMeters(
+      new Pose2d(
+        getPoseMeters().getTranslation(),
+        Rotation2d.fromDegrees(0)
+      )
+    );
+
+    
   }
 
   /**
@@ -183,6 +208,11 @@ public class Drivetrain extends SubsystemBase {
       getModulePositions(),
       pose
     );
+    poseEstimator.resetPosition(
+      getRobotRotation2d(),
+      getModulePositions(),
+      pose
+    );
   }
 
   public void setHomeGrownPose(Pose2d freshPose) {
@@ -205,6 +235,37 @@ public class Drivetrain extends SubsystemBase {
 
   public void updateOdometry() {
     swerveOdometry.update(getRobotRotation2d(), getModulePositions());
+
+    //updates field visualization on shuffleboard
+    odometryField.setRobotPose(swerveOdometry.getPoseMeters());
+  }
+
+  //updates pose estimator with both vision and odometry measurement
+  private void updatePoseEstimator() {
+    poseEstimator.update(
+        getRobotRotation2d(), getModulePositions());
+
+
+    //calculate inaccuracy of limelight source by finding distance between sources
+    double limelightOdometryDistance = Math.sqrt(
+      Math.pow(Vision.getLimelightPose2d().getX() - getPoseMeters().getX(), 2)
+      + Math.pow(Vision.getLimelightPose2d().getY() - getPoseMeters().getY(), 2)
+    );
+
+    if (Vision.limelightSeesAprilTag() && (limelightOdometryDistance < 1)) {
+      poseEstimator.addVisionMeasurement(
+        Vision.getLimelightPose2d(),
+        Timer.getFPGATimestamp() - (Vision.getTotalLatencyMs()/1000.0)
+      );
+    }
+
+    //updates field visualization on shuffleboard
+    estimatorField.setRobotPose(poseEstimator.getEstimatedPosition());
+  }
+
+  //resets odometry pose to the pose given by limelight
+  public void setPoseToVisionEstimate() {
+    setPoseMeters(Vision.getLimelightPose2d());
   }
 
   // SWERVE MODULES
@@ -279,47 +340,49 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     updateOdometry();
 
+    updateHomeGrownPose();
+
+    updatePoseEstimator();
+
+
     SmartDashboard.putNumber("pose x meters", swerveOdometry.getPoseMeters().getX());
     SmartDashboard.putNumber("pose y meters", swerveOdometry.getPoseMeters().getY());
     SmartDashboard.putNumber("pose rotation degrees", swerveOdometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putData("odometryField", odometryField);
+
+    SmartDashboard.putNumber("estimator x meters", poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("estimator y meters", poseEstimator.getEstimatedPosition().getY());
+    SmartDashboard.putNumber("estimator rotation degrees", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+    SmartDashboard.putData("estimatorField", estimatorField);
+
     SmartDashboard.putNumber("gyro yaw degrees", getRobotRotation2d().getDegrees());
-    SmartDashboard.putNumber("pitch degrees", getRobotPitchDegrees());
-    SmartDashboard.putNumber("roll degrees", getRobotRollDegrees());
-    SmartDashboard.putNumber("pitch degrees per second", getRobotPitchDegreesPerSecond());
-    SmartDashboard.putNumber("roll degrees per second", getRobotRollDegreesPerSecond());
-    SmartDashboard.putData("field", field);
+    // SmartDashboard.putNumber("pitch degrees", getRobotPitchDegrees());
+    // SmartDashboard.putNumber("roll degrees", getRobotRollDegrees());
+    // SmartDashboard.putNumber("pitch degrees per second", getRobotPitchDegreesPerSecond());
+    // SmartDashboard.putNumber("roll degrees per second", getRobotRollDegreesPerSecond());
 
-    SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vxMetersPerSecond);
-    SmartDashboard.putNumber("DesiredChassisSpeedsYMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
-    SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
-    
-    // SmartDashboard.putNumber("front left module speed", mSwerveMods[0].getState().speedMetersPerSecond);
-  
-    SmartDashboard.putNumber("front left distance meters", mSwerveMods[0].getPosition().distanceMeters);
-    SmartDashboard.putNumber("front right distance meters", mSwerveMods[1].getPosition().distanceMeters);
-    SmartDashboard.putNumber("back left distance meters", mSwerveMods[2].getPosition().distanceMeters);
-    SmartDashboard.putNumber("back right distance meters", mSwerveMods[3].getPosition().distanceMeters);
-  
-    SmartDashboard.putNumber("front left degrees", mSwerveMods[0].getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("front right degrees", mSwerveMods[1].getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("back left degrees", mSwerveMods[2].getPosition().angle.getDegrees());
-    SmartDashboard.putNumber("back right degrees", mSwerveMods[3].getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vxMetersPerSecond);
+    // SmartDashboard.putNumber("DesiredChassisSpeedsYMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
+    // SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
 
-    // SmartDashboard.putNumber("front right cancoder")
+    // SmartDashboard.putNumber("front left distance meters", mSwerveMods[0].getPosition().distanceMeters);
+    // SmartDashboard.putNumber("front right distance meters", mSwerveMods[1].getPosition().distanceMeters);
+    // SmartDashboard.putNumber("back left distance meters", mSwerveMods[2].getPosition().distanceMeters);
+    // SmartDashboard.putNumber("back right distance meters", mSwerveMods[3].getPosition().distanceMeters);
+  
+    // SmartDashboard.putNumber("front left degrees", mSwerveMods[0].getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("front right degrees", mSwerveMods[1].getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("back left degrees", mSwerveMods[2].getPosition().angle.getDegrees());
+    // SmartDashboard.putNumber("back right degrees", mSwerveMods[3].getPosition().angle.getDegrees());
     
-    SmartDashboard.putNumber("front left velocity", mSwerveMods[0].getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("front right velocity", mSwerveMods[1].getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("back left velocity", mSwerveMods[2].getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("back right velocity", mSwerveMods[3].getState().speedMetersPerSecond);
+    // SmartDashboard.putNumber("front left velocity", mSwerveMods[0].getState().speedMetersPerSecond);
+    // SmartDashboard.putNumber("front right velocity", mSwerveMods[1].getState().speedMetersPerSecond);
+    // SmartDashboard.putNumber("back left velocity", mSwerveMods[2].getState().speedMetersPerSecond);
+    // SmartDashboard.putNumber("back right velocity", mSwerveMods[3].getState().speedMetersPerSecond);
 
 
     SmartDashboard.putBoolean("gyro is calibrating", gyro.isCalibrating());
 
-    updateHomeGrownPose();
-    SmartDashboard.putNumber("Home Grown Pose X", homeGrownPoseX);
-    SmartDashboard.putNumber("Home Grown Pose Y", homeGrownPoseY);
-    SmartDashboard.putNumber("Home Grown Pose Degrees", homeGrownPoseTheta.getDegrees());
-    field.setRobotPose(swerveOdometry.getPoseMeters());
   }
 
   private void updateHomeGrownPose() {

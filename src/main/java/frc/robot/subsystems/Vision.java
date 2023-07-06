@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,7 +15,7 @@ import frc.robot.Constants;
 public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
 
-  NetworkTable limelight;
+  private static NetworkTable limelight;
 
   public Vision() {
     limelight = NetworkTableInstance.getDefault().getTable("limelight");
@@ -40,6 +42,39 @@ public class Vision extends SubsystemBase {
 
   public double getLateralOffsetMeters(Constants.Vision.LimelightTarget target) {
     return getTargetDistanceMeters(target) * Math.tan(Math.toRadians(getTXDegrees()));
+  }
+
+
+
+  //the next three methods are static because drivetrain references them
+  //gets pose using limelight 3d tingies
+  public static Pose2d getLimelightPose2d() {
+
+    double[] defaultValues = {0, 0, 0, 0, 0, 0};
+    //limelight sends its pose estimate as an array of {x, y, z, roll, pitch, yaw} (in meters and degrees)
+    double[] limelightPoseArray = limelight.getEntry("botpose_wpiblue").getDoubleArray(defaultValues);
+
+    return new Pose2d(
+      limelightPoseArray[0],
+      limelightPoseArray[1],
+      Rotation2d.fromDegrees(limelightPoseArray[5]));
+  }
+
+  public static double getTotalLatencyMs() {
+    //targeting latency (ms)
+    double tl = limelight.getEntry("tl").getDouble(0.0);
+    //capture latency (ms)
+    double cl = limelight.getEntry("cl").getDouble(0.0);
+
+    return tl + cl;
+  }
+
+  //idk if this is the best way of implementing this but whatever
+  public static boolean limelightSeesAprilTag() {
+    //ta is the area on the camera of the target it sees
+    double ta = limelight.getEntry("ta").getDouble(0.0);
+    if (ta != 0) return true;
+    else return false;
   }
 
   @Override

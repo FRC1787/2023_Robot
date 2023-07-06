@@ -42,8 +42,6 @@ public class PickUpCube extends SequentialCommandGroup {
         new MoveSideBelts(indexerWalls, -2.0),
         new MoveConveyor(conveyor, -4)  
       ),
-
-      // TODO: i dont even know whats going on here lol
       
       // Now that the cube is securly held by the Grabber Placer, we can open the indexer,
       // and also have the grabber apply a small torque to hold onto the cube.

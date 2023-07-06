@@ -115,7 +115,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("scoreConeHigh", 
       new SequentialCommandGroup(
         // Sucks the cone into the backstop
-        new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0),
+        new SetGrabberMotor(grabberPlacer, 6, 26).withTimeout(2.0),
         new ExtendElevatorToPosition(elevator, pivot, 1.69),
         new ScoreGamePiece(elevator, pivot, grabberPlacer, true))
     );
@@ -123,7 +123,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("placeConeHigh", 
     new SequentialCommandGroup(
       // Sucks the cone into the backstop
-      new SetGrabberMotor(grabberPlacer, 6, 24).withTimeout(2.0),
+      new SetGrabberMotor(grabberPlacer, 6, 26).withTimeout(2.0),
       new ExtendElevatorToPosition(elevator, pivot, 1.69),
       // Places cone onto peg.
       new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(0.15),

@@ -151,7 +151,7 @@ public class RobotContainer {
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
     //controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6, 4, 4, 0).withTimeout(3));
     //controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
-    controller.back().whileTrue(new AutoBalance(drivetrain));
+    //controller.back().whileTrue(new AutoBalance(drivetrain));
     // buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
 
     inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
@@ -172,6 +172,7 @@ public class RobotContainer {
 
     // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
+    controller.x().onTrue(new InstantCommand(drivetrain::setPoseToVisionEstimate));
 
     // intake cone
     controller.rightTrigger().and(inConeMode)
@@ -224,8 +225,6 @@ public class RobotContainer {
       new MoveElevatorToPosition(elevator, 0).asProxy()
     );
     
-    controller.x().whileTrue(new InstantCommand(intake::extendIntake, intake)
-      .andThen(new ShuffleboardRunWheelsAtVolt(conveyor)));
     // hand off cone from indexer to grabber
     controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
     controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
