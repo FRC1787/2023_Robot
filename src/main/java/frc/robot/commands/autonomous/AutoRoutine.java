@@ -170,7 +170,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     eventMap.put("autoBalance", new AutoBalance(drivetrain));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-      drivetrain::getPoseMeters,
+      drivetrain::getEstimatorPoseMeters,
       drivetrain::setPoseMeters,
       Constants.Swerve.swerveKinematics,
       new PIDConstants(12.0, 0, 0),

@@ -143,12 +143,12 @@ public class Elevator extends SubsystemBase {
       hasBeenHomed = true;
     }
 
-    SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
-    SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
-    SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());
-    SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
+    // SmartDashboard.putNumber("elevator position meters", getElevatorPositionMeters());
+    // SmartDashboard.putNumber("motor encoder position", elevatorMotor.getEncoder().getPosition());
+    // SmartDashboard.putBoolean("elevator limit switch", atLowerLimit());
+    // SmartDashboard.putNumber("elevator speed meters per second", getElevatorVelocityMetersPerSecond());
 
-    SmartDashboard.putNumber("relative encoder position", encoder.getPosition());
-    SmartDashboard.putNumber("relative encoder velocity", encoder.getVelocity());
+    // SmartDashboard.putNumber("relative encoder position", encoder.getPosition());
+    // SmartDashboard.putNumber("relative encoder velocity", encoder.getVelocity());
   }
 }

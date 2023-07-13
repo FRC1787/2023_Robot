@@ -69,7 +69,7 @@ public class GrabberPlacer extends SubsystemBase {
       )
     );
 
-    SmartDashboard.putNumber("amp reading for grabber", getGrabOutputAmps());
-    SmartDashboard.putNumber("unfiltered amp limit", motor.getOutputCurrent());
+    // SmartDashboard.putNumber("amp reading for grabber", getGrabOutputAmps());
+    // SmartDashboard.putNumber("unfiltered amp limit", motor.getOutputCurrent());
   }
 }

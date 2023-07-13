@@ -89,7 +89,7 @@ public class Claw extends SubsystemBase {
       zeroClawEncoder();
     }
 
-    SmartDashboard.putNumber("claw distance", clawMotorEncoder.getPosition());
-    SmartDashboard.putBoolean("claw is back", isClawBack());
+    // SmartDashboard.putNumber("claw distance", clawMotorEncoder.getPosition());
+    // SmartDashboard.putBoolean("claw is back", isClawBack());
   }
 }

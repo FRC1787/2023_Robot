@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.drivetrain.TrackScoringLocation;
 import frc.robot.commands.elevatorGrabber.ElevatorIdle;
 import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
@@ -116,6 +117,7 @@ public class RobotContainer {
     autoChooser.addOption("Simon 3 Piece Barrier + Balance", "Simon 3 Piece Barrier + Balance");
     autoChooser.addOption("Simon 3 Piece Barrier", "Simon 3 Piece Barrier");
     autoChooser.addOption("2 Piece + Balance", "2 Piece + Balance");
+    autoChooser.addOption("Simon 3 Piece Wire Guard", "Simon 3 Piece Wire Guard");
 
 
     
@@ -144,8 +146,6 @@ public class RobotContainer {
     // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
     // stuff we're testing
-    //controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
-    //controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
     // controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
     // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
     //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
@@ -167,12 +167,11 @@ public class RobotContainer {
     coneModeJoystick.onTrue(new InstantCommand(leds::setConeMode));
     cubeModeJoystick.onTrue(new InstantCommand(leds::setCubeMode));
 
-    //controller.a().onTrue((new InstantCommand(indexer::setConeMode)).andThen(new InstantCommand(this::syncCone)));
-    //controller.b().onTrue((new InstantCommand(indexer::setCubeMode)).andThen(new InstantCommand(this::syncCube)));
-
     // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
     controller.x().onTrue(new InstantCommand(drivetrain::setPoseToVisionEstimate));
+    controller.a().whileTrue(new TrackScoringLocation(drivetrain, elevator));
+
 
     // intake cone
     controller.rightTrigger().and(inConeMode)
@@ -247,22 +246,6 @@ public class RobotContainer {
 
     //high cube score
     highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
-
-    //BACKUP CONTROLLER
-    controller.a().and(inConeMode).and(controller.leftBumper())
-    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
-
-    //high cone score
-    controller.b().and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
-
-    //mid cube score
-    controller.a().and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
-
-    //high cube score
-    controller.b().and(inConeMode.negate()).and(controller.leftBumper())
       .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
   }
 

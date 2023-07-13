@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,6 +17,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -37,10 +41,6 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter chassisSpeedsYSlewLimiter;
 
   private SwerveDrivePoseEstimator poseEstimator;
-
-  private double homeGrownPoseX = 0;
-  private double homeGrownPoseY = 0;
-  private Rotation2d homeGrownPoseTheta = Rotation2d.fromDegrees(0);
 
   public Drivetrain() { 
     // Using the USB Port prevents reading of "raw" data, including pitch and roll velocity :(
@@ -76,11 +76,26 @@ public class Drivetrain extends SubsystemBase {
 
     gyro.zeroYaw();
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
+    
+    Matrix<N3, N1> stateStdDevs = new Matrix(Nat.N3(), Nat.N1());
+    //corresponds to x, y, and rotation standard deviations (meters and radians)
+    stateStdDevs.set(0, 0, 0.1);
+    stateStdDevs.set(1, 0, 0.1);
+    stateStdDevs.set(2, 0, 0.1);
+    Matrix<N3, N1> visionStdDevs = new Matrix(Nat.N3(), Nat.N1());
+    //corresponds to x, y, and rotation standard deviations (meters and radians)
+    visionStdDevs.set(0, 0, 0.9);
+    visionStdDevs.set(1, 0, 0.9);
+    visionStdDevs.set(2, 0, 1.7); //vision angle tends to be janky so this is higher
+
+    
     poseEstimator = new SwerveDrivePoseEstimator(
       Constants.Swerve.swerveKinematics,
       getRobotRotation2d(),
       getModulePositions(),
-      new Pose2d(0, 0, new Rotation2d(0))
+      new Pose2d(0, 0, new Rotation2d(0)),
+      stateStdDevs,
+      visionStdDevs
     );
     
     odometryField = new Field2d();
@@ -191,8 +206,8 @@ public class Drivetrain extends SubsystemBase {
     return swerveOdometry.getPoseMeters();
   }
 
-  public Pose2d getHomeGrownPose() {
-    return new Pose2d(homeGrownPoseX, homeGrownPoseY, homeGrownPoseTheta);
+  public Pose2d getEstimatorPoseMeters() {
+    return poseEstimator.getEstimatedPosition();
   }
 
   /**
@@ -215,23 +230,6 @@ public class Drivetrain extends SubsystemBase {
     );
   }
 
-  public void setHomeGrownPose(Pose2d freshPose) {
-    homeGrownPoseX = freshPose.getX();
-    homeGrownPoseY = freshPose.getY();
-
-    // Keeps gyro in sync with desired pose
-    gyro.zeroYaw();
-    gyro.setAngleAdjustment(freshPose.getRotation().getDegrees());
-
-    // Not strictly necessary, but just probably good for debugging:
-    for (int i = 0; i < mSwerveMods.length; i += 1) {
-      mSwerveMods[i].zeroDriveEncoder();
-    }
-
-    // for backwards compatability (because gyro angle and drive encoder counts have changed,
-    // and the wpiLib swerveDriveOdometry needs a prior pose to compute deltas):
-    setPoseMeters(freshPose);
-  }
 
   public void updateOdometry() {
     swerveOdometry.update(getRobotRotation2d(), getModulePositions());
@@ -252,7 +250,7 @@ public class Drivetrain extends SubsystemBase {
       + Math.pow(Vision.getLimelightPose2d().getY() - getPoseMeters().getY(), 2)
     );
 
-    if (Vision.limelightSeesAprilTag() && (limelightOdometryDistance < 1)) {
+    if (Vision.limelightSeesAprilTag() && (limelightOdometryDistance < 0.2)) {
       poseEstimator.addVisionMeasurement(
         Vision.getLimelightPose2d(),
         Timer.getFPGATimestamp() - (Vision.getTotalLatencyMs()/1000.0)
@@ -340,8 +338,6 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     updateOdometry();
 
-    updateHomeGrownPose();
-
     updatePoseEstimator();
 
 
@@ -385,59 +381,6 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-  private void updateHomeGrownPose() {
-    // Step 1: Gather the velocities of each swerve module relative to the robot and split into components.
-    //         Robot Relative velocities will be useful for debugging. Field relative speeds are ultimately
-    //         what we want though.
-    //
-    // moduleAngleRelativeToRobot + robotAngleRelativeToField = moduleAngleRelativeToField
-    //
-    // Maybe Re-Do calculations with ChassisSpeeds object?
-    /*
-    SwerveModule frontLeft = mSwerveMods[0];
-    SwerveModule frontRight = mSwerveMods[1];
-    SwerveModule backLeft = mSwerveMods[2];
-    SwerveModule backRight = mSwerveMods[3];
-    Rotation2d robotAngle = this.getRobotRotation2d();
 
-    double frontLeftSpeed = frontLeft.getState().speedMetersPerSecond;
-    Rotation2d frontLeftAngle = frontLeft.getState().angle;
-    double frontLeftRobotRelativeVX = frontLeftSpeed * frontLeftAngle.getCos();
-    double frontLeftRobotRelativeVY = frontLeftSpeed * frontLeftAngle.getSin();
-    double frontLeftFieldRelativeVX = frontLeftSpeed * frontLeftAngle.rotateBy(robotAngle).getCos();
-    double frontLeftFieldRelativeVY = frontLeftSpeed * frontLeftAngle.rotateBy(robotAngle).getSin();
 
-    double frontRightSpeed = frontRight.getState().speedMetersPerSecond;
-    Rotation2d frontRightAngle = frontRight.getState().angle;
-    double frontRightRobotRelativeVX = frontRightSpeed * frontRightAngle.getCos();
-    double frontRightRobotRelativeVY = frontRightSpeed * frontRightAngle.getSin();
-    double frontRightFieldRelativeVX = frontRightSpeed * frontRightAngle.rotateBy(robotAngle).getCos();
-    double frontRightFieldRelativeVY = frontRightSpeed * frontRightAngle.rotateBy(robotAngle).getSin();
-
-    double backLeftSpeed = backLeft.getState().speedMetersPerSecond;
-    Rotation2d backLeftAngle = backLeft.getState().angle;
-    double backLeftRobotRelativeVX = backLeftSpeed * backLeftAngle.getCos();
-    double backLeftRobotRelativeVY = backLeftSpeed * backLeftAngle.getSin();
-    double backLeftFieldRelativeVX = backLeftSpeed * backLeftAngle.rotateBy(robotAngle).getCos();
-    double backLeftFieldRelativeVY = backLeftSpeed * backLeftAngle.rotateBy(robotAngle).getSin();
-
-    double backRightSpeed = backRight.getState().speedMetersPerSecond;
-    Rotation2d backRightAngle = backRight.getState().angle;
-    double backRightRobotRelativeVX = backRightSpeed * backRightAngle.getCos();
-    double backRightRobotRelativeVY = backRightSpeed * backRightAngle.getSin();
-    double backRightFieldRelativeVX = backRightSpeed * backRightAngle.rotateBy(robotAngle).getCos();
-    double backRightFieldRelativeVY = backRightSpeed * backRightAngle.rotateBy(robotAngle).getSin();
-
-    // Step 2: The position of the center of the robot is the average position of each swerve module (because the robot is square).
-    //         Therefore, the velocity of the center of the robot is the average velocity of each swerve module.
-    double robotVX = (frontLeftFieldRelativeVX + frontRightFieldRelativeVX + backLeftFieldRelativeVX + backRightFieldRelativeVX) / 4.0;
-    double robotVY = (frontLeftFieldRelativeVY + frontRightFieldRelativeVY + backLeftFieldRelativeVY + backRightFieldRelativeVY) / 4.0;
-
-    // Step 3: Integrate robot velocity (using left handed reimann summs) to get robot position
-    //         TODO: use measured deltaT instead of hard coded. hard coded should be good enough for testing proof of concept though.
-    homeGrownPoseX += robotVX * 0.02;
-    homeGrownPoseY += robotVY * 0.02;
-    homeGrownPoseTheta = robotAngle;
-    */
-  }
 }
