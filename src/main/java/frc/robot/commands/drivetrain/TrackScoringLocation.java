@@ -14,22 +14,25 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.Pivot;
 
 public class TrackScoringLocation extends CommandBase {
   
 
   Drivetrain drivetrain;
   Elevator elevator;
+  Pivot pivot;
 
   PIDController anglePID = new PIDController(8, 0, 0);  //(8, 0, 0.3)
-  double targetX = 0.78;
-  double targetY = 2.73;
+  double targetX = 0.80;
+  double targetY = 3.29;
 
 
-  public TrackScoringLocation(Drivetrain drivetrain, Elevator elevator) {
+  public TrackScoringLocation(Drivetrain drivetrain, Pivot pivot, Elevator elevator) {
     this.drivetrain=drivetrain;
     this.elevator=elevator;
-    addRequirements(drivetrain, elevator);
+    this.pivot=pivot;
+    addRequirements(drivetrain, elevator, pivot);
     
     anglePID.enableContinuousInput(-180, 180);
   }
@@ -64,7 +67,9 @@ public class TrackScoringLocation extends CommandBase {
   
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    pivot.extendElevator();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -104,6 +109,7 @@ public class TrackScoringLocation extends CommandBase {
 
 
     double distToTargetMeters = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+    elevator.moveElevatorToPosition(distToTargetMeters+0.1); //elevator clamps this if it is too high
 
 
 
@@ -111,7 +117,8 @@ public class TrackScoringLocation extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

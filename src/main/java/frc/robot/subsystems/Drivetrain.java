@@ -84,9 +84,9 @@ public class Drivetrain extends SubsystemBase {
     stateStdDevs.set(2, 0, 0.1);
     Matrix<N3, N1> visionStdDevs = new Matrix(Nat.N3(), Nat.N1());
     //corresponds to x, y, and rotation standard deviations (meters and radians)
-    visionStdDevs.set(0, 0, 0.9);
-    visionStdDevs.set(1, 0, 0.9);
-    visionStdDevs.set(2, 0, 1.7); //vision angle tends to be janky so this is higher
+    visionStdDevs.set(0, 0, 0.6);
+    visionStdDevs.set(1, 0, 0.6);
+    visionStdDevs.set(2, 0, 1.3); //vision angle tends to be janky so this is higher
 
     
     poseEstimator = new SwerveDrivePoseEstimator(

@@ -125,7 +125,7 @@ public class RobotContainer {
     grabberPlacer.setDefaultCommand(new SetGrabberMotor(grabberPlacer, 0.5, 100));
     // Makes sure the claw is homed.
     claw.setDefaultCommand(new MoveClawBack(claw, 1));
-    elevator.setDefaultCommand(new ElevatorIdle(elevator));
+    //elevator.setDefaultCommand(new ElevatorIdle(elevator));
     indexerWalls.setDefaultCommand(new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls));
 
     SmartDashboard.putData(autoChooser);
@@ -170,7 +170,8 @@ public class RobotContainer {
     // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
     controller.x().onTrue(new InstantCommand(drivetrain::setPoseToVisionEstimate));
-    controller.a().whileTrue(new TrackScoringLocation(drivetrain, elevator));
+    controller.a().whileTrue(new TrackScoringLocation(drivetrain, pivot, elevator));
+    controller.a().onFalse(new ScoreGamePiece(elevator, pivot, grabberPlacer, true).asProxy());
 
 
     // intake cone
