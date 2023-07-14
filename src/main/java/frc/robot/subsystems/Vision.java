@@ -16,9 +16,19 @@ public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
 
   private static NetworkTable limelight;
+  private Pose2d meanPoseMeasurement;
+  private double xVarianceMetersSquared;
+  private double yVarianceMetersSquared;
+  private double rVarianceRadiansSquared;
+  private int iteration = 1;
 
   public Vision() {
     limelight = NetworkTableInstance.getDefault().getTable("limelight");
+
+    xVarianceMetersSquared = 0;
+    yVarianceMetersSquared = 0;
+    rVarianceRadiansSquared = 0;
+
   }
 
   public void changePipeline(Constants.Vision.LimelightTarget target) {
@@ -77,9 +87,50 @@ public class Vision extends SubsystemBase {
     else return false;
   }
 
+
+  //look at the stackexchange link below if you want some context for this ugliness
+  //returns variance (units^2) of measurement, given repeated incremental measurements
+  double calculateIterativeVariance(double curVariance, double iterations, double measurement, double prevMean) {
+    return (iterations-2)/(iterations-1)*curVariance*curVariance + 1/iterations*Math.pow(measurement-prevMean, 2);
+  }
+
+  //call this every loop
+  private void updateVisionPoseStdDev(double n) {
+
+
+    //based on this: https://math.stackexchange.com/questions/102978/incremental-computation-of-standard-deviation
+
+    if (meanPoseMeasurement == null) {
+      meanPoseMeasurement = getLimelightPose2d();
+      return;
+    }
+
+    Pose2d curPose = getLimelightPose2d();
+    
+    xVarianceMetersSquared = calculateIterativeVariance(xVarianceMetersSquared, n, curPose.getX(), meanPoseMeasurement.getX());
+    yVarianceMetersSquared = calculateIterativeVariance(yVarianceMetersSquared, n, curPose.getY(), meanPoseMeasurement.getY());
+    rVarianceRadiansSquared = calculateIterativeVariance(rVarianceRadiansSquared, n, curPose.getRotation().getRadians(), meanPoseMeasurement.getRotation().getRadians());
+
+    meanPoseMeasurement = new Pose2d(
+      (meanPoseMeasurement.getX()*(n-1) + curPose.getX())/n,
+      (meanPoseMeasurement.getY()*(n-1) + curPose.getY())/n,
+      new Rotation2d(
+        (meanPoseMeasurement.getRotation().getRadians()*(n-1) + curPose.getRotation().getRadians())/n
+      )
+    );
+  }
+  
+
+  
+
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("apriltag lateral offset", getLateralOffsetMeters(Constants.Vision.LimelightTarget.midTape));
-    // SmartDashboard.putNumber("tarfget distance meters", getTargetDistanceMeters(Constants.Vision.LimelightTarget.midTape));
+    
+    updateVisionPoseStdDev(iteration);
+    iteration++;
+
+    SmartDashboard.putNumber("xStdDev", Math.sqrt(xVarianceMetersSquared));
+    SmartDashboard.putNumber("yStdDev", Math.sqrt(yVarianceMetersSquared));
+    SmartDashboard.putNumber("rStdDev", Math.sqrt(rVarianceRadiansSquared));
   }
 }

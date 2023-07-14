@@ -7,7 +7,9 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -24,15 +26,18 @@ public class TrackScoringLocation extends CommandBase {
   Pivot pivot;
 
   PIDController anglePID = new PIDController(8, 0, 0);  //(8, 0, 0.3)
-  double targetX = 0.80;
-  double targetY = 3.29;
 
+  SendableChooser<Translation2d> positionChooser = new SendableChooser<>();
 
   public TrackScoringLocation(Drivetrain drivetrain, Pivot pivot, Elevator elevator) {
     this.drivetrain=drivetrain;
     this.elevator=elevator;
     this.pivot=pivot;
     addRequirements(drivetrain, elevator, pivot);
+
+    positionChooser.addOption("right cone", new Translation2d(0.8, 3.29));
+    positionChooser.addOption("right cube", new Translation2d(0.78, 2.73));
+    SmartDashboard.putData(positionChooser);
     
     anglePID.enableContinuousInput(-180, 180);
   }
@@ -80,10 +85,14 @@ public class TrackScoringLocation extends CommandBase {
     double controllerY = modifyAxis(-RobotContainer.controller.getLeftY());
 
     Pose2d robotPose = drivetrain.getEstimatorPoseMeters();
-    double deltaX = robotPose.getX()-targetX;
-    double deltaY = robotPose.getY()-targetY;
+    Translation2d targetPos = positionChooser.getSelected();
+
+    double deltaX = robotPose.getX()-targetPos.getX();
+    double deltaY = robotPose.getY()-targetPos.getY();
 
     double atanAngleDeg = Math.toDegrees(Math.atan(deltaX/deltaY));
+
+    //extra math to find exact angle to turn to
     double targetAngleDeg = Math.signum(atanAngleDeg)*(-90) - atanAngleDeg; //this is definitely not the simplest way of doing this but it works
     
     double robotAngleDeg = robotPose.getRotation().getDegrees();
@@ -96,7 +105,7 @@ public class TrackScoringLocation extends CommandBase {
     ChassisSpeeds outputChassisSpeeds = new ChassisSpeeds(
       controllerY*2, //2, since max speed in meters per second while doing chicken head is 2 m/s (slower than default of 4.3)
       controllerX*2,
-      MathUtil.clamp(Math.toRadians(pidOutputDegreesPerSecond), -3, 3) //clamp for safety reasons
+      MathUtil.clamp(Math.toRadians(pidOutputDegreesPerSecond), -3, 3)
     );
 
     outputChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -105,11 +114,10 @@ public class TrackScoringLocation extends CommandBase {
 
     drivetrain.drive(outputChassisSpeeds, true);
 
+
     //elevator position stuff ////////////////////////////////////////////////////////////
-
-
     double distToTargetMeters = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
-    elevator.moveElevatorToPosition(distToTargetMeters+0.1); //elevator clamps this if it is too high
+    elevator.moveElevatorToPosition((distToTargetMeters)/Math.cos(Math.toRadians(35))); //converts horizontal distance to elevator distance
 
 
 
