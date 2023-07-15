@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems;
 
+import org.opencv.core.Mat;
+
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -81,11 +84,11 @@ public class Drivetrain extends SubsystemBase {
     //corresponds to x, y, and rotation standard deviations (meters and radians)
     stateStdDevs.set(0, 0, 0.1);
     stateStdDevs.set(1, 0, 0.1);
-    stateStdDevs.set(2, 0, 0.1);
+    stateStdDevs.set(2, 0, 0.005);
     Matrix<N3, N1> visionStdDevs = new Matrix(Nat.N3(), Nat.N1());
     //corresponds to x, y, and rotation standard deviations (meters and radians)
-    visionStdDevs.set(0, 0, 0.6);
-    visionStdDevs.set(1, 0, 0.6);
+    visionStdDevs.set(0, 0, 0.03);
+    visionStdDevs.set(1, 0, 0.03);
     visionStdDevs.set(2, 0, 1.3); //vision angle tends to be janky so this is higher
 
     
@@ -250,10 +253,22 @@ public class Drivetrain extends SubsystemBase {
       + Math.pow(Vision.getLimelightPose2d().getY() - getPoseMeters().getY(), 2)
     );
 
-    if (Vision.limelightSeesAprilTag() && (limelightOdometryDistance < 0.2)) {
+
+    //scales standard deviations from lower value to upper value from distance 0 to 2.4 meters away from target
+    double xyStdDevMeters = MathUtil.interpolate(0.005, 0.4, Vision.getLimelightAprilTagDistanceMeters()/2.4);
+    double rStdDevRadians = MathUtil.interpolate(0.01, 1.0, Vision.getLimelightAprilTagDistanceMeters()/2.4);
+
+    Matrix<N3, N1> stdDevs = new Matrix(Nat.N3(), Nat.N1());
+    //corresponds to x, y, and rotation standard deviations (meters and radians)
+    stdDevs.set(0, 0, xyStdDevMeters);
+    stdDevs.set(1, 0, xyStdDevMeters);
+    stdDevs.set(2, 0, rStdDevRadians);
+
+    if (Vision.limelightSeesAprilTag() && (limelightOdometryDistance < 0.3) && Vision.getLimelightAprilTagDistanceMeters() < 2.4) {
       poseEstimator.addVisionMeasurement(
         Vision.getLimelightPose2d(),
-        Timer.getFPGATimestamp() - (Vision.getTotalLatencyMs()/1000.0)
+        Timer.getFPGATimestamp() - (Vision.getTotalLatencyMs()/1000.0),
+        stdDevs
       );
     }
 
@@ -339,7 +354,6 @@ public class Drivetrain extends SubsystemBase {
     updateOdometry();
 
     updatePoseEstimator();
-
 
     SmartDashboard.putNumber("pose x meters", swerveOdometry.getPoseMeters().getX());
     SmartDashboard.putNumber("pose y meters", swerveOdometry.getPoseMeters().getY());

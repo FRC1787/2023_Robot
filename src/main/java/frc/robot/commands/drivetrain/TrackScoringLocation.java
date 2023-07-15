@@ -35,8 +35,8 @@ public class TrackScoringLocation extends CommandBase {
     this.pivot=pivot;
     addRequirements(drivetrain, elevator, pivot);
 
-    positionChooser.addOption("right cone", new Translation2d(0.8, 3.29));
-    positionChooser.addOption("right cube", new Translation2d(0.78, 2.73));
+    positionChooser.addOption("right cone", new Translation2d(0.80, 3.23));
+    positionChooser.addOption("right cube", new Translation2d(0.83, 2.66));
     SmartDashboard.putData(positionChooser);
     
     anglePID.enableContinuousInput(-180, 180);
@@ -80,6 +80,8 @@ public class TrackScoringLocation extends CommandBase {
   @Override
   public void execute() {
 
+    if (positionChooser.getSelected() == null) return;
+
     //drivetrain stuff ////////////////////////////////////////////////////////////////
     double controllerX = modifyAxis(-RobotContainer.controller.getLeftX());
     double controllerY = modifyAxis(-RobotContainer.controller.getLeftY());
@@ -117,7 +119,7 @@ public class TrackScoringLocation extends CommandBase {
 
     //elevator position stuff ////////////////////////////////////////////////////////////
     double distToTargetMeters = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
-    elevator.moveElevatorToPosition((distToTargetMeters)/Math.cos(Math.toRadians(35))); //converts horizontal distance to elevator distance
+    elevator.moveElevatorToPosition((distToTargetMeters)/Math.cos(Math.toRadians(35))-0.15); //converts horizontal distance to elevator distance
 
 
 

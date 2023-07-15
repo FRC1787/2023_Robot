@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,6 +23,8 @@ public class Vision extends SubsystemBase {
   private double rVarianceRadiansSquared;
   private int iteration = 1;
 
+  private Field2d visionField2d;
+
   public Vision() {
     limelight = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -29,6 +32,7 @@ public class Vision extends SubsystemBase {
     yVarianceMetersSquared = 0;
     rVarianceRadiansSquared = 0;
 
+    visionField2d = new Field2d();
   }
 
   public void changePipeline(Constants.Vision.LimelightTarget target) {
@@ -55,6 +59,13 @@ public class Vision extends SubsystemBase {
   }
 
 
+  public static double getLimelightAprilTagDistanceMeters() {
+    double[] defaultValues = {0, 0, 0, 0, 0, 0};
+    //for some reason the first and third values here represent the x and y position of the robot relative to the target
+    double[] limelightPoseArray = limelight.getEntry("botpose_targetspace").getDoubleArray(defaultValues);
+
+    return Math.sqrt(limelightPoseArray[0]*limelightPoseArray[0] + limelightPoseArray[1]*limelightPoseArray[1]);
+  }
 
   //the next three methods are static because drivetrain references them
   //gets pose using limelight 3d tingies
@@ -91,7 +102,7 @@ public class Vision extends SubsystemBase {
   //look at the stackexchange link below if you want some context for this ugliness
   //returns variance (units^2) of measurement, given repeated incremental measurements
   double calculateIterativeVariance(double curVariance, double iterations, double measurement, double prevMean) {
-    return (iterations-2)/(iterations-1)*curVariance*curVariance + 1/iterations*Math.pow(measurement-prevMean, 2);
+    return (iterations-2)/(iterations-1)*curVariance*curVariance + Math.pow(measurement-prevMean, 2)/iterations;
   }
 
   //call this every loop
@@ -121,7 +132,13 @@ public class Vision extends SubsystemBase {
   }
   
 
-  
+  public void resetVisionPoseStdDev() {
+    iteration = 1;
+    xVarianceMetersSquared = 0;
+    yVarianceMetersSquared = 0;
+    rVarianceRadiansSquared = 0;
+    meanPoseMeasurement = null;
+  }
 
   @Override
   public void periodic() {
@@ -132,5 +149,8 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("xStdDev", Math.sqrt(xVarianceMetersSquared));
     SmartDashboard.putNumber("yStdDev", Math.sqrt(yVarianceMetersSquared));
     SmartDashboard.putNumber("rStdDev", Math.sqrt(rVarianceRadiansSquared));
+    
+    visionField2d.setRobotPose(getLimelightPose2d());
+    SmartDashboard.putData(visionField2d);
   }
 }

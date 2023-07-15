@@ -169,9 +169,15 @@ public class RobotContainer {
 
     // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
-    controller.x().onTrue(new InstantCommand(drivetrain::setPoseToVisionEstimate));
-    controller.a().whileTrue(new TrackScoringLocation(drivetrain, pivot, elevator));
-    controller.a().onFalse(new ScoreGamePiece(elevator, pivot, grabberPlacer, true).asProxy());
+    controller.x().onTrue(new InstantCommand(drivetrain::setPoseToVisionEstimate))
+      .onTrue(new InstantCommand(vision::resetVisionPoseStdDev));
+    controller.a().whileTrue(
+      new ParallelCommandGroup(
+        new SetGrabberMotor(grabberPlacer, -0.5, 100),
+        new TrackScoringLocation(drivetrain, pivot, elevator)
+      )
+    );
+    controller.a().onFalse(new ScoreGamePiece(elevator, pivot, grabberPlacer, false).asProxy());
 
 
     // intake cone
