@@ -78,10 +78,10 @@ public class RobotContainer {
   public final Trigger inConeMode = new Trigger(leds::inConeMode);
 
   // BACKUP JOYSTICK
-  private final Trigger highScoreJoystick = new JoystickButton(joystick, 7);
-  private final Trigger midScoreJoystick = new JoystickButton(joystick, 9);
-  private final Trigger coneModeJoystick = new JoystickButton(joystick, 11);
-  private final Trigger cubeModeJoystick = new JoystickButton(joystick, 12);
+  // private final Trigger highScoreJoystick = new JoystickButton(joystick, 7);
+  // private final Trigger midScoreJoystick = new JoystickButton(joystick, 9);
+  // private final Trigger coneModeJoystick = new JoystickButton(joystick, 11);
+  // private final Trigger cubeModeJoystick = new JoystickButton(joystick, 12);
 
   // AUTO
   public final SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -164,8 +164,8 @@ public class RobotContainer {
     // buttonBoard.button(1).onTrue(new InstantCommand(leds::setConeMode));
     // buttonBoard.button(2).onTrue(new InstantCommand(leds::setCubeMode));
 
-    coneModeJoystick.onTrue(new InstantCommand(leds::setConeMode));
-    cubeModeJoystick.onTrue(new InstantCommand(leds::setCubeMode));
+    // coneModeJoystick.onTrue(new InstantCommand(leds::setConeMode));
+    // cubeModeJoystick.onTrue(new InstantCommand(leds::setCubeMode));
 
     // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
@@ -239,21 +239,21 @@ public class RobotContainer {
   }
 
   private void driverConfirmBindings() {  
-    //BACKUP CONTROLLER
-    midScoreJoystick.and(inConeMode).and(controller.leftBumper())
-    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+    // //BACKUP CONTROLLER
+    // midScoreJoystick.and(inConeMode).and(controller.leftBumper())
+    // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
 
-    //high cone score
-    highScoreJoystick.and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+    // //high cone score
+    // highScoreJoystick.and(inConeMode).and(controller.leftBumper())
+    //   .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
 
-    //mid cube score
-    midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+    // //mid cube score
+    // midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
+    //   .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.18)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
-    //high cube score
-    highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+    // //high cube score
+    // highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
+    //   .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
   }
 
   /**

@@ -4,10 +4,16 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.server.PathPlannerServer;
 
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,7 +25,7 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -35,6 +41,22 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     Timer.delay(10); // Ghost Busters! Make sure everything has time to power up before initializing
+    
+    Logger.getInstance().recordMetadata("projectName", "orangeLightning");
+
+    if (isReal()) {
+      Logger.getInstance().addDataReceiver(new WPILOGWriter("/home/lvuser/deploy/logs")); 
+      Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+    }
+    else {
+      setUseTiming(false);
+      String logPath = LogFileUtil.findReplayLog();
+      Logger.getInstance().setReplaySource(new WPILOGReader(logPath));
+    }
+    
+    Logger.getInstance().start();
+    
+    
     m_robotContainer = new RobotContainer();
 
     PathPlannerServer.startServer(5811);

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
 import org.opencv.core.Mat;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -355,17 +356,18 @@ public class Drivetrain extends SubsystemBase {
 
     updatePoseEstimator();
 
-    SmartDashboard.putNumber("pose x meters", swerveOdometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("pose y meters", swerveOdometry.getPoseMeters().getY());
-    SmartDashboard.putNumber("pose rotation degrees", swerveOdometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putData("odometryField", odometryField);
+    Logger.getInstance().recordOutput("drivetrain/poseEstimatorPose", getEstimatorPoseMeters());
+    // SmartDashboard.putNumber("pose x meters", swerveOdometry.getPoseMeters().getX());
+    // SmartDashboard.putNumber("pose y meters", swerveOdometry.getPoseMeters().getY());
+    // SmartDashboard.putNumber("pose rotation degrees", swerveOdometry.getPoseMeters().getRotation().getDegrees());
+    // SmartDashboard.putData("odometryField", odometryField);
 
-    SmartDashboard.putNumber("estimator x meters", poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("estimator y meters", poseEstimator.getEstimatedPosition().getY());
-    SmartDashboard.putNumber("estimator rotation degrees", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-    SmartDashboard.putData("estimatorField", estimatorField);
+    // SmartDashboard.putNumber("estimator x meters", poseEstimator.getEstimatedPosition().getX());
+    // SmartDashboard.putNumber("estimator y meters", poseEstimator.getEstimatedPosition().getY());
+    // SmartDashboard.putNumber("estimator rotation degrees", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+    // SmartDashboard.putData("estimatorField", estimatorField);
 
-    SmartDashboard.putNumber("gyro yaw degrees", getRobotRotation2d().getDegrees());
+    // SmartDashboard.putNumber("gyro yaw degrees", getRobotRotation2d().getDegrees());
     // SmartDashboard.putNumber("pitch degrees", getRobotPitchDegrees());
     // SmartDashboard.putNumber("roll degrees", getRobotRollDegrees());
     // SmartDashboard.putNumber("pitch degrees per second", getRobotPitchDegreesPerSecond());
@@ -391,7 +393,9 @@ public class Drivetrain extends SubsystemBase {
     // SmartDashboard.putNumber("back right velocity", mSwerveMods[3].getState().speedMetersPerSecond);
 
 
-    SmartDashboard.putBoolean("gyro is calibrating", gyro.isCalibrating());
+    // SmartDashboard.putBoolean("gyro is calibrating", gyro.isCalibrating());
+
+
 
   }
 
