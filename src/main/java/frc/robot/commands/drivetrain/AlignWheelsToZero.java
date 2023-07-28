@@ -7,7 +7,7 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.drive.Drivetrain;
 
 public class AlignWheelsToZero extends CommandBase {
   private Drivetrain drivetrain;

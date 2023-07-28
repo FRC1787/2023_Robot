@@ -22,7 +22,6 @@ import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.commands.intake.ShuffleboardRunWheelsAtVolt;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.LEDs;
@@ -32,6 +31,7 @@ import java.util.List;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,6 +42,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.drive.SwerveModuleIO;
+import frc.robot.subsystems.drive.SwerveModuleIOReal;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
@@ -64,7 +67,7 @@ public class RobotContainer {
   public static final Joystick joystick = new Joystick(3);
 
   // SUBSYSTEMS 
-  final Drivetrain drivetrain = new Drivetrain();
+  final Drivetrain drivetrain;
   final Intake intake = new Intake();
   final Conveyor conveyor = new Conveyor();
   final IndexerWalls indexerWalls = new IndexerWalls();
@@ -88,6 +91,43 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    if (RobotBase.isReal()) {
+      drivetrain = new Drivetrain(
+        new SwerveModuleIOReal(
+          Constants.Swerve.FrontLeftSwerveModule.driveMotorID,
+          Constants.Swerve.FrontLeftSwerveModule.steerMotorID,
+          Constants.Swerve.FrontLeftSwerveModule.steerEncoderID,
+          Constants.Swerve.FrontLeftSwerveModule.steerOffset),
+        new SwerveModuleIOReal(
+          Constants.Swerve.FrontRightSwerveModule.driveMotorID,
+          Constants.Swerve.FrontRightSwerveModule.steerMotorID,
+          Constants.Swerve.FrontRightSwerveModule.steerEncoderID,
+          Constants.Swerve.FrontRightSwerveModule.steerOffset),
+        new SwerveModuleIOReal(
+
+          Constants.Swerve.BackLeftSwerveModule.driveMotorID,
+          Constants.Swerve.BackLeftSwerveModule.steerMotorID,
+          Constants.Swerve.BackLeftSwerveModule.steerEncoderID,
+          Constants.Swerve.BackLeftSwerveModule.steerOffset),
+        new SwerveModuleIOReal(
+          Constants.Swerve.BackRightSwerveModule.driveMotorID,
+          Constants.Swerve.BackRightSwerveModule.steerMotorID,
+          Constants.Swerve.BackRightSwerveModule.steerEncoderID,
+          Constants.Swerve.BackRightSwerveModule.steerOffset)
+      );
+    }
+    else {
+      drivetrain = new Drivetrain(
+          new SwerveModuleIO() {},
+          new SwerveModuleIO() {},
+          new SwerveModuleIO() {},
+          new SwerveModuleIO() {}
+        );
+    }
+
+
+
     // Configure the trigger bindings
     configureBindings();
 
