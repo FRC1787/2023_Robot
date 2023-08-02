@@ -11,8 +11,9 @@ import frc.robot.Constants;
 
 /** Add your docs here. */
 public class SwerveModuleIOSim implements SwerveModuleIO {
-    private FlywheelSim angleSim = new FlywheelSim(DCMotor.getNEO(1), 0, 0);
-    private FlywheelSim driveSim = new FlywheelSim(DCMotor.getNEO(1), 0, 0);
+    //TODO: try tuning the rotational inertias
+    private FlywheelSim angleSim = new FlywheelSim(DCMotor.getNEO(1), 1./Constants.Swerve.driveReduction, 0.025);
+    private FlywheelSim driveSim = new FlywheelSim(DCMotor.getNEO(1), 1./Constants.Swerve.steerReduction, 0.004);
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
@@ -20,10 +21,9 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
         driveSim.update(0.02); //TODO: add 0.02 to constants as loop time
 
         //DRIVE MOTOR ----
-        //converts rpm of drive motor into m/s of wheel
+        //converts rpm of wheel into m/s of wheel
         double driveVelocityConversionFactor =  
-            1./60. * Constants.Swerve.driveReduction
-            * Constants.Swerve.wheelCircumferenceMeters;
+            1./60. * Constants.Swerve.wheelCircumferenceMeters;
         
         inputs.driveVelocityMetersPerSecond = 
             driveSim.getAngularVelocityRPM()*driveVelocityConversionFactor;
@@ -35,9 +35,9 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
         
         //ANGLE MOTOR ----
 
-        //converts rpm of angle motor into deg/s of swerve module
+        //converts rpm of module into deg/s of swerve module
         double angleVelocityConversionFactor =
-            Constants.Swerve.steerReduction*360.0/60.0;
+            360.0/60.0;
 
         double angleVelocityDegreesPerSecond = 
             angleSim.getAngularVelocityRPM()*angleVelocityConversionFactor;
