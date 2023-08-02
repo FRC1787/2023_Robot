@@ -44,16 +44,20 @@ public class SwerveModuleIOReal implements SwerveModuleIO {
         configDriveMotor();
     }
 
+    //TODO: i hope this is correct usage of @override? simon pls check
+    @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
         inputs.drivePositionMeters = mDriveEncoder.getPosition();
         inputs.driveVelocityMetersPerSecond = mDriveEncoder.getVelocity();
         inputs.angleAbsolutePositionDegrees = absoluteEncoder.getAbsolutePosition();
     }
 
+    @Override
     public void setDriveVoltage(double volts) {
         mDriveMotor.setVoltage(volts);
     }
 
+    @Override
     public void setAngleVoltage(double volts) {
         mAngleMotor.setVoltage(volts);
     }
@@ -69,7 +73,9 @@ public class SwerveModuleIOReal implements SwerveModuleIO {
         mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
         mAngleMotor.setInverted(Constants.Swerve.angleInvert);
         mAngleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
+        //converts rotations of motor into deg of wheel
         mAngleEncoder.setPositionConversionFactor(Constants.Swerve.steerReduction*360.0);
+        //converts rpm of motor into deg/s of wheel
         mAngleEncoder.setVelocityConversionFactor(Constants.Swerve.steerReduction*360.0/60.0);
         mAngleMotor.burnFlash();
     }

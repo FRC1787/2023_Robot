@@ -59,7 +59,7 @@ public class SwerveModule {
     double originalDegrees = toConstrain.angle.getDegrees();
     // Start by assuming there is no need to constrain.
     double constrainedDegrees = originalDegrees;
-    if (originalDegrees < -180 || originalDegrees > 180) {
+    if (originalDegrees < -180 || originalDegrees > 180) { //TODO: is this if statement necessary???
       // Constrain angle if necessary.
       constrainedDegrees = MathUtil.inputModulus(originalDegrees, -180, 180);
     }
