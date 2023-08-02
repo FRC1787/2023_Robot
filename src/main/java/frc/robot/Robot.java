@@ -42,13 +42,17 @@ public class Robot extends LoggedRobot {
     // autonomous chooser on the dashboard.
     Timer.delay(10); // Ghost Busters! Make sure everything has time to power up before initializing
     
-    Logger.getInstance().recordMetadata("projectName", "orangeLightning");
+    Logger.getInstance().recordMetadata("projectName", "2023Robot");
 
-    if (isReal()) {
+    
+    if (isReal()) { //real
       Logger.getInstance().addDataReceiver(new WPILOGWriter("/home/lvuser/deploy/logs")); 
-      Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      Logger.getInstance().addDataReceiver(new NT4Publisher());
     }
-    else {
+    else if (isSimulation()) { //simulation
+      Logger.getInstance().addDataReceiver(new NT4Publisher());
+    }
+    else { //replaying
       setUseTiming(false);
       String logPath = LogFileUtil.findReplayLog();
       Logger.getInstance().setReplaySource(new WPILOGReader(logPath));
