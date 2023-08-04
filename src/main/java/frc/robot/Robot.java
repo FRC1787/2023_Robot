@@ -40,7 +40,8 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    Timer.delay(10); // Ghost Busters! Make sure everything has time to power up before initializing
+
+    if (isReal()) Timer.delay(10); // Ghost Busters! Make sure everything has time to power up before initializing
     
     Logger.getInstance().recordMetadata("projectName", "2023Robot");
 

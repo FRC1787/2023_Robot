@@ -279,6 +279,8 @@ public class Drivetrain extends SubsystemBase {
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxAchievableVelocityMetersPerSecond);
 
+    Logger.getInstance().recordOutput("drivetrain/desiredSwerveModuleStates", swerveModuleStates);
+
     if (closedLoop)
       setModuleStatesClosedLoop(swerveModuleStates);
 
@@ -340,43 +342,14 @@ public class Drivetrain extends SubsystemBase {
     updatePoseEstimator();
 
     Logger.getInstance().recordOutput("drivetrain/poseEstimatorPose", getEstimatorPoseMeters());
-    // SmartDashboard.putNumber("pose x meters", swerveOdometry.getPoseMeters().getX());
-    // SmartDashboard.putNumber("pose y meters", swerveOdometry.getPoseMeters().getY());
-    // SmartDashboard.putNumber("pose rotation degrees", swerveOdometry.getPoseMeters().getRotation().getDegrees());
-    // SmartDashboard.putData("odometryField", odometryField);
-
-    // SmartDashboard.putNumber("estimator x meters", poseEstimator.getEstimatedPosition().getX());
-    // SmartDashboard.putNumber("estimator y meters", poseEstimator.getEstimatedPosition().getY());
-    // SmartDashboard.putNumber("estimator rotation degrees", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
-    // SmartDashboard.putData("estimatorField", estimatorField);
-
-    // SmartDashboard.putNumber("gyro yaw degrees", getRobotRotation2d().getDegrees());
-    // SmartDashboard.putNumber("pitch degrees", getRobotPitchDegrees());
-    // SmartDashboard.putNumber("roll degrees", getRobotRollDegrees());
-    // SmartDashboard.putNumber("pitch degrees per second", getRobotPitchDegreesPerSecond());
-    // SmartDashboard.putNumber("roll degrees per second", getRobotRollDegreesPerSecond());
-
-    // SmartDashboard.putNumber("DesiredChassisSpeedsXMetersPerSecond", desiredChassisSpeeds.vxMetersPerSecond);
-    // SmartDashboard.putNumber("DesiredChassisSpeedsYMetersPerSecond", desiredChassisSpeeds.vyMetersPerSecond);
-    // SmartDashboard.putNumber("DesiredChassisSpeedsRotationRadiansPerSecond", desiredChassisSpeeds.omegaRadiansPerSecond);
-
-    // SmartDashboard.putNumber("front left distance meters", mSwerveMods[0].getPosition().distanceMeters);
-    // SmartDashboard.putNumber("front right distance meters", mSwerveMods[1].getPosition().distanceMeters);
-    // SmartDashboard.putNumber("back left distance meters", mSwerveMods[2].getPosition().distanceMeters);
-    // SmartDashboard.putNumber("back right distance meters", mSwerveMods[3].getPosition().distanceMeters);
-  
-    // SmartDashboard.putNumber("front left degrees", mSwerveMods[0].getPosition().angle.getDegrees());
-    // SmartDashboard.putNumber("front right degrees", mSwerveMods[1].getPosition().angle.getDegrees());
-    // SmartDashboard.putNumber("back left degrees", mSwerveMods[2].getPosition().angle.getDegrees());
-    // SmartDashboard.putNumber("back right degrees", mSwerveMods[3].getPosition().angle.getDegrees());
-    
-    // SmartDashboard.putNumber("front left velocity", mSwerveMods[0].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("front right velocity", mSwerveMods[1].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("back left velocity", mSwerveMods[2].getState().speedMetersPerSecond);
-    // SmartDashboard.putNumber("back right velocity", mSwerveMods[3].getState().speedMetersPerSecond);
-
-
-    // SmartDashboard.putBoolean("gyro is calibrating", gyro.isCalibrating());
+    Logger.getInstance().recordOutput(
+      "drivetrain/swerveModuleStates",
+      new SwerveModuleState[] {
+        mSwerveMods[0].getState(),
+        mSwerveMods[1].getState(),
+        mSwerveMods[2].getState(),
+        mSwerveMods[3].getState()
+    });
 
 
 

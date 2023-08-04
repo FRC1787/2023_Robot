@@ -45,6 +45,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.SwerveModuleIOReal;
+import frc.robot.subsystems.drive.SwerveModuleIOSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.elevator.Pivot;
@@ -63,8 +64,8 @@ public class RobotContainer {
 
   // CONTROLLERS
   public static final CommandXboxController controller = new CommandXboxController(0);
-  public static final CommandXboxController backupController = new CommandXboxController(1);
-  public static final Joystick joystick = new Joystick(3);
+  // public static final CommandXboxController backupController = new CommandXboxController(1);
+  // public static final Joystick joystick = new Joystick(3);
 
   // SUBSYSTEMS 
   final Drivetrain drivetrain;
@@ -105,7 +106,6 @@ public class RobotContainer {
           Constants.Swerve.FrontRightSwerveModule.steerEncoderID,
           Constants.Swerve.FrontRightSwerveModule.steerOffset),
         new SwerveModuleIOReal(
-
           Constants.Swerve.BackLeftSwerveModule.driveMotorID,
           Constants.Swerve.BackLeftSwerveModule.steerMotorID,
           Constants.Swerve.BackLeftSwerveModule.steerEncoderID,
@@ -117,7 +117,14 @@ public class RobotContainer {
           Constants.Swerve.BackRightSwerveModule.steerOffset)
       );
     }
-    else {
+    else if (RobotBase.isSimulation()) {
+      drivetrain = new Drivetrain(
+        new SwerveModuleIOSim(), 
+        new SwerveModuleIOSim(),
+        new SwerveModuleIOSim(),
+        new SwerveModuleIOSim());
+    }
+    else { //TODO: check if this is necessary for replays? it might not be
       drivetrain = new Drivetrain(
           new SwerveModuleIO() {},
           new SwerveModuleIO() {},

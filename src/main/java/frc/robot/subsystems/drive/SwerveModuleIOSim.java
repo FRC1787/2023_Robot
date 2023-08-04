@@ -11,9 +11,9 @@ import frc.robot.Constants;
 
 /** Add your docs here. */
 public class SwerveModuleIOSim implements SwerveModuleIO {
-    //TODO: try tuning the rotational inertias
-    private FlywheelSim angleSim = new FlywheelSim(DCMotor.getNEO(1), 1./Constants.Swerve.driveReduction, 0.025);
-    private FlywheelSim driveSim = new FlywheelSim(DCMotor.getNEO(1), 1./Constants.Swerve.steerReduction, 0.004);
+    //TODO: fiddle around with rotational inertias for more realism (try increasing drive rotational inertia)
+    private FlywheelSim angleSim = new FlywheelSim(DCMotor.getNEO(1), 1./Constants.Swerve.steerReduction, 0.025);
+    private FlywheelSim driveSim = new FlywheelSim(DCMotor.getNEO(1), 1./Constants.Swerve.driveReduction, 0.004);
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
@@ -43,8 +43,9 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
             angleSim.getAngularVelocityRPM()*angleVelocityConversionFactor;
 
         //calculate module angle from (angular velocity)*dt, then mod to keep within -180 and 180
-        inputs.angleAbsolutePositionDegrees =
-            MathUtil.inputModulus(angleVelocityDegreesPerSecond*0.02, -180, 180);
+        inputs.angleAbsolutePositionDegrees += angleVelocityDegreesPerSecond*0.02;
+        inputs.angleAbsolutePositionDegrees = 
+            MathUtil.inputModulus(inputs.angleAbsolutePositionDegrees, -180, 180);
 
     }
 
