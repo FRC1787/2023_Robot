@@ -4,12 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.commands.autonomous.AutoBalance;
 import frc.robot.commands.autonomous.AutoRoutine;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.TrackScoringLocation;
-import frc.robot.commands.elevatorGrabber.ElevatorIdle;
-import frc.robot.commands.elevatorGrabber.ExtendElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.elevatorGrabber.PickUpCone;
 import frc.robot.commands.elevatorGrabber.PickUpCube;
@@ -21,7 +18,6 @@ import frc.robot.commands.intake.BowlCube;
 import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
-import frc.robot.commands.intake.ShuffleboardRunWheelsAtVolt;
 import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.LEDs;
@@ -30,8 +26,8 @@ import java.util.List;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,10 +35,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drivetrain;
+import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroIOReal;
+import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.SwerveModuleIOReal;
 import frc.robot.subsystems.drive.SwerveModuleIOSim;
@@ -95,6 +93,7 @@ public class RobotContainer {
 
     if (RobotBase.isReal()) {
       drivetrain = new Drivetrain(
+        new GyroIOReal(Port.kUSB),
         new SwerveModuleIOReal(
           Constants.Swerve.FrontLeftSwerveModule.driveMotorID,
           Constants.Swerve.FrontLeftSwerveModule.steerMotorID,
@@ -119,6 +118,7 @@ public class RobotContainer {
     }
     else if (RobotBase.isSimulation()) {
       drivetrain = new Drivetrain(
+        new GyroIOSim(),
         new SwerveModuleIOSim(), 
         new SwerveModuleIOSim(),
         new SwerveModuleIOSim(),
@@ -126,6 +126,7 @@ public class RobotContainer {
     }
     else { //TODO: check if this is necessary for replays? it might not be
       drivetrain = new Drivetrain(
+          new GyroIO() {},
           new SwerveModuleIO() {},
           new SwerveModuleIO() {},
           new SwerveModuleIO() {},

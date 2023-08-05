@@ -5,9 +5,6 @@
 package frc.robot.subsystems.drive;
 
 import org.littletonrobotics.junction.Logger;
-import org.opencv.core.Mat;
-
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
@@ -24,18 +21,19 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Vision;
 
 public class Drivetrain extends SubsystemBase {
 
-  private final AHRS gyro; // NavX connected over MXP
-  private SwerveDriveOdometry swerveOdometry;
+  private GyroIO gyroIO;
+  private GyroIOInputsAutoLogged gyroInputs;
   private SwerveModule[] mSwerveMods;
+
+  private SwerveDriveOdometry swerveOdometry;
+  private SwerveDrivePoseEstimator poseEstimator;
 
   private Field2d odometryField;
   private Field2d estimatorField;
@@ -43,21 +41,20 @@ public class Drivetrain extends SubsystemBase {
   private SlewRateLimiter chassisSpeedsXSlewLimiter;
   private SlewRateLimiter chassisSpeedsYSlewLimiter;
 
-  private SwerveDrivePoseEstimator poseEstimator;
 
-  public Drivetrain(SwerveModuleIO fl, SwerveModuleIO fr, SwerveModuleIO bl, SwerveModuleIO br) { 
+  public Drivetrain(GyroIO gyroIO, SwerveModuleIO flIO, SwerveModuleIO frIO, SwerveModuleIO blIO, SwerveModuleIO brIO) { 
     
-    // Using the USB Port prevents reading of "raw" data, including pitch and roll velocity :(
-    gyro = new AHRS(Port.kUSB);
+    this.gyroIO = gyroIO;
+    gyroInputs = new GyroIOInputsAutoLogged();
 
     mSwerveMods = new SwerveModule[] {
-      new SwerveModule(fl, 0),
-      new SwerveModule(fr, 1),
-      new SwerveModule(bl, 2),
-      new SwerveModule(br, 3)
+      new SwerveModule(flIO, 0),
+      new SwerveModule(frIO, 1),
+      new SwerveModule(blIO, 2),
+      new SwerveModule(brIO, 3)
     };
 
-    gyro.zeroYaw();
+    gyroIO.zeroYaw();
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getRobotRotation2d(), getModulePositions());
     
     Matrix<N3, N1> stateStdDevs = new Matrix(Nat.N3(), Nat.N1());
@@ -67,7 +64,7 @@ public class Drivetrain extends SubsystemBase {
     stateStdDevs.set(2, 0, 0.005);
     Matrix<N3, N1> visionStdDevs = new Matrix(Nat.N3(), Nat.N1());
     //corresponds to x, y, and rotation standard deviations (meters and radians)
-    //these values are automatically retuned depending on distance
+    //these values are automatically recalculated periodically depending on distance
     visionStdDevs.set(0, 0, 0.03);
     visionStdDevs.set(1, 0, 0.03);
     visionStdDevs.set(2, 0, 1.3);
@@ -99,8 +96,8 @@ public class Drivetrain extends SubsystemBase {
    * This can be used to set the direction the robot is currently facing to the 'forwards' direction.
    */
   public void zeroYaw() {
-    gyro.zeroYaw(); //this is the exact same thing as saying gyro.reset();
-    gyro.setAngleAdjustment(0);
+    gyroIO.zeroYaw(); //this is the exact same thing as saying gyro.reset();
+    gyroIO.setAngleAdjustment(0);
 
     setPoseMeters(
       new Pose2d(
@@ -110,14 +107,16 @@ public class Drivetrain extends SubsystemBase {
     );
   }
 
+
+  //TODO: ASSUMING THE CODE REFACTOR, rather than setting angle adjustment (cringe, navx api stinks), you can just setPoseMeters with a rotation of 180 degrees, and it accomplishes the same thing
   /**
    * Sets the gyroscope angle adjustment to be 180.
    * <br>
    * In other words, if the robot is facing towards the grid, calling this method will field orient it.
    */
   public void setGyroscope180() {
-    gyro.zeroYaw();
-    gyro.setAngleAdjustment(180);
+    gyroIO.zeroYaw();
+    gyroIO.setAngleAdjustment(180);
 
     setPoseMeters(
       new Pose2d(
@@ -129,12 +128,13 @@ public class Drivetrain extends SubsystemBase {
     
   }
 
+  //TODO: consider refactoring code to separate pose rotation and gyro rotation. 
   /**
    * Gets the angle of the robot measured by the gyroscope as a Rotation2d (continuous).
    * @return rotation2d - this angle will be counterclockwise positive.
    */
   public Rotation2d getRobotRotation2d() {
-    return gyro.getRotation2d();
+    return Rotation2d.fromDegrees(gyroInputs.robotYawDegrees);
   }
 
   /**
@@ -144,8 +144,7 @@ public class Drivetrain extends SubsystemBase {
    * @return The current pitch value in degrees (-180 to 180). This value will be positive if the front of the robot is raised.
    */
   public double getRobotPitchDegrees() {
-    // Since navx is mounted silly and also axis convention this is correct.
-    return gyro.getRoll(); 
+    return gyroInputs.robotPitchDegrees; 
   }
 
   /**
@@ -155,7 +154,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public double getRobotRollDegrees() {
     // Since navx is mounted silly and also axis convention this is correct.
-    return gyro.getPitch();
+    return gyroInputs.robotRollDegrees;
   }
 
   /**
@@ -164,7 +163,7 @@ public class Drivetrain extends SubsystemBase {
    * @return The current pitch speed value in degrees per second. If the front of the robot is being raised, this will return a positive value.
    */
   public double getRobotPitchDegreesPerSecond() {
-    return gyro.getRawGyroY();
+    return gyroInputs.robotPitchDegreesPerSecond;
   }
   
   /**
@@ -173,7 +172,7 @@ public class Drivetrain extends SubsystemBase {
    * @return The current roll speed value in degrees per second. If the left side of the robot is being raised, this will return a positive value.
    */
   public double getRobotRollDegreesPerSecond() {
-    return gyro.getRawGyroX();
+    return gyroInputs.robotRollDegreesPerSecond;
   }
 
   // POSE, FIELD, ODOMETRY
@@ -335,6 +334,10 @@ public class Drivetrain extends SubsystemBase {
 
     for (SwerveModule mod : mSwerveMods) {
       mod.periodic();
+    }
+    gyroIO.updateInputs(gyroInputs);
+    if (gyroIO instanceof GyroIOSim) { //calculates sim gyro
+      gyroIO.calculateYaw(getModulePositions());
     }
 
     updateOdometry();
