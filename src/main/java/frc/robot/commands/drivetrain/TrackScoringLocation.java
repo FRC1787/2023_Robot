@@ -16,24 +16,21 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.Pivot;
 
 public class TrackScoringLocation extends CommandBase {
   
 
   Drivetrain drivetrain;
   Elevator elevator;
-  Pivot pivot;
 
   PIDController anglePID = new PIDController(8, 0, 0);  //(8, 0, 0.3)
 
   SendableChooser<Translation2d> positionChooser = new SendableChooser<>();
 
-  public TrackScoringLocation(Drivetrain drivetrain, Pivot pivot, Elevator elevator) {
+  public TrackScoringLocation(Drivetrain drivetrain, Elevator elevator) {
     this.drivetrain=drivetrain;
     this.elevator=elevator;
-    this.pivot=pivot;
-    addRequirements(drivetrain, elevator, pivot);
+    addRequirements(drivetrain, elevator);
 
     positionChooser.addOption("right cone", new Translation2d(0.80, 3.23));
     positionChooser.addOption("right cube", new Translation2d(0.83, 2.66));
@@ -73,7 +70,7 @@ public class TrackScoringLocation extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pivot.extendElevator();
+    elevator.extendElevator();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

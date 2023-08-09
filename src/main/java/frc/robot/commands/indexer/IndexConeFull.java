@@ -12,7 +12,6 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.commands.intake.PulseConveyor;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Claw;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
@@ -24,13 +23,13 @@ import frc.robot.subsystems.intakeIndex.Intake;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IndexConeFull extends SequentialCommandGroup {
   /** Creates a new IndexConeFull. */
-  public IndexConeFull(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw, Elevator elevator, Pivot pivot) {
+  public IndexConeFull(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw, Elevator elevator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
     addCommands(
       // Agitates the cone so it will be aligned facing either forwards or backwards in the indexer.
-      new InstantCommand(pivot::retractElevator, pivot),
+      new InstantCommand(elevator::retractElevator),
       new MoveClawBack(claw, -3),
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevator, 0.4).asProxy(), // https://www.chiefdelphi.com/t/sequential-command-group-default-command-issue/430845

@@ -46,7 +46,6 @@ import frc.robot.subsystems.drive.SwerveModuleIOReal;
 import frc.robot.subsystems.drive.SwerveModuleIOSim;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
-import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Claw;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
@@ -74,7 +73,6 @@ public class RobotContainer {
   final Vision vision = new Vision();
   final Elevator elevator = new Elevator();
   final GrabberPlacer grabberPlacer = new GrabberPlacer();
-  final Pivot pivot = new Pivot();
   final LEDs leds = new LEDs();
 
   public final Trigger inConeMode = new Trigger(leds::inConeMode);
@@ -222,10 +220,10 @@ public class RobotContainer {
     controller.a().whileTrue(
       new ParallelCommandGroup(
         new SetGrabberMotor(grabberPlacer, -0.5, 100),
-        new TrackScoringLocation(drivetrain, pivot, elevator)
+        new TrackScoringLocation(drivetrain, elevator)
       )
     );
-    controller.a().onFalse(new ScoreGamePiece(elevator, pivot, grabberPlacer, false).asProxy());
+    controller.a().onFalse(new ScoreGamePiece(elevator, grabberPlacer, false).asProxy());
 
 
     // intake cone
@@ -233,7 +231,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(claw, 3.6),
-          new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6),
+          new IntakeGamePieces(intake, conveyor, indexerWalls, elevator, -4, -12, -6),
           new MoveElevatorToPosition(elevator, 0).asProxy())
       );
 
@@ -242,7 +240,7 @@ public class RobotContainer {
       .whileTrue(
         new ParallelCommandGroup(
           new MoveClawBack(claw, 3.6),
-          new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6),
+          new IntakeGamePieces(intake, conveyor, indexerWalls, elevator, -3, -5, -6),
           new MoveElevatorToPosition(elevator, 0).asProxy())
       );
 
@@ -251,21 +249,21 @@ public class RobotContainer {
     controller.rightTrigger().and(inConeMode)
       .onFalse(
         new MoveConveyor(conveyor, -9).withTimeout(0.50) // <- if something breaks with the intake to index sequence then this is why
-        .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
+        .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator))
       );
 
     //get cube in grabber upon intake release
     controller.rightTrigger().and(inConeMode.negate())
       .onFalse(
         new WaitCommand(0.5).andThen(
-        new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls))
+        new PickUpCube(intake, conveyor, elevator, grabberPlacer, indexerWalls))
       );
     
     //eject cone
     controller.leftTrigger().and(inConeMode).whileTrue(
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevator, .4).asProxy(),
-        new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)
+        new EjectGamePiece(intake, elevator, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)
       )
     ).onFalse(
       new InstantCommand(intake::retractIntake).andThen(
@@ -280,8 +278,8 @@ public class RobotContainer {
     );
     
     // hand off cone from indexer to grabber
-    controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
-    controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
+    controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, grabberPlacer, intake, conveyor, indexerWalls, claw));
+    controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, grabberPlacer, indexerWalls));
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
     this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
   }
@@ -312,6 +310,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // we always start facing towards the alliance station, so our inital angle should always be 180
     return new InstantCommand(drivetrain::setGyroscope180).andThen(
-    new AutoRoutine(pathGroup, drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor));
+    new AutoRoutine(pathGroup, drivetrain, vision, grabberPlacer, elevator, indexerWalls, claw, intake, conveyor));
   }
 }
