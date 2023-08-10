@@ -9,7 +9,6 @@ import frc.robot.commands.indexer.MoveClawBack;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
-import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Claw;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
@@ -23,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCone extends SequentialCommandGroup {
   /** Creates a new PickUpCone. */
-  public PickUpCone(Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw) {
+  public PickUpCone(Elevator elevator, GrabberPlacer grabberPlacer, Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, Claw claw) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     
@@ -33,7 +32,7 @@ public class PickUpCone extends SequentialCommandGroup {
     addCommands(
       // Moves all subsystems into the grabbing position.
       new InstantCommand(indexerWalls::closeIndexerWalls, indexerWalls),
-      new InstantCommand(pivot::retractElevator, pivot),
+      new InstantCommand(elevator::retractElevator),
       new ParallelCommandGroup(
         new MoveElevatorToPosition(elevator, pickupPosition).asProxy(),
         new MoveClawBack(claw, -3)

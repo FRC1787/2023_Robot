@@ -5,7 +5,6 @@
 package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -18,7 +17,7 @@ public class ElevatorIOSim implements ElevatorIO {
     MechanismRoot2d root;
     MechanismLigament2d elevator;
 
-    private ElevatorSim elevatorSim;
+    private AngledElevatorSim elevatorSim;
 
 
     public ElevatorIOSim() {
@@ -27,17 +26,28 @@ public class ElevatorIOSim implements ElevatorIO {
         elevator = root.append(new MechanismLigament2d("elevator", 0.1, 30));
 
         elevatorSim = 
-            new ElevatorSim(
+            new AngledElevatorSim(
                 DCMotor.getNEO(1),
                 1.0/Constants.ElevatorGrabber.elevatorReduction,
                 3,
                 Constants.ElevatorGrabber.drumRadius,
                 0,
                 Constants.ElevatorGrabber.elevatorMaxPositionMeters,
-                false
+                false,
+                60
             );
 
     }
+
+    @Override
+    public void extendElevator() {
+        elevatorSim.setAngleDegrees(30);
+    };
+
+    @Override
+    public void retractElevator() {
+        elevatorSim.setAngleDegrees(60);
+    };
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
@@ -46,8 +56,8 @@ public class ElevatorIOSim implements ElevatorIO {
         inputs.elevatorPositionMeters = elevatorSim.getPositionMeters();
         inputs.elevatorVelocityMetersPerSecond = elevatorSim.getVelocityMetersPerSecond();
 
-        inputs.atLowerLimit = elevatorSim.getPositionMeters() <= 0;
-        inputs.atUpperLimit = elevatorSim.getPositionMeters() >= Constants.ElevatorGrabber.elevatorMaxPositionMeters;
+        inputs.atLowerLimit = elevatorSim.hasHitLowerLimit();
+        inputs.atUpperLimit = elevatorSim.hasHitUpperLimit();
     };
 
 

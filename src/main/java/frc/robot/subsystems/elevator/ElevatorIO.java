@@ -19,6 +19,11 @@ public interface ElevatorIO {
 
     public default void updateInputs(ElevatorIOInputs inputs) {};
 
+    public default void extendElevator() {};
+    public default void retractElevator() {};
+
     public default void setElevatorMotorVoltage(double volts) {};
+
+    public default void zeroEncoder() {};
     
 }

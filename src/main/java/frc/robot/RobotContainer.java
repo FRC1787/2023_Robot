@@ -45,6 +45,9 @@ import frc.robot.subsystems.drive.SwerveModuleIO;
 import frc.robot.subsystems.drive.SwerveModuleIOReal;
 import frc.robot.subsystems.drive.SwerveModuleIOSim;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOReal;
+import frc.robot.subsystems.elevator.ElevatorIOSim;
 import frc.robot.subsystems.elevator.GrabberPlacer;
 import frc.robot.subsystems.intakeIndex.Claw;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
@@ -65,15 +68,15 @@ public class RobotContainer {
   // public static final Joystick joystick = new Joystick(3);
 
   // SUBSYSTEMS 
-  final Drivetrain drivetrain;
-  final Intake intake = new Intake();
-  final Conveyor conveyor = new Conveyor();
-  final IndexerWalls indexerWalls = new IndexerWalls();
-  final Claw claw = new Claw();
-  final Vision vision = new Vision();
-  final Elevator elevator = new Elevator();
-  final GrabberPlacer grabberPlacer = new GrabberPlacer();
-  final LEDs leds = new LEDs();
+  public final Drivetrain drivetrain;
+  public final Elevator elevator;
+  public final Intake intake = new Intake();
+  public final Conveyor conveyor = new Conveyor();
+  public final IndexerWalls indexerWalls = new IndexerWalls();
+  public final Claw claw = new Claw();
+  public final Vision vision = new Vision();
+  public final GrabberPlacer grabberPlacer = new GrabberPlacer();
+  public final LEDs leds = new LEDs();
 
   public final Trigger inConeMode = new Trigger(leds::inConeMode);
 
@@ -113,6 +116,8 @@ public class RobotContainer {
           Constants.Swerve.BackRightSwerveModule.steerEncoderID,
           Constants.Swerve.BackRightSwerveModule.steerOffset)
       );
+
+      elevator = new Elevator(new ElevatorIOReal());
     }
     else if (RobotBase.isSimulation()) {
       drivetrain = new Drivetrain(
@@ -121,8 +126,10 @@ public class RobotContainer {
         new SwerveModuleIOSim(),
         new SwerveModuleIOSim(),
         new SwerveModuleIOSim());
+      
+      elevator = new Elevator(new ElevatorIOSim());
     }
-    else { //TODO: check if this is necessary for replays? it might not be
+    else { //TODO: check if this is necessary for replays? im pretty sure it is
       drivetrain = new Drivetrain(
           new GyroIO() {},
           new SwerveModuleIO() {},
@@ -130,6 +137,8 @@ public class RobotContainer {
           new SwerveModuleIO() {},
           new SwerveModuleIO() {}
         );
+
+      elevator = new Elevator(new ElevatorIO() {});
     }
 
 

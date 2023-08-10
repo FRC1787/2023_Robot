@@ -35,7 +35,6 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
-import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Claw;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
@@ -49,8 +48,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       Drivetrain drivetrain, 
       Vision vision, 
       GrabberPlacer grabberPlacer, 
-      Elevator elevator, 
-      Pivot pivot, 
+      Elevator elevator,
       IndexerWalls indexerWalls, 
       Claw claw,
       Intake intake,
@@ -86,9 +84,9 @@ public class AutoRoutine extends SequentialCommandGroup {
     );
 
   // INDEXING //////////////////////////////////////
-    eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
-    eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
-    eventMap.put("pickUpCone", new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
+    eventMap.put("indexCone", new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator));
+    eventMap.put("indexCube", new PickUpCube(intake, conveyor, elevator, grabberPlacer, indexerWalls));
+    eventMap.put("pickUpCone", new PickUpCone(elevator, grabberPlacer, intake, conveyor, indexerWalls, claw));
 
 
   // HIGH/MID SCORING ////////////////////////
@@ -97,9 +95,9 @@ public class AutoRoutine extends SequentialCommandGroup {
       new InstantCommand(indexerWalls::openIndexerWalls).andThen(
         new ParallelRaceGroup(
           new SetGrabberMotor(grabberPlacer, -0.75, 100), // apply small holding torque to keep cube in grabber on the way up
-          new ExtendElevatorToPosition(elevator, pivot, 1.6).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
+          new ExtendElevatorToPosition(elevator, 1.6).withTimeout(1.3) //if elevator doesn't reach setpoint in time, score game piece anyways
         ).andThen(
-          new ScoreGamePiece(elevator, pivot, grabberPlacer, false)
+          new ScoreGamePiece(elevator, grabberPlacer, false)
         )
       )
     );
@@ -107,7 +105,7 @@ public class AutoRoutine extends SequentialCommandGroup {
     
     eventMap.put("placeCubeHigh", 
     new SequentialCommandGroup(
-      new ExtendElevatorToPosition(elevator, pivot, 1.6),
+      new ExtendElevatorToPosition(elevator, 1.6),
       new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(.15)
       )
     );
@@ -116,15 +114,15 @@ public class AutoRoutine extends SequentialCommandGroup {
       new SequentialCommandGroup(
         // Sucks the cone into the backstop
         new SetGrabberMotor(grabberPlacer, 6, 26).withTimeout(2.0),
-        new ExtendElevatorToPosition(elevator, pivot, 1.69),
-        new ScoreGamePiece(elevator, pivot, grabberPlacer, true))
+        new ExtendElevatorToPosition(elevator, 1.69),
+        new ScoreGamePiece(elevator, grabberPlacer, true))
     );
 
     eventMap.put("placeConeHigh", 
     new SequentialCommandGroup(
       // Sucks the cone into the backstop
       new SetGrabberMotor(grabberPlacer, 6, 26).withTimeout(2.0),
-      new ExtendElevatorToPosition(elevator, pivot, 1.69),
+      new ExtendElevatorToPosition(elevator, 1.69),
       // Places cone onto peg.
       new SetGrabberMotor(grabberPlacer, -6, 100).withTimeout(0.15),
       // Moves cube hat out of the way so the cone doesn't get pulled back out.
@@ -136,7 +134,7 @@ public class AutoRoutine extends SequentialCommandGroup {
       new ParallelCommandGroup(
         // Resets the elevator and indexer walls to prepare for getting the next game piece.
         new MoveElevatorToPosition(elevator, 0).asProxy(),
-        new InstantCommand(pivot::retractElevator, pivot),
+        new InstantCommand(elevator::retractElevator),
         new InstantCommand(indexerWalls::openIndexerWalls, indexerWalls)
       )
     );

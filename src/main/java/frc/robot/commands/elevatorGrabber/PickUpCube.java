@@ -12,7 +12,6 @@ import frc.robot.commands.indexer.MoveSideBelts;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.GrabberPlacer;
-import frc.robot.subsystems.elevator.Pivot;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 import frc.robot.subsystems.intakeIndex.Intake;
@@ -22,13 +21,13 @@ import frc.robot.subsystems.intakeIndex.Intake;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickUpCube extends SequentialCommandGroup {
   /** Creates a new PickUpCube. */
-  public PickUpCube(Intake intake, Conveyor conveyor, Elevator elevator, Pivot pivot, GrabberPlacer grabberPlacer, IndexerWalls indexerWalls) {
+  public PickUpCube(Intake intake, Conveyor conveyor, Elevator elevator,  GrabberPlacer grabberPlacer, IndexerWalls indexerWalls) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
     addCommands(
       // Moves subsystems into the pickup position.
-      new InstantCommand(pivot::retractElevator, pivot),
+      new InstantCommand(elevator::retractElevator),
       new InstantCommand(indexerWalls::closeIndexerWalls),
       new MoveElevatorToPosition(elevator, 0.0).asProxy(),
 
