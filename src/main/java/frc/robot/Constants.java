@@ -19,9 +19,12 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class GoofyAhhConstants {
-    public static final boolean weWillWin = true;
-    public static final boolean weWillLose = false;
+
+  public static enum LoggerMode {
+    ROBOT_SIM,
+    ROBOT_REAL_LOGGED,
+    ROBOT_REAL,
+    ROBOT_REPLAY
   }
 
   public static final class Swerve {

@@ -17,6 +17,7 @@ import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.LoggerMode;
 import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
 
 /**
@@ -26,11 +27,16 @@ import frc.robot.commands.elevatorGrabber.MoveElevatorToPosition;
  * project.
  */
 public class Robot extends LoggedRobot {
+
+  //turn this true to use the simulator!!
+  public LoggerMode robotMode = LoggerMode.ROBOT_REAL_LOGGED;
+
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
   private String previousPath = "";
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -45,18 +51,22 @@ public class Robot extends LoggedRobot {
     
     Logger.getInstance().recordMetadata("projectName", "2023Robot");
 
-    
-    if (isReal()) { //real
-      Logger.getInstance().addDataReceiver(new WPILOGWriter("/home/lvuser/deploy/logs")); 
-      Logger.getInstance().addDataReceiver(new NT4Publisher());
-    }
-    else if (isSimulation()) { //simulation
-      Logger.getInstance().addDataReceiver(new NT4Publisher());
-    }
-    else { //replaying
-      setUseTiming(false);
-      String logPath = LogFileUtil.findReplayLog();
-      Logger.getInstance().setReplaySource(new WPILOGReader(logPath));
+    switch (robotMode) {
+      case ROBOT_SIM:
+        Logger.getInstance().addDataReceiver(new NT4Publisher());
+        break;
+      case ROBOT_REAL:
+        Logger.getInstance().addDataReceiver(new NT4Publisher());
+        break;
+      case ROBOT_REAL_LOGGED:
+        Logger.getInstance().addDataReceiver(new WPILOGWriter("/home/lvuser/deploy/logs")); 
+        Logger.getInstance().addDataReceiver(new NT4Publisher());
+        break;
+      case ROBOT_REPLAY:
+        setUseTiming(false);
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.getInstance().setReplaySource(new WPILOGReader(logPath));
+        break;
     }
     
     Logger.getInstance().start();

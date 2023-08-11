@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.vision.Vision;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -344,7 +344,8 @@ public class Drivetrain extends SubsystemBase {
 
     updatePoseEstimator();
 
-    Logger.getInstance().recordOutput("drivetrain/poseEstimatorPose", getEstimatorPoseMeters());
+    Logger.getInstance().recordOutput("drivetrain/odometryPose2d", getPoseMeters());
+    Logger.getInstance().recordOutput("drivetrain/poseEstimatorPose2d", getEstimatorPoseMeters());
     Logger.getInstance().recordOutput(
       "drivetrain/swerveModuleStates",
       new SwerveModuleState[] {
@@ -353,6 +354,7 @@ public class Drivetrain extends SubsystemBase {
         mSwerveMods[2].getState(),
         mSwerveMods[3].getState()
     });
+    
 
 
 

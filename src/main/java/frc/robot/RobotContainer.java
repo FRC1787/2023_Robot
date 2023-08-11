@@ -19,6 +19,9 @@ import frc.robot.commands.intake.EjectGamePiece;
 import frc.robot.commands.intake.IntakeGamePieces;
 import frc.robot.commands.intake.MoveConveyor;
 import frc.robot.subsystems.intakeIndex.Intake;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOReal;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.LEDs;
 
@@ -36,7 +39,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.drive.Drivetrain;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOReal;
@@ -70,11 +72,11 @@ public class RobotContainer {
   // SUBSYSTEMS 
   public final Drivetrain drivetrain;
   public final Elevator elevator;
+  public final Vision vision;
   public final Intake intake = new Intake();
   public final Conveyor conveyor = new Conveyor();
   public final IndexerWalls indexerWalls = new IndexerWalls();
   public final Claw claw = new Claw();
-  public final Vision vision = new Vision();
   public final GrabberPlacer grabberPlacer = new GrabberPlacer();
   public final LEDs leds = new LEDs();
 
@@ -118,6 +120,8 @@ public class RobotContainer {
       );
 
       elevator = new Elevator(new ElevatorIOReal());
+
+      vision = new Vision(new VisionIOReal());
     }
     else if (RobotBase.isSimulation()) {
       drivetrain = new Drivetrain(
@@ -128,8 +132,10 @@ public class RobotContainer {
         new SwerveModuleIOSim());
       
       elevator = new Elevator(new ElevatorIOSim());
+
+      vision = new Vision(new VisionIO() {});
     }
-    else { //TODO: check if this is necessary for replays? im pretty sure it is
+    else {
       drivetrain = new Drivetrain(
           new GyroIO() {},
           new SwerveModuleIO() {},
@@ -139,6 +145,8 @@ public class RobotContainer {
         );
 
       elevator = new Elevator(new ElevatorIO() {});
+
+      vision = new Vision(new VisionIO() {});
     }
 
 

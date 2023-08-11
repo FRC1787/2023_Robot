@@ -23,7 +23,7 @@ public class GyroIOReal implements GyroIO {
         //these are correct believe it or not because of navX mounting issues
         inputs.robotPitchDegrees = gyro.getRoll();
         inputs.robotRollDegrees = gyro.getPitch();
-        inputs.robotYawDegrees = gyro.getAngle();
+        inputs.robotYawDegrees = gyro.getRotation2d().getDegrees();
 
         inputs.robotPitchDegreesPerSecond = gyro.getRawGyroY();
         inputs.robotRollDegreesPerSecond = gyro.getRawGyroX();
