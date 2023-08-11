@@ -1,6 +1,8 @@
 {
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/elevator mech2d": "Mechanism2d",
+      "/AdvantageKit/RealOutputs/elevator/mech2d": "Mechanism2d",
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",

@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 /** Add your docs here. */
 public interface ElevatorIO {
+
     @AutoLog
     public class ElevatorIOInputs {
         public boolean atLowerLimit = false;

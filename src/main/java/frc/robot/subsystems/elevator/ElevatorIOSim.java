@@ -13,17 +13,13 @@ import frc.robot.Constants;
 /** Add your docs here. */
 public class ElevatorIOSim implements ElevatorIO {
 
-    Mechanism2d mech;
-    MechanismRoot2d root;
-    MechanismLigament2d elevator;
+
 
     private AngledElevatorSim elevatorSim;
 
 
     public ElevatorIOSim() {
-        mech = new Mechanism2d(1, 1);
-        root = mech.getRoot("hi", 0.35, 0.0);
-        elevator = root.append(new MechanismLigament2d("elevator", 0.1, 30));
+
 
         elevatorSim = 
             new AngledElevatorSim(
@@ -33,7 +29,7 @@ public class ElevatorIOSim implements ElevatorIO {
                 Constants.ElevatorGrabber.drumRadius,
                 0,
                 Constants.ElevatorGrabber.elevatorMaxPositionMeters,
-                false,
+                true,
                 60
             );
 

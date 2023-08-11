@@ -56,7 +56,7 @@ public class AngledElevatorSim extends ElevatorSim {
                 (x, _u) -> {
                   Matrix<N2, N1> xdot = m_plant.getA().times(x).plus(m_plant.getB().times(_u));
                   if (m_simulateGravity) {
-                    double gravAccel = -9.8/Math.sin(Math.toRadians(m_angleDegrees));
+                    double gravAccel = -9.8*Math.sin(Math.toRadians(m_angleDegrees));
 
                     xdot = xdot.plus(VecBuilder.fill(0, gravAccel));
                   }

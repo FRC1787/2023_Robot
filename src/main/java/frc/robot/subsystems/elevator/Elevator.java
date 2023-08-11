@@ -5,12 +5,18 @@
 package frc.robot.subsystems.elevator;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.elevator.ElevatorIOInputsAutoLogged;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -30,6 +36,10 @@ public class Elevator extends SubsystemBase {
 
   public double desiredVelocity;
   private boolean hasBeenHomed;
+
+  private Mechanism2d mech;
+  private MechanismRoot2d mechRoot;
+  private MechanismLigament2d mechElevator;
 
   public Elevator(ElevatorIO io) {
 
@@ -53,11 +63,15 @@ public class Elevator extends SubsystemBase {
       Constants.ElevatorGrabber.kVVoltsPer_MeterPerSecond,
       Constants.ElevatorGrabber.kAVoltsPer_MeterPerSecondSquared);
 
-    desiredVelocity = 0;
+    timer = new Timer();
 
+    desiredVelocity = 0;
     hasBeenHomed = false;
 
-    timer = new Timer();
+    //mechanism2d stuff to visualize the elevator
+    mech = new Mechanism2d(0.73, 1.5);
+    mechRoot = mech.getRoot("root", 0.3, 0.3);
+    mechElevator = mechRoot.append(new MechanismLigament2d("elevator", 0.15, 60));
   }
 
     /**
@@ -65,6 +79,7 @@ public class Elevator extends SubsystemBase {
    */
   public void extendElevator() {
     io.extendElevator();
+    mechElevator.setAngle(Rotation2d.fromDegrees(30));
   }
 
   /**
@@ -72,6 +87,11 @@ public class Elevator extends SubsystemBase {
    */
   public void retractElevator() {
     io.retractElevator();
+    mechElevator.setAngle(Rotation2d.fromDegrees(60));
+  }
+
+  public boolean hasBeenHomed() {
+    return hasBeenHomed;
   }
 
   /**
@@ -97,10 +117,6 @@ public class Elevator extends SubsystemBase {
     io.setElevatorMotorVoltage(totalOutput);
   }
 
-
-  public boolean hasBeenHomed() {
-    return hasBeenHomed;
-  }
 
   //moves elevator to a position in meters (0 being all the way down)
   public void moveElevatorToPosition(double targetPositionMeters) {
@@ -139,6 +155,7 @@ public class Elevator extends SubsystemBase {
 
     //holding position if no trapezoid profile is active
     if (!isMovingToTarget) {
+      //TODO: THIS THING DOESN't WORK BECAUSE ELEVATOR STUFF IS ANNOYING. WORK ON CREATING NEW PID OBJECT THAT ALLOWS CUSTOM INTEGRAL INPUT SO THAT WE DON't HAVE TO USE SIMON's JANKY HOMEMADE IMPLEMENTATION
       setElevatorMotorMetersPerSecond(0, 0);
       return;
     }
@@ -170,11 +187,20 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    io.updateInputs(inputs);
+
     if (inputs.atLowerLimit) {
       io.zeroEncoder();
       hasBeenHomed = true;
     }
 
     followTrapezoidProfile();
+
+    Logger.getInstance().processInputs("Elevator", inputs);
+
+    mechElevator.setLength(0.15 + inputs.elevatorPositionMeters);
+    Logger.getInstance().recordOutput("elevator/mech2d", mech);
+    Logger.getInstance().recordOutput("elevator/isMovingToTarget", isMovingToTarget);
   }
 }
