@@ -11,11 +11,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <br>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <br>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
@@ -27,14 +31,16 @@ public final class Constants {
   public static final class Swerve {
     // KINEMATICS CONSTANTS
     /**
-     * Distance between the center point of the left wheels and the center point of the right wheels.
+     * Distance between the center point of the left wheels and the center point of
+     * the right wheels.
      */
     public static final double trackwidthMeters = Units.inchesToMeters(22.75);
     /**
-     * Distance between the center point of the front wheels and the center point of the back wheels.
+     * Distance between the center point of the front wheels and the center point of
+     * the back wheels.
      */
     public static final double wheelbaseMeters = Units.inchesToMeters(22.75);
-    
+
     public static final double driveReduction = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
     public static final double steerReduction = (14.0 / 50.0) * (10.0 / 60.0);
 
@@ -47,17 +53,16 @@ public final class Constants {
         new Translation2d(-wheelbaseMeters / 2.0, trackwidthMeters / 2.0),
         new Translation2d(-wheelbaseMeters / 2.0, -trackwidthMeters / 2.0));
 
-
     // PID + FEEDFORWARD CONSTANTS FOR MOTORS
-    
+
     // PID for drive motors.
-    public static final double drivekPVoltsPerMeterPerSecond = 0.81027; //sysid says this should 0.27
+    public static final double drivekPVoltsPerMeterPerSecond = 0.81027; // sysid says this should 0.27
     public static final double drivekIVoltsPerMeter = 0.;
     public static final double drivekDVoltsPerMeterPerSecondSquared = 0.00;
 
     // PID for angle motors.
-    public static final double anglekPVoltsPerDegree = 0.08;//0.065;
-    public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk 
+    public static final double anglekPVoltsPerDegree = 0.08;// 0.065;
+    public static final double anglekIVoltsPerDegreeSeconds = 0.; // this might be the wrong unit idk
     public static final double anglekDVoltsPerDegreePerSecond = 0.;
 
     public static final double drivekSVolts = 0.1301;
@@ -67,7 +72,8 @@ public final class Constants {
     /**
      * The maximum possible velocity of the robot in meters per second.
      * <br>
-     * This is a measure of how fast the robot will be able to drive in a straight line, based off of the empirical free speed of the drive NEOs.
+     * This is a measure of how fast the robot will be able to drive in a straight
+     * line, based off of the empirical free speed of the drive NEOs.
      */
     public static final double maxAchievableVelocityMetersPerSecond = 5880.0 / 60.0 *
         driveReduction *
@@ -76,16 +82,19 @@ public final class Constants {
     /**
      * This is the max desired speed that will be achievable in teleop.
      * <br>
-     * If the controller joystick is maxed in one direction, it will drive at this speed.
+     * If the controller joystick is maxed in one direction, it will drive at this
+     * speed.
      * <br>
-     * This value will be less than or equal to the maxAchievableVelocityMetersPerSecond, depending on driver preference.
+     * This value will be less than or equal to the
+     * maxAchievableVelocityMetersPerSecond, depending on driver preference.
      */
-    public static final double maxDesiredTeleopVelocityMetersPerSecond = 4.3;
+    public static final double maxDesiredTeleopVelocityMetersPerSecond = 0.5;
 
     /**
      * The maximum achievable angular velocity of the robot in radians per second.
      * <br>
-     * This is a measure of how fast the robot can rotate in place, based off of maxAchievableVelocityMetersPerSecond.
+     * This is a measure of how fast the robot can rotate in place, based off of
+     * maxAchievableVelocityMetersPerSecond.
      */
     public static final double maxAchievableAngularVelocityRadiansPerSecond = maxAchievableVelocityMetersPerSecond /
         Math.hypot(Constants.Swerve.trackwidthMeters / 2.0, Constants.Swerve.wheelbaseMeters / 2.0);
@@ -93,11 +102,12 @@ public final class Constants {
     /**
      * This is the max desired angular velocity that will be achievable in teleop.
      * <br>
-     * If the controller rotation joystick is maxed in one direction, it will rotate at this speed.
+     * If the controller rotation joystick is maxed in one direction, it will rotate
+     * at this speed.
      * <br>
      * This value will be tuned based off of driver preference.
      */
-    public static final double maxDesiredAngularVelocityRadiansPerSecond = 5.4;
+    public static final double maxDesiredAngularVelocityRadiansPerSecond = 2.2;
 
     public static final double maxDesiredDriverAccel = 27.27;
 
@@ -118,7 +128,7 @@ public final class Constants {
     public static final class CANCoderOffsets {
       public static final double one = -61.1719;
       public static final double two = 108.896;
-      public static final double three = 17.23 - 90; 
+      public static final double three = 17.23 - 90;
       public static final double four = 117.33 - 180;
       public static final double five = 105.08;
       public static final double six = 85.43;
@@ -139,8 +149,8 @@ public final class Constants {
      * This method is used to get the offset for the swerve modules.
      * 
      * @param leftRightOffset the offset for the left and right swerve modules.
-     * This should be a {@link CANCoderOffsets} constant.
-     * @param corner the corner of the swerve module to get the offset for.
+     *                        This should be a {@link CANCoderOffsets} constant.
+     * @param corner          the corner of the swerve module to get the offset for.
      * @return the angular offset for the swerve module in degrees.
      */
     public static double getOffset(double leftRightOffset, SwerveModuleCorners corner) {
@@ -213,7 +223,7 @@ public final class Constants {
 
   public static class IntakeIndexer {
     public static double voltsPerRPMIntakeMotor = 0.00210764;
-    public static double intakeWheelCircumference = Units.inchesToMeters(2.25*Math.PI);
+    public static double intakeWheelCircumference = Units.inchesToMeters(2.25 * Math.PI);
 
     // for the intake, not for the actual pneumatics
     public static int intakeExtendPneumaticsChannel = 5;
@@ -244,13 +254,14 @@ public final class Constants {
 
     public static int lowerLimitSwitchID = 2;
 
-    public static double kPVoltsPerMeterPerSecond = 0.95385;  
+    public static double kPVoltsPerMeterPerSecond = 0.95385;
     public static double kIVoltsPerMeter = 0; // significant integral windup with this set to 0.2
     public static double kDVoltsPerMeterPerSecondSquared = 0;
 
-    public static double kSVolts = 0.032828; 
-    public static double kGVolts = 0.2156; 
-    public static double kVVoltsPer_MeterPerSecond = 4.8109; //represents voltage given to motor per m/s of desired elevator carriage velocity
+    public static double kSVolts = 0.032828;
+    public static double kGVolts = 0.2156;
+    public static double kVVoltsPer_MeterPerSecond = 4.8109; // represents voltage given to motor per m/s of desired
+                                                             // elevator carriage velocity
     public static double kAVoltsPer_MeterPerSecondSquared = 0.087606;
 
     public static double elevatorReduction = (18. / 44.) * (1. / 4.);
@@ -260,10 +271,10 @@ public final class Constants {
     // this causes the encoder to no longer determine the elevator's positon
     // accurately. We have no idea why, and no more time to debug this.
 
-    public static double chainMetersPerRotation = Units.inchesToMeters(1.76)*Math.PI;
+    public static double chainMetersPerRotation = Units.inchesToMeters(1.76) * Math.PI;
     public static double grabberMetersPerChain = 2;
-    public static double grabberMetersPerRotation = chainMetersPerRotation*grabberMetersPerChain;
-    public static double grabberMetersPerSecondPerRPM = grabberMetersPerRotation/60; 
+    public static double grabberMetersPerRotation = chainMetersPerRotation * grabberMetersPerChain;
+    public static double grabberMetersPerSecondPerRPM = grabberMetersPerRotation / 60;
   }
 
   public static class LED {
@@ -276,16 +287,16 @@ public final class Constants {
   public static class Controller {
     public static final double controllerDeadzone = 0.175;
 
-    public static int buttonA = 1;
-    public static int buttonB = 2;
-    public static int buttonX = 3;
+    public static int buttonA = 901;
+    public static int buttonB = 902;
+    public static int buttonX = 903;
     public static int buttonY = 4;
-    public static int leftBumper = 5;
-    public static int rightBumper = 6;
-    public static int viewButton = 7;
-    public static int menuButton = 8;
-    public static int leftJoyStickPress = 9;
-    public static int rightJoyStickPress = 10;  
+    public static int leftBumper = 905;
+    public static int rightBumper = 906;
+    public static int viewButton = 907;
+    public static int menuButton = 908;
+    public static int leftJoyStickPress = 909;
+    public static int rightJoyStickPress = 910;
   }
 
   public static class Vision {
@@ -293,20 +304,20 @@ public final class Constants {
       aprilTag(0, 0.46, 0.36),
       midTape(1, 0.61, 0.59),
       highTape(2, 1.11, 1.01);
-      
+
       public int limelightPipeline;
       public double heightMeters;
       public double distanceMeters;
 
       LimelightTarget(int limelightPipeline, double heightMeters, double distanceMeters) {
-        this.limelightPipeline=limelightPipeline;
-        this.heightMeters=heightMeters;
+        this.limelightPipeline = limelightPipeline;
+        this.heightMeters = heightMeters;
         this.distanceMeters = distanceMeters;
       }
     }
 
     /** Height of the Limelight from the ground. */
-    public static final double limelightHeightMeters = Units.inchesToMeters(22.75      );
+    public static final double limelightHeightMeters = Units.inchesToMeters(22.75);
     /** Angle above the horizontal of the Limelight. */
     public static final double limelightAngleDegrees = 0.0;
     /** Lateral offset of the Limelight from the center of the robot. */

@@ -48,9 +48,12 @@ import frc.robot.subsystems.intakeIndex.Claw;
 import frc.robot.subsystems.intakeIndex.IndexerWalls;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -62,7 +65,7 @@ public class RobotContainer {
   public static final CommandXboxController backupController = new CommandXboxController(1);
   public static final Joystick joystick = new Joystick(3);
 
-  // SUBSYSTEMS 
+  // SUBSYSTEMS
   final Drivetrain drivetrain = new Drivetrain();
   final Intake intake = new Intake();
   final Conveyor conveyor = new Conveyor();
@@ -85,7 +88,9 @@ public class RobotContainer {
   // AUTO
   public final SendableChooser<String> autoChooser = new SendableChooser<>();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -102,21 +107,26 @@ public class RobotContainer {
     autoChooser.addOption("2 Piece + Balance Barrier", "2 Piece + Balance Barrier");
     autoChooser.addOption("3 Piece Wire Guard Side", "3 Piece Wire Guard Side");
 
-    // autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire guard");
-    //autoChooser.addOption("cone + cube high barrier", "cone + cube high barrier");
-    //autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high + balance barrier");
-    //autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire guard");
+    // autoChooser.addOption("gigachad auto wire guard", "gigachad auto wire
+    // guard");
+    // autoChooser.addOption("cone + cube high barrier", "cone + cube high
+    // barrier");
+    // autoChooser.addOption("cone + cube high + balance barrier", "cone + cube high
+    // + balance barrier");
+    // autoChooser.addOption("1 cone + pickup wire guard", "1 cone + pickup wire
+    // guard");
 
     // Testing autos. Don't use in-game.
-    //autoChooser.addOption("goober", "goober");
+    // autoChooser.addOption("goober", "goober");
     // autoChooser.addOption("TESTING DO NOT CHOOSE", "TESTING DO NOT CHOOSE");
-    //autoChooser.addOption("One Bumper Length Forward", "One Bumper Length Forward");
-    //autoChooser.addOption("One Bumper Length Backward", "One Bumper Length Backward");
-    //autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper Length Backward Plus Flip");
-    //autoChooser.addOption("Mini Pickup", "Mini Pickup");
+    // autoChooser.addOption("One Bumper Length Forward", "One Bumper Length
+    // Forward");
+    // autoChooser.addOption("One Bumper Length Backward", "One Bumper Length
+    // Backward");
+    // autoChooser.addOption("One Bumper Length Backward Plus Flip", "One Bumper
+    // Length Backward Plus Flip");
+    // autoChooser.addOption("Mini Pickup", "Mini Pickup");
 
-
-    
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
     grabberPlacer.setDefaultCommand(new SetGrabberMotor(grabberPlacer, 0.5, 100));
     // Makes sure the claw is homed.
@@ -128,12 +138,17 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
@@ -142,127 +157,127 @@ public class RobotContainer {
     // controller.rightBumper().whileFalse(new JoystickDrive(drivetrain, true));
 
     // stuff we're testing
-    //controller.a().whileTrue(new MoveElevatorToPositionSmartDashboard(elevatorGrabber));
-    //controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
-    // controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake, indexer));
-    // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer, hatHack));
-    //controller.back().whileTrue(new AlignToTarget(drivetrain, vision, Constants.Vision.LimelightTarget.aprilTag));
-    //controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6, 4, 4, 0).withTimeout(3));
-    //controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
-    controller.back().whileTrue(new AutoBalance(drivetrain));
-    // buttonBoard.button(16).and(controller.start()).onTrue(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
+    // controller.a().whileTrue(new
+    // MoveElevatorToPositionSmartDashboard(elevatorGrabber));
+    // controller.b().whileTrue(new MoveElevatorToPosition(elevatorGrabber, 0));
+    // controller.povLeft().whileTrue(new PickUpCone(elevatorGrabber, intake,
+    // indexer));
+    // controller.povUp().whileTrue(new PickUpCube(intake, elevatorGrabber, indexer,
+    // hatHack));
+    // controller.back().whileTrue(new AlignToTarget(drivetrain, vision,
+    // Constants.Vision.LimelightTarget.aprilTag));
+    // controller.povLeft().whileTrue(new BowlCube(intake, conveyor, indexerWalls,
+    // grabberPlacer, 6, 4, 4, 0).withTimeout(3));
+    // controller.povRight().whileTrue(new AlignWheelsToZero(drivetrain));
+    // controller.back().whileTrue(new AutoBalance(drivetrain));
+    // buttonBoard.button(16).and(controller.start()).onTrue(new
+    // IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot));
 
     inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
 
     // cube mode and cone mode toggles
-    //controller.a().onTrue(new InstantCommand(leds::setConeMode));
-    //controller.b().onTrue(new InstantCommand(leds::setCubeMode));
+    // controller.a().onTrue(new InstantCommand(leds::setConeMode));
+    // controller.b().onTrue(new InstantCommand(leds::setCubeMode));
     controller.povLeft().onTrue(new InstantCommand(leds::setConeMode));
-    controller.povRight().onTrue(new InstantCommand(leds::setCubeMode));
+    // controller.povRight().onTrue(new InstantCommand(leds::setCubeMode));
     // buttonBoard.button(1).onTrue(new InstantCommand(leds::setConeMode));
     // buttonBoard.button(2).onTrue(new InstantCommand(leds::setCubeMode));
 
     coneModeJoystick.onTrue(new InstantCommand(leds::setConeMode));
-    cubeModeJoystick.onTrue(new InstantCommand(leds::setCubeMode));
+    // cubeModeJoystick.onTrue(new InstantCommand(leds::setCubeMode));
 
-    //controller.a().onTrue((new InstantCommand(indexer::setConeMode)).andThen(new InstantCommand(this::syncCone)));
-    //controller.b().onTrue((new InstantCommand(indexer::setCubeMode)).andThen(new InstantCommand(this::syncCube)));
+    // controller.a().onTrue((new InstantCommand(indexer::setConeMode)).andThen(new
+    // InstantCommand(this::syncCone)));
+    // controller.b().onTrue((new InstantCommand(indexer::setCubeMode)).andThen(new
+    // InstantCommand(this::syncCube)));
 
     // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
 
     // intake cone
     controller.rightTrigger().and(inConeMode)
-      .whileTrue(
-        new ParallelCommandGroup(
-          new MoveClawBack(claw, 3.6),
-          new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6),
-          new MoveElevatorToPosition(elevator, 0).asProxy())
-      );
+        .whileTrue(
+            new ParallelCommandGroup(
+                new MoveClawBack(claw, 3.6),
+                new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6),
+                new MoveElevatorToPosition(elevator, 0).asProxy()));
 
     // intake cube
-    controller.rightTrigger().and(inConeMode.negate())
-      .whileTrue(
-        new ParallelCommandGroup(
-          new MoveClawBack(claw, 3.6),
-          new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6),
-          new MoveElevatorToPosition(elevator, 0).asProxy())
-      );
+    // controller.rightTrigger().and(inConeMode.negate())
+    // .whileTrue(
+    // new ParallelCommandGroup(
+    // new MoveClawBack(claw, 3.6),
+    // new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -3, -5, -6),
+    // new MoveElevatorToPosition(elevator, 0).asProxy())
+    // );
 
-    
-    //index cone upon trigger release
+    // index cone upon trigger release
     controller.rightTrigger().and(inConeMode)
-      .onFalse(
-        new MoveConveyor(conveyor, -9).withTimeout(0.50) // <- if something breaks with the intake to index sequence then this is why
-        .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot))
-      );
+        .onFalse(
+            new MoveConveyor(conveyor, -9).withTimeout(0.50) // <- if something breaks with the intake to index sequence
+                                                             // then this is why
+                .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot)));
 
-    //get cube in grabber upon intake release
-    controller.rightTrigger().and(inConeMode.negate())
-      .onFalse(
-        new WaitCommand(0.5).andThen(
-        new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls))
-      );
-    
-    //eject cone
+    // get cube in grabber upon intake release
+    // controller.rightTrigger().and(inConeMode.negate())
+    // .onFalse(
+    // new WaitCommand(0.5).andThen(
+    // new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer,
+    // indexerWalls))
+    // );
+
+    // eject cone
     controller.leftTrigger().and(inConeMode).whileTrue(
-      new ParallelCommandGroup(
-        new MoveElevatorToPosition(elevator, .4).asProxy(),
-        new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)
-      )
-    ).onFalse(
-      new InstantCommand(intake::retractIntake).andThen(
-      new MoveElevatorToPosition(elevator, 0).asProxy())
-    );
+        new ParallelCommandGroup(
+            new MoveElevatorToPosition(elevator, .4).asProxy(),
+            new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)))
+        .onFalse(
+            new InstantCommand(intake::retractIntake).andThen(
+                new MoveElevatorToPosition(elevator, 0).asProxy()));
 
-    //eject cube
-    controller.leftTrigger().and(inConeMode.negate()).whileTrue(
-      new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5, 4)
-    ).onFalse(
-      new MoveElevatorToPosition(elevator, 0).asProxy()
-    );
-    
-    controller.x().whileTrue(new InstantCommand(intake::extendIntake, intake)
-      .andThen(new ShuffleboardRunWheelsAtVolt(conveyor)));
+    // eject cube
+    // controller.leftTrigger().and(inConeMode.negate()).whileTrue(
+    // new BowlCube(intake, conveyor, indexerWalls, grabberPlacer, 6.75, 2.5, 2.5,
+    // 4)
+    // ).onFalse(
+    // new MoveElevatorToPosition(elevator, 0).asProxy()
+    // );
+
+    // controller.x().whileTrue(new InstantCommand(intake::extendIntake, intake)
+    // .andThen(new ShuffleboardRunWheelsAtVolt(conveyor)));
     // hand off cone from indexer to grabber
-    controller.rightBumper().and(inConeMode).onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
-    controller.rightBumper().and(inConeMode.negate()).onTrue(new PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
+    controller.rightBumper()
+        .onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
+    // controller.rightBumper().and(inConeMode.negate()).onTrue(new
+    // PickUpCube(intake, conveyor, elevator, pivot, grabberPlacer, indexerWalls));
     /* ALTERNATIVE SCORING CONTROLS TO TEST */
-    this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position being held by the operator
+    this.driverConfirmBindings(); // driver gives the OK for the elevator to move to and score at the position
+                                  // being held by the operator
   }
 
-  private void driverConfirmBindings() {  
-    //BACKUP CONTROLLER
+  private void driverConfirmBindings() {
+    // BACKUP CONTROLLER
     midScoreJoystick.and(inConeMode).and(controller.leftBumper())
-    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+        .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21))
+            .andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
 
-    //high cone score
+    // high cone score
     highScoreJoystick.and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+        .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69))
+            .andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
 
-    //mid cube score
-    midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.08)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+    // mid cube score
+    // midScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
+    // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.08)).andThen(new
+    // ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
-    //high cube score
-    highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
+    // high cube score
+    // highScoreJoystick.and(inConeMode.negate()).and(controller.leftBumper())
+    // .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new
+    // ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
 
-    //BACKUP CONTROLLER
-    controller.a().and(inConeMode).and(controller.leftBumper())
-    .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.21)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
+    // BACKUP CONTROLLER
 
-    //high cone score
-    controller.b().and(inConeMode).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.69)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, true)));
-
-    //mid cube score
-    controller.a().and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.08)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
-
-    //high cube score
-    controller.b().and(inConeMode.negate()).and(controller.leftBumper())
-      .onTrue((new ExtendElevatorToPosition(elevator, pivot, 1.6)).andThen(new ScoreGamePiece(elevator, pivot, grabberPlacer, false)));
   }
 
   /**
@@ -271,8 +286,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // we always start facing towards the alliance station, so our inital angle should always be 180
-    return new InstantCommand(drivetrain::setGyroscope180).andThen(
-    new AutoRoutine(pathGroup, drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake, conveyor));
+    // we always start facing towards the alliance station, so our inital angle
+    // should always be 180
+    return null;
+    // return new InstantCommand(drivetrain::setGyroscope180).andThen(
+    //     new AutoRoutine(pathGroup, drivetrain, vision, grabberPlacer, elevator, pivot, indexerWalls, claw, intake,
+    //         conveyor));
   }
 }
