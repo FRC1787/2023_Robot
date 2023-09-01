@@ -28,9 +28,9 @@ public class BowlCube extends SequentialCommandGroup {
    */
   public BowlCube(Intake intake, Conveyor conveyor, IndexerWalls indexerWalls, GrabberPlacer grabberPlacer, double intakeMotorVoltage, double conveyorMotorVoltage, double indexerMotorVoltage, double grabberPlacerVolts) {
     addCommands(
-      new SetGrabberMotor(grabberPlacer, 12, 100).withTimeout(0.15),
       new InstantCommand(indexerWalls::closeIndexerWalls),
       new ParallelCommandGroup(
+      new SetGrabberMotor(grabberPlacer, -12, 100),
         new MoveConveyor(conveyor, conveyorMotorVoltage),
         new MoveSideBelts(indexerWalls, indexerMotorVoltage),
         new MoveIntakeWheels(intake, intakeMotorVoltage)

@@ -134,7 +134,7 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(
         new ParallelCommandGroup(
             new MoveElevatorToPosition(elevator, .4).asProxy(),
-            new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -4)))
+            new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -8)))
         .onFalse(
             new InstantCommand(intake::retractIntake).andThen(
                 new MoveElevatorToPosition(elevator, 0).asProxy()));
