@@ -39,18 +39,22 @@ public class LEDs extends SubsystemBase {
     blinkin.set(0.91);
   }
 
+  public void setLEDSOrange() {
+    blinkin.set(0.65);
+  }
+
   @Override
   public void periodic() {
-    
-    //update LEDs
-    if (inConeMode()) {
-      setLEDsYellow();
-    }
-    else {
-      setLEDsPurple();
-    }
+    setLEDSOrange();
+    // //update LEDs
+    // if (inConeMode()) {
+    //   setLEDsYellow();
+    // }
+    // else {
+    //   setLEDsPurple();
+    // }
 
-    SmartDashboard.putBoolean("in cone mode", inConeMode());
+    SmartDashboard.putBoolean("in cone mode", true);
 
   }
 }
