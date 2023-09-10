@@ -34,7 +34,6 @@ public class Elevator extends SubsystemBase {
   public boolean isMovingToTarget;
   private double targetPositionMeters;
 
-  public double desiredVelocity;
   private boolean hasBeenHomed;
 
   private Mechanism2d mech;
@@ -65,7 +64,6 @@ public class Elevator extends SubsystemBase {
 
     timer = new Timer();
 
-    desiredVelocity = 0;
     hasBeenHomed = false;
 
     //mechanism2d stuff to visualize the elevator
@@ -99,7 +97,6 @@ public class Elevator extends SubsystemBase {
    * @param targetMetersPerSecond - Make this positive if you want to extend the elevator up.
    */
   public void setElevatorMotorMetersPerSecond(double targetMetersPerSecond, double targetMetersPerSecondSquared) {
-    desiredVelocity = targetMetersPerSecond;
     
     double currentMetersPerSecond = inputs.elevatorVelocityMetersPerSecond;
 
