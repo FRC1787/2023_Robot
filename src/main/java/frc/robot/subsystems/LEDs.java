@@ -45,14 +45,9 @@ public class LEDs extends SubsystemBase {
 
   @Override
   public void periodic() {
-    setLEDSOrange();
-    // //update LEDs
-    // if (inConeMode()) {
-    //   setLEDsYellow();
-    // }
-    // else {
-    //   setLEDsPurple();
-    // }
+    
+
+    blinkin.set(-0.63);
 
     SmartDashboard.putBoolean("in cone mode", true);
 

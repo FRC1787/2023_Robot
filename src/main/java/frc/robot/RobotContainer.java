@@ -19,6 +19,7 @@ import frc.robot.subsystems.intakeIndex.Intake;
 import frc.robot.subsystems.intakeIndex.Conveyor;
 import frc.robot.subsystems.LEDs;
 
+import java.time.Instant;
 import java.util.List;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -67,10 +68,6 @@ public class RobotContainer {
   final Pivot pivot = new Pivot();
   final LEDs leds = new LEDs();
 
-  public final Trigger inConeMode = new Trigger(leds::inConeMode);
-
-  // BACKUP JOYSTICK
-  private final Trigger coneModeJoystick = new JoystickButton(joystick, 11);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -81,7 +78,6 @@ public class RobotContainer {
 
 
     drivetrain.setDefaultCommand(new JoystickDrive(drivetrain, true));
-    grabberPlacer.setDefaultCommand(new SetGrabberMotor(grabberPlacer, 0.5, 100));
     // Makes sure the claw is homed.
     claw.setDefaultCommand(new MoveClawBack(claw, 1));
     elevator.setDefaultCommand(new ElevatorIdle(elevator));
@@ -104,45 +100,19 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    inConeMode.onTrue(new SetGrabberMotor(grabberPlacer, 6, 100).withTimeout(0.15));
+    controller.a().onTrue(
+      new InstantCommand(intake::extendIntake).andThen(
+        new MoveElevatorToPosition(elevator, 1.6)));
 
-    // cube mode and cone mode toggles
-    controller.povLeft().onTrue(new InstantCommand(leds::setConeMode));
+    controller.b().onTrue(
+      new InstantCommand(intake::extendIntake).andThen(
+        new MoveElevatorToPosition(elevator, 1.)));
 
-    coneModeJoystick.onTrue(new InstantCommand(leds::setConeMode));
+    controller.x().onTrue(
+      new MoveElevatorToPosition(elevator, 0));
 
-    // drivetrain
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
-
-    // intake cone
-    controller.rightTrigger().and(inConeMode)
-        .whileTrue(
-            new ParallelCommandGroup(
-                new MoveClawBack(claw, 3.6),
-                new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, -4, -12, -6),
-                new MoveElevatorToPosition(elevator, 0).asProxy()));
-
-    // index cone upon trigger release
-    controller.rightTrigger()
-        .onFalse(
-            new MoveConveyor(conveyor, -9).withTimeout(0.50) // <- if something breaks with the intake to index sequence
-                                                             // then this is why
-                .andThen(new IndexConeFull(intake, conveyor, indexerWalls, claw, elevator, pivot)));
-
-
-    // eject cone
-    controller.leftTrigger().whileTrue(
-        new ParallelCommandGroup(
-            new MoveElevatorToPosition(elevator, .4).asProxy(),
-            new EjectGamePiece(intake, pivot, conveyor, indexerWalls, grabberPlacer, 12, 8, 8, -8)))
-        .onFalse(
-            new InstantCommand(intake::retractIntake).andThen(
-                new MoveElevatorToPosition(elevator, 0).asProxy()));
-
-    // hand off cone from indexer to grabber
-    controller.rightBumper()
-        .onTrue(new PickUpCone(elevator, pivot, grabberPlacer, intake, conveyor, indexerWalls, claw));
-
+    controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, 4, 0, 0));
   }
 
 

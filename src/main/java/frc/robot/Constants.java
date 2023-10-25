@@ -265,11 +265,8 @@ public final class Constants {
     public static double kAVoltsPer_MeterPerSecondSquared = 0.087606;
 
     public static double elevatorReduction = (18. / 44.) * (1. / 4.);
-    public static double elevatorMaxVelMetersPerSecond = 2.5;
-    public static double elevatorMaxAccelMetersPerSecondSquared = 5;
-    // We tried increasing max accel from 0.5 to 1.0, and found that
-    // this causes the encoder to no longer determine the elevator's positon
-    // accurately. We have no idea why, and no more time to debug this.
+    public static double elevatorMaxVelMetersPerSecond = 0.5;
+    public static double elevatorMaxAccelMetersPerSecondSquared = 1.0;
 
     public static double chainMetersPerRotation = Units.inchesToMeters(1.76) * Math.PI;
     public static double grabberMetersPerChain = 2;
