@@ -113,6 +113,9 @@ public class RobotContainer {
 
     controller.y().onTrue(new InstantCommand(drivetrain::zeroYaw));
     controller.rightTrigger().whileTrue(new IntakeGamePieces(intake, conveyor, indexerWalls, pivot, 4, 0, 0));
+    controller.povUp().whileTrue(new InstantCommand(() -> grabberPlacer.setGrabMotorVolts(3))).onFalse(new InstantCommand(() -> grabberPlacer.setGrabMotorVolts(0)));
+    controller.povDown().whileTrue(new InstantCommand(() -> grabberPlacer.setGrabMotorVolts(-3))).onFalse(new InstantCommand(() -> grabberPlacer.setGrabMotorVolts(0)));
+
   }
 
 

@@ -107,7 +107,7 @@ public final class Constants {
      * <br>
      * This value will be tuned based off of driver preference.
      */
-    public static final double maxDesiredAngularVelocityRadiansPerSecond = 2.2;
+    public static final double maxDesiredAngularVelocityRadiansPerSecond = .2;
 
     public static final double maxDesiredDriverAccel = 27.27;
 
